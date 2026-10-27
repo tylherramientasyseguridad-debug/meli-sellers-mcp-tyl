@@ -1,5 +1,5 @@
 // src/instalar.js — instalador automático: configura el conector en Claude Desktop.
-//   npx -y github:TYL-Herramientas/meli-sellers-mcp-colombia instalar  // TODO: actualizar cuando exista el repo
+//   npx -y github:tylherramientasyseguridad-debug/meli-sellers-mcp-tyl instalar
 // Pregunta el App ID y el Secret (o los toma de --app-id / --secret), ubica el
 // archivo de configuración según el sistema operativo, hace backup y agrega el
 // conector sin tocar los demás que ya existan.
@@ -9,9 +9,8 @@ import path from 'node:path';
 import os from 'node:os';
 import readline from 'node:readline/promises';
 
-// TODO: actualizar REPO y REDIRECT cuando TYL tenga su propio repo en GitHub
-const REPO = 'github:kokesaurio/mercadolibre-sellers-mcp-algoritmo-Digital';
-const REDIRECT = 'https://kokesaurio.github.io/mercadolibre-sellers-mcp-algoritmo-Digital/conectar.html';
+const REPO = 'github:tylherramientasyseguridad-debug/meli-sellers-mcp-tyl';
+const REDIRECT = 'https://tylherramientasyseguridad-debug.github.io/meli-sellers-mcp-tyl/conectar.html';
 
 export function rutaConfig() {
   if (process.env.CLAUDE_CONFIG_DIR) return path.join(process.env.CLAUDE_CONFIG_DIR, 'claude_desktop_config.json');
@@ -88,7 +87,7 @@ export async function mainInstalador() {
   console.log('\nÚltimos 2 pasos:');
   console.log('  1. Reiniciá Claude Desktop (cerralo del todo y volvé a abrirlo).');
   console.log('  2. En un chat nuevo decile: "conectá mi cuenta de MercadoLibre".');
-  console.log('\nGuía completa: https://github.com/kokesaurio/mercadolibre-sellers-mcp-algoritmo-Digital'); // TODO: actualizar URL
+  console.log('\nGuía completa: https://github.com/tylherramientasyseguridad-debug/meli-sellers-mcp-tyl');
   console.log('\n⭐ Este conector es un fork para Colombia mantenido por TYL Herramientas y Seguridad.');
   console.log('   Tu estrella en GitHub hace que más vendedores lo encuentren.');
   if (process.stdin.isTTY) {
@@ -97,12 +96,12 @@ export async function mainInstalador() {
     rl2.close();
     if (r === 's' || r === 'si' || r === 'sí' || r === 'y') {
       const { exec } = await import('node:child_process');
-      const url = 'https://github.com/kokesaurio/mercadolibre-sellers-mcp-algoritmo-Digital';
+      const url = 'https://github.com/tylherramientasyseguridad-debug/meli-sellers-mcp-tyl';
       const cmd = process.platform === 'win32' ? 'start "" "' + url + '"' : process.platform === 'darwin' ? 'open "' + url + '"' : 'xdg-open "' + url + '"';
       exec(cmd, () => {});
       console.log('   ¡Gracias! Se abre GitHub: botón ⭐ Star arriba a la derecha.');
     }
   } else {
-    console.log('   https://github.com/kokesaurio/mercadolibre-sellers-mcp-algoritmo-Digital');
+    console.log('   https://github.com/tylherramientasyseguridad-debug/meli-sellers-mcp-tyl');
   }
 }
