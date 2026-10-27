@@ -1052,7 +1052,7 @@ export const TOOLS = [
       item_id: z.string().optional().describe('Si se indica, trae precio, tipo de publicación y gasto de ads reales'),
       precio: z.number().positive().optional().describe('Precio de venta; si hay item_id se toma el de la publicación'),
       costo: z.number().min(0).optional().describe('Costo del producto (lo que te sale a vos) — SIEMPRE preguntarlo al usuario'),
-      impuestos_pct: z.number().min(0).max(60).optional().describe('% de impuestos sobre el precio (ICA, régimen simplificado/IVA según su situación) — SIEMPRE preguntarlo'),
+      impuestos_pct: z.number().min(0).max(60).optional().describe('% de impuestos sobre el precio (IVA 19% + ICA según municipio, para régimen común) — SIEMPRE preguntarlo'),
       costo_envio: z.number().min(0).optional().describe('Lo que paga el vendedor de envío por unidad (si ofrece envío gratis). Default 0'),
       dias_ads: z.number().int().min(1).max(90).optional().describe('Período para promediar la publicidad (default 30)') },
     async run(args) {
@@ -1074,7 +1074,7 @@ export const TOOLS = [
       const faltan = [];
       if (!precio) faltan.push('el **precio de venta** (o pasame el item_id y lo traigo)');
       if (costoFinal == null) faltan.push(`el **costo del producto** (lo que te sale a vos, con IVA si corresponde)${sku ? ` — lo guardo en el SKU ${sku} y vale para todas sus publicaciones` : ''}`);
-      if (impuestosFinal == null) faltan.push('el **% de impuestos** sobre la venta (ICA + régimen simplificado o IVA según tu situación — si no lo sabés, tu contador lo tiene en 1 minuto)');
+      if (impuestosFinal == null) faltan.push('el **% de impuestos** sobre la venta (IVA 19% + ICA de tu municipio — si no lo sabés, tu contador lo tiene en 1 minuto)');
       if (faltan.length) return 'Para calcular la rentabilidad real me falta:\n- ' + faltan.join('\n- ') + '\n\nCon esos datos te doy el desglose peso por peso (y los guardo en el cerebro para no volver a preguntarlos).';
       // Aprender lo que vino nuevo
       const aprendido = {};

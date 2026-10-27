@@ -344,7 +344,7 @@ async function pruebas() {
     contiene(t, 'entraron al top', 'termo milan', 'salieron del top', 'mate imperial'); // tendencias
   });
   await caso('ml_cerebro guarda, hereda del negocio y muestra lo que sabe', async () => {
-    contiene(await tool('ml_cerebro').run({ accion: 'guardar', impuestos_pct: 19, nota: 'IVA + ICA régimen simplificado' }), 'Guardado', 'negocio');
+    contiene(await tool('ml_cerebro').run({ accion: 'guardar', impuestos_pct: 19, nota: 'Régimen común + IVA 19% + ICA Bogotá' }), 'Guardado', 'negocio');
     contiene(await tool('ml_cerebro').run({ accion: 'guardar', item_id: 'MCO111', costo: 20000, medidas: '27 cm alto, 8,5 cm diámetro' }), 'MCO111', 'costo');
     const t = await tool('ml_cerebro').run({ accion: 'ver', item_id: 'MCO111' });
     contiene(t, '20.000', '19%', 'heredado del negocio', '27 cm');

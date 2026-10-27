@@ -19,7 +19,7 @@ Cuando el vendedor suelta un dato del negocio, guardarlo en el momento con
   medidas ("27 cm alto, 8,5 cm diámetro, 480 g"), qué incluye, notas ("el
   proveedor tarda 15 días", "los compradores siempre preguntan si trae funda").
 - **Del negocio entero** (sin item_id): % de impuestos general, costo de envío
-  típico, notas ("Régimen simplificado + ICA Bogotá", "no vendo a ciertos departamentos").
+  típico, notas ("Régimen común + IVA 19% + ICA Bogotá", "no vendo a ciertos departamentos").
   Los productos heredan estos defaults salvo que tengan el dato propio.
 Confirmar en una línea QUÉ quedó guardado. Solo datos que el vendedor dijo:
 el cerebro nunca guarda estimaciones ni inventos.
