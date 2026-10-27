@@ -1,6 +1,6 @@
 // src/servicio.js — los trabajadores como servicio de la PC (24/7, sin Claude abierto).
-//   npx -y github:kokesaurio/mercadolibre-sellers-mcp-algoritmo-Digital trabajadores            → corre en primer plano
-//   npx -y github:kokesaurio/mercadolibre-sellers-mcp-algoritmo-Digital trabajadores instalar   → arranca solo al iniciar sesión
+//   npx -y github:tylherramientasyseguridad-debug/meli-sellers-mcp-tyl trabajadores            → corre en primer plano
+//   npx -y github:tylherramientasyseguridad-debug/meli-sellers-mcp-tyl trabajadores instalar   → arranca solo al iniciar sesión
 //   ... trabajadores desinstalar | estado
 // Sin permisos de administrador: carpeta Inicio (Windows), LaunchAgent (macOS), systemd --user (Linux).
 
@@ -10,10 +10,10 @@ import os from 'node:os';
 import { spawn, spawnSync } from 'node:child_process';
 import { rutaConfig } from './instalar.js';
 
-const REPO = 'github:kokesaurio/mercadolibre-sellers-mcp-algoritmo-Digital';
+const REPO = 'github:tylherramientasyseguridad-debug/meli-sellers-mcp-tyl';
 const DIR = () => process.env.MELI_CONFIG_DIR || path.join(os.homedir(), '.meli-sellers-mcp');
 const LOG = () => path.join(DIR(), 'trabajadores.log');
-const ETIQUETA = 'ar.algoritmodigital.meli-trabajadores';
+const ETIQUETA = 'co.tylherramientas.meli-trabajadores';
 
 // El servicio necesita App ID / Secret para renovar la sesión: los toma del config de Claude
 // (donde los dejó el instalador) para no guardar el secreto en un segundo lugar.
@@ -61,7 +61,7 @@ export function instalarServicio() {
     spawnSync('launchctl', ['load', '-w', r.auto], { stdio: 'ignore' });
   } else {
     fs.writeFileSync(r.auto, `[Unit]
-Description=Trabajadores de MercadoLibre (Algoritmo Digital)
+Description=Trabajadores de MercadoLibre (TYL Herramientas y Seguridad)
 After=network-online.target
 
 [Service]

@@ -105,12 +105,12 @@ export const TOOLS = [
       const appId = process.env.ML_APP_ID, appSecret = process.env.ML_APP_SECRET;
       if (!appId || !appSecret) return 'Faltan ML_APP_ID y ML_APP_SECRET en la configuración. Creá tu aplicación gratis en developers.mercadolibre.com.co (guía en el README) y agregá esas dos variables.';
       if (!args.code) {
-        const redirectUri = process.env.ML_REDIRECT_URI || 'https://kokesaurio.github.io/mercadolibre-sellers-mcp-algoritmo-Digital/conectar.html';
+        const redirectUri = process.env.ML_REDIRECT_URI || 'https://tylherramientasyseguridad-debug.github.io/meli-sellers-mcp-tyl/conectar.html';
         const url = urlDeAutorizacion({ appId, sitio: args.sitio || process.env.ML_SITE || 'MCO', redirectUri });
         return `Abrí este link, inicia sesión con tu cuenta de MercadoLibre y autorizá:\n\n${url}\n\nAl terminar vas a ver un código: pasámelo y completo la conexión (ml_conectar con code).\n\nImportante: la redirect URI de tu app en el DevCenter tiene que incluir exactamente:\n${redirectUri}`;
       }
       const r = await canjearCode({ appId, appSecret, code: args.code });
-      return `✅ Cuenta conectada: **${r.nickname}** (${r.sitio}, user_id ${r.user_id}). Ya podés pedirme ventas, publicaciones, preguntas y más.\n\n⭐ Este conector es gratis: si te sirve, dejanos una estrella en GitHub — hace que más vendedores lo encuentren: https://github.com/kokesaurio/mercadolibre-sellers-mcp-algoritmo-Digital`;
+      return `✅ Cuenta conectada: **${r.nickname}** (${r.sitio}, user_id ${r.user_id}). Ya podés pedirme ventas, publicaciones, preguntas y más.\n\n⭐ Este conector es gratis: si te sirve, dejanos una estrella en GitHub — hace que más vendedores lo encuentren: https://github.com/tylherramientasyseguridad-debug/meli-sellers-mcp-tyl`;
     },
   },
   {
@@ -138,12 +138,12 @@ export const TOOLS = [
     schema: {},
     async run() {
       const e = await chequearActualizacion({ forzar: true });
-      if (!e.remota) return `Conector de MercadoLibre de Algoritmo Digital — versión instalada: **v${VERSION}**. No pude consultar si hay una versión nueva (sin conexión a GitHub): reintentá más tarde.`;
-      if (!e.hayNueva) return `Conector de MercadoLibre de Algoritmo Digital — versión instalada: **v${VERSION}** ✅ (es la última publicada).\n⭐ ¿Te está sirviendo? Una estrella en GitHub nos ayuda un montón: https://github.com/kokesaurio/mercadolibre-sellers-mcp-algoritmo-Digital`;
-      return [`Conector de MercadoLibre de Algoritmo Digital`,
+      if (!e.remota) return `Conector de MercadoLibre de TYL Herramientas y Seguridad — versión instalada: **v${VERSION}**. No pude consultar si hay una versión nueva (sin conexión a GitHub): reintentá más tarde.`;
+      if (!e.hayNueva) return `Conector de MercadoLibre de TYL Herramientas y Seguridad — versión instalada: **v${VERSION}** ✅ (es la última publicada).\n⭐ ¿Te está sirviendo? Una estrella en GitHub nos ayuda un montón: https://github.com/tylherramientasyseguridad-debug/meli-sellers-mcp-tyl`;
+      return [`Conector de MercadoLibre de TYL Herramientas y Seguridad`,
         `- Instalada: v${VERSION} · **Última publicada: v${e.remota}** 📦`,
-        `- Para actualizar: cerrá Claude, corré en la terminal \`npx -y github:kokesaurio/mercadolibre-sellers-mcp-algoritmo-Digital actualizar\` y volvé a abrir Claude.`,
-        `- Novedades: https://github.com/kokesaurio/mercadolibre-sellers-mcp-algoritmo-Digital/commits/main`].join('\n');
+        `- Para actualizar: cerrá Claude, corré en la terminal \`npx -y github:tylherramientasyseguridad-debug/meli-sellers-mcp-tyl actualizar\` y volvé a abrir Claude.`,
+        `- Novedades: https://github.com/tylherramientasyseguridad-debug/meli-sellers-mcp-tyl/commits/main`].join('\n');
     },
   },
   // ──────────────────────── Ventas y métricas ────────────────────────
@@ -1349,9 +1349,9 @@ export const TOOLS = [
 
       if (args.accion === 'equipo') {
         const d = leerEquipo(); const corre = quienCorre();
-        const modo = !corre ? '⚪ Nadie los está corriendo ahora. Se despiertan solos mientras Claude esté abierto; para 24/7 corré en la terminal `npx -y github:kokesaurio/mercadolibre-sellers-mcp-algoritmo-Digital trabajadores instalar`.'
+        const modo = !corre ? '⚪ Nadie los está corriendo ahora. Se despiertan solos mientras Claude esté abierto; para 24/7 corré en la terminal `npx -y github:tylherramientasyseguridad-debug/meli-sellers-mcp-tyl trabajadores instalar`.'
           : corre.modo === 'servicio' ? `🟢 Trabajando 24/7 como servicio de la PC (desde ${hora(corre.desde)}).`
-          : '🟢 Trabajando mientras Claude está abierto (para 24/7: `npx -y github:kokesaurio/mercadolibre-sellers-mcp-algoritmo-Digital trabajadores instalar`).';
+          : '🟢 Trabajando mientras Claude está abierto (para 24/7: `npx -y github:tylherramientasyseguridad-debug/meli-sellers-mcp-tyl trabajadores instalar`).';
         const bloques = objetivo.map((id) => {
           const w = d.trabajadores[id], e = EQUIPO[id];
           const tareas = tareasDe(d, id), propias = tareas.filter((t) => !t.deLista), heredadas = tareas.length - propias.length;
@@ -1509,7 +1509,7 @@ export const TOOLS = [
       }
 
       if (args.accion === 'drive') {
-        const GS = 'https://github.com/kokesaurio/mercadolibre-sellers-mcp-algoritmo-Digital/blob/main/docs/drive/planilla-equipo.gs';
+        const GS = 'https://github.com/tylherramientasyseguridad-debug/meli-sellers-mcp-tyl/blob/main/docs/drive/planilla-equipo.gs';
         if (args.quitar) return desconectarDrive(args.quitar) ? `Listo: dejé de enviar a Drive (${args.quitar}). Tus archivos y planilla quedan como están.` : 'Drive no estaba conectado.';
         if (args.url || args.carpeta) {
           const cfg = conectarDrive({ url: args.url, carpeta: args.carpeta });

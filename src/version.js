@@ -11,7 +11,7 @@ const pkg = JSON.parse(fs.readFileSync(path.join(path.dirname(fileURLToPath(impo
 export const VERSION = pkg.version;
 
 export const URL_REMOTA = process.env.ML_UPDATE_URL
-  || 'https://raw.githubusercontent.com/kokesaurio/mercadolibre-sellers-mcp-algoritmo-Digital/main/package.json';
+  || 'https://raw.githubusercontent.com/tylherramientasyseguridad-debug/meli-sellers-mcp-tyl/main/package.json';
 
 const DIR = () => process.env.MELI_CONFIG_DIR || path.join(os.homedir(), '.meli-sellers-mcp');
 const CACHE = () => path.join(DIR(), 'version-check.json');
@@ -45,5 +45,5 @@ export async function chequearActualizacion({ forzar = false } = {}) {
 export const AVISO_ACTUALIZAR = (remota) =>
   `\n\n---\n📦 Hay una versión nueva del conector (v${remota}, tenés la v${VERSION}). ` +
   'Para actualizar: cerrá Claude, corré en la terminal ' +
-  '`npx -y github:kokesaurio/mercadolibre-sellers-mcp-algoritmo-Digital actualizar` y volvé a abrir Claude. ' +
-  'Novedades: https://github.com/kokesaurio/mercadolibre-sellers-mcp-algoritmo-Digital/commits/main';
+  '`npx -y github:tylherramientasyseguridad-debug/meli-sellers-mcp-tyl actualizar` y volvé a abrir Claude. ' +
+  'Novedades: https://github.com/tylherramientasyseguridad-debug/meli-sellers-mcp-tyl/commits/main';
