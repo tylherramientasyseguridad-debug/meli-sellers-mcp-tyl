@@ -92,7 +92,7 @@ export function desinstalarServicio() {
 
 export async function mainTrabajadores(sub) {
   const t = await import('./trabajadores.js');
-  const hora = () => new Date().toLocaleString('es-AR');
+  const hora = () => new Date().toLocaleString('es-CO');
   if (sub === 'instalar') {
     if (!cargarCredenciales()) console.log('⚠️ No encontré ML_APP_ID / ML_APP_SECRET en el config de Claude: corré primero el instalador del conector.');
     const r = instalarServicio();
@@ -109,7 +109,7 @@ export async function mainTrabajadores(sub) {
   if (sub === 'estado') {
     const c = t.quienCorre(); const d = t.leerEquipo();
     console.log(c ? `🟢 Corriendo (${c.modo}, pid ${c.pid})` : '⚪ Nadie los está corriendo ahora.');
-    for (const id of t.IDS) console.log(`  ${t.etiqueta(id)} — ${d.trabajadores[id].activo ? 'activo' : 'pausa'} · cada ${d.trabajadores[id].intervalo} min · último ${d.trabajadores[id].ultimo ? new Date(d.trabajadores[id].ultimo).toLocaleString('es-AR') : '—'}`);
+    for (const id of t.IDS) console.log(`  ${t.etiqueta(id)} — ${d.trabajadores[id].activo ? 'activo' : 'pausa'} · cada ${d.trabajadores[id].intervalo} min · último ${d.trabajadores[id].ultimo ? new Date(d.trabajadores[id].ultimo).toLocaleString('es-CO') : '—'}`);
     const { estadoDB } = await import('./db.js');
     const e = estadoDB();
     console.log(e.activa ? `🗄️ Base de datos: ${e.ruta} · ${e.mediciones.n} mediciones · ${e.alertas.n} alertas` : `🗄️ Base de datos no activa: ${e.motivo}. En Windows: winget install OpenJS.NodeJS.LTS`);

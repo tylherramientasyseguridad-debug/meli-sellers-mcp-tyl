@@ -3,7 +3,7 @@
 <circle cx="64" cy="56" r="26" fill="#FFE600"/>
 <text x="64" y="66" text-anchor="middle" font-size="28" font-weight="800" fill="#17211C">1</text>
 <text x="106" y="66" font-size="26" font-weight="800" fill="#17211C">Creá tu aplicación gratis en MercadoLibre</text>
-<rect x="70" y="100" width="860" height="400" rx="14" fill="#FFFFFF" stroke="#DDE2DB" /><rect x="70" y="100" width="860" height="46" rx="14" fill="#FFE600"/><rect x="70" y="126" width="860" height="20" fill="#FFE600"/><text x="94" y="130" font-size="16" font-weight="800" fill="#17211C">developers.mercadolibre.com.ar — Crear nueva aplicación</text><text x="100" y="176" font-size="14" font-weight="700" fill="#5C665F">Nombre de la aplicación</text>
+<rect x="70" y="100" width="860" height="400" rx="14" fill="#FFFFFF" stroke="#DDE2DB" /><rect x="70" y="100" width="860" height="46" rx="14" fill="#FFE600"/><rect x="70" y="126" width="860" height="20" fill="#FFE600"/><text x="94" y="130" font-size="16" font-weight="800" fill="#17211C">developers.mercadolibre.com.co — Crear nueva aplicación</text><text x="100" y="176" font-size="14" font-weight="700" fill="#5C665F">Nombre de la aplicación</text>
 <rect x="100" y="184" width="380" height="40" rx="8" fill="#F6F7F3" stroke="#DDE2DB"/>
 <text x="112" y="210" font-size="15" fill="#17211C" >Mi conector Claude</text><text x="520" y="176" font-size="14" font-weight="700" fill="#5C665F">Descripción corta</text>
 <rect x="520" y="184" width="380" height="40" rx="8" fill="#F6F7F3" stroke="#DDE2DB"/>

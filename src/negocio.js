@@ -176,4 +176,4 @@ export async function resumenContable(c, sellerId, desde, hasta = Date.now(), { 
 }
 
 export const inicioDeMes = (t = Date.now(), corrimiento = 0) => { const d = new Date(t); return new Date(d.getFullYear(), d.getMonth() + corrimiento, 1).getTime(); };
-export const nombreMes = (t) => new Date(t).toLocaleDateString('es-AR', { month: 'long', year: 'numeric' });
+export const nombreMes = (t) => new Date(t).toLocaleDateString('es-CO', { month: 'long', year: 'numeric' });

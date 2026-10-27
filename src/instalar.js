@@ -1,5 +1,5 @@
 // src/instalar.js — instalador automático: configura el conector en Claude Desktop.
-//   npx -y github:kokesaurio/mercadolibre-sellers-mcp-algoritmo-Digital instalar
+//   npx -y github:TYL-Herramientas/meli-sellers-mcp-colombia instalar  // TODO: actualizar cuando exista el repo
 // Pregunta el App ID y el Secret (o los toma de --app-id / --secret), ubica el
 // archivo de configuración según el sistema operativo, hace backup y agrega el
 // conector sin tocar los demás que ya existan.
@@ -9,6 +9,7 @@ import path from 'node:path';
 import os from 'node:os';
 import readline from 'node:readline/promises';
 
+// TODO: actualizar REPO y REDIRECT cuando TYL tenga su propio repo en GitHub
 const REPO = 'github:kokesaurio/mercadolibre-sellers-mcp-algoritmo-Digital';
 const REDIRECT = 'https://kokesaurio.github.io/mercadolibre-sellers-mcp-algoritmo-Digital/conectar.html';
 
@@ -55,7 +56,7 @@ export async function instalar({ appId, appSecret, soloLectura = false } = {}) {
 }
 
 export async function mainInstalador() {
-  console.log('── Instalador del conector de MercadoLibre para Claude ── Algoritmo Digital ──\n');
+  console.log('── Instalador del conector de MercadoLibre Colombia para Claude ── TYL Herramientas y Seguridad ──\n');
   let appId = flag('--app-id');
   let appSecret = flag('--secret');
 
@@ -65,7 +66,7 @@ export async function mainInstalador() {
   }
   if (!appId || !appSecret) {
     console.log('Necesitás una aplicación gratis de MercadoLibre (2 minutos):');
-    console.log('  1. Entrá a https://developers.mercadolibre.com.ar → Mis aplicaciones → Crear');
+    console.log('  1. Entrá a https://developers.mercadolibre.com.co → Mis aplicaciones → Crear');
     console.log('  2. URI de redirect (exacta): ' + REDIRECT);
     console.log('  3. Scopes: read, write y offline_access\n');
     const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
@@ -87,8 +88,8 @@ export async function mainInstalador() {
   console.log('\nÚltimos 2 pasos:');
   console.log('  1. Reiniciá Claude Desktop (cerralo del todo y volvé a abrirlo).');
   console.log('  2. En un chat nuevo decile: "conectá mi cuenta de MercadoLibre".');
-  console.log('\nGuía completa: https://github.com/kokesaurio/mercadolibre-sellers-mcp-algoritmo-Digital');
-  console.log('\n⭐ Este conector es gratis y lo mantiene Algoritmo Digital.');
+  console.log('\nGuía completa: https://github.com/kokesaurio/mercadolibre-sellers-mcp-algoritmo-Digital'); // TODO: actualizar URL
+  console.log('\n⭐ Este conector es un fork para Colombia mantenido por TYL Herramientas y Seguridad.');
   console.log('   Tu estrella en GitHub hace que más vendedores lo encuentren.');
   if (process.stdin.isTTY) {
     const rl2 = readline.createInterface({ input: process.stdin, output: process.stdout });

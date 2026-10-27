@@ -4,7 +4,7 @@ import { TOOLS, MeliError } from './herramientas.js';
 import { VERSION, chequearActualizacion, AVISO_ACTUALIZAR } from './version.js';
 
 export const INSTRUCCIONES = [
-  'MCP de MercadoLibre para vendedores, de Algoritmo Digital (algoritmodigital.com.ar).',
+  'MCP de MercadoLibre Colombia para vendedores — TYL Herramientas y Seguridad (fork de Algoritmo Digital).',
   'Conexión directa a la API oficial de MercadoLibre con la cuenta del vendedor.',
   'Si no hay cuenta conectada, guiá al usuario con ml_conectar.',
   'Las herramientas de escritura (responder preguntas, actualizar publicaciones, aceptar promociones) modifican la tienda real: usalas solo con confirmación explícita del usuario, mostrando antes el cambio exacto.',

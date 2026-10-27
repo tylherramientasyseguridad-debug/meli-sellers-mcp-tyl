@@ -1,7 +1,7 @@
 {
-  "name": "@algoritmodigital/meli-sellers-mcp",
-  "version": "1.30.0",
-  "description": "MCP de MercadoLibre para vendedores — conectá tu cuenta a Claude sin servidor propio. 43 herramientas y un equipo de 19 trabajadores que vigilan 24/7 (más su jefe): ventas, publicaciones, preguntas, precios, promociones, competencia.",
+  "name": "@tyl/meli-sellers-mcp-colombia",
+  "version": "1.30.0-tyl.1",
+  "description": "MCP de MercadoLibre Colombia para TYL Herramientas y Seguridad — conecta tu cuenta a Claude sin servidor propio. Fork adaptado para MCO (Colombia) del conector de Algoritmo Digital.",
   "type": "module",
   "bin": {
     "meli-sellers-mcp": "src/stdio.js"
@@ -20,7 +20,7 @@
     "vendedores",
     "api-mercadolibre"
   ],
-  "author": "Algoritmo Digital <https://algoritmodigital.com.ar>",
+  "author": "TYL Herramientas y Seguridad S.A.S. (fork de Algoritmo Digital <https://algoritmodigital.com.ar>)",
   "license": "MIT",
   "engines": {
     "node": ">=20"

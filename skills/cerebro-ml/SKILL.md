@@ -19,13 +19,13 @@ Cuando el vendedor suelta un dato del negocio, guardarlo en el momento con
   medidas ("27 cm alto, 8,5 cm diámetro, 480 g"), qué incluye, notas ("el
   proveedor tarda 15 días", "los compradores siempre preguntan si trae funda").
 - **Del negocio entero** (sin item_id): % de impuestos general, costo de envío
-  típico, notas ("Monotributo + IIBB CABA", "no vendo a Tierra del Fuego").
+  típico, notas ("Régimen simplificado + ICA Bogotá", "no vendo a ciertos departamentos").
   Los productos heredan estos defaults salvo que tengan el dato propio.
 Confirmar en una línea QUÉ quedó guardado. Solo datos que el vendedor dijo:
 el cerebro nunca guarda estimaciones ni inventos.
 
 ## El costo va por SKU
-- Si la publicación tiene SKU, `ml_cerebro guardar item_id=MLA… costo=…` guarda el
+- Si la publicación tiene SKU, `ml_cerebro guardar item_id=MCO… costo=…` guarda el
   costo **en el SKU**: lo usan todas las publicaciones con ese SKU, las que ya existen
   y las que se creen después. Cambiarlo en una lo cambia en todas (avisarlo).
 - También se puede guardar directo por SKU: `item_id="TER-1L" costo=8000`.

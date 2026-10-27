@@ -55,6 +55,19 @@ export const CALENDARIOS = {
     dia_pais: { nombre: 'Dia dos Pais', regla: (a) => enesimoDia(a, 7, DOM, 2), consejo: 'tecnologia e ferramentas' },
     criancas: { nombre: 'Dia das Crianças', regla: (a) => fechaLocal(a, 9, 12), consejo: 'brinquedos e jogos' },
   },
+  MCO: {
+    ...COMUNES,
+    vuelta_cole: { nombre: 'Vuelta a clases', regla: (a) => fechaLocal(a, 0, 20), estimada: true, temporada: true, consejo: 'útiles, mochilas, uniformes y loncheras' },
+    dia_mujer: { nombre: 'Día de la Mujer', regla: (a) => fechaLocal(a, 2, 8), consejo: 'regalos y bienestar' },
+    pascuas: { nombre: 'Semana Santa', regla: (a) => new Date(pascua(a).getTime() - 2 * DIA), consejo: 'viajes, descanso y productos de temporada' },
+    dia_madre: { nombre: 'Día de la Madre', regla: (a) => enesimoDia(a, 4, DOM, 2), consejo: 'una de las fechas de más venta del año: regalos, flores y electrodomésticos' },
+    dia_padre: { nombre: 'Día del Padre', regla: (a) => enesimoDia(a, 5, DOM, 3), consejo: 'tecnología, herramientas y deportes' },
+    dia_nino: { nombre: 'Día de los Niños', regla: (a) => fechaLocal(a, 3, 30), estimada: true, consejo: 'juguetes, juegos y ropa infantil — último sábado de abril' },
+    amor_amistad: { nombre: 'Amor y Amistad', regla: (a) => enesimoDia(a, 8, 6, 3), consejo: 'regalos de pareja y amigos: el San Valentín colombiano' },
+    halloween: { nombre: 'Halloween / Día de los Niños', regla: (a) => fechaLocal(a, 9, 31), consejo: 'disfraces, dulces y decoración' },
+    cyberlunes: { nombre: 'CyberLunes / CyberMonday', regla: (a) => enesimoDia(a, 10, LUN, 1), dias: 3, estimada: true, consejo: 'el evento de descuentos online más grande de Colombia: stock y precios listos 1 semana antes' },
+    hot_sale: { nombre: 'Hot Sale Colombia', regla: (a) => enesimoDia(a, 5, LUN, 4), dias: 3, estimada: true, consejo: 'evento de ofertas de mitad de año: prepara stock y publicidad' },
+  },
   OTROS: {
     ...COMUNES,
     dia_madre: { nombre: 'Día de la Madre', regla: (a) => enesimoDia(a, 4, DOM, 2), consejo: 'una de las fechas de más venta del año' },
@@ -67,7 +80,7 @@ const calendarioDe = (sitio) => CALENDARIOS[sitio] || CALENDARIOS.OTROS;
  * Fechas comerciales entre hoy y hoy+dias. `confirmadas` = { 'hot_sale:2027': '2027-05-10' }
  * (fechas que el vendedor corrigió) y `propias` = [{ id, nombre, fecha:'YYYY-MM-DD', consejo }].
  */
-export function fechasComerciales(sitio = 'MLA', { desde = Date.now(), dias = 60, confirmadas = {}, propias = [] } = {}) {
+export function fechasComerciales(sitio = 'MCO', { desde = Date.now(), dias = 60, confirmadas = {}, propias = [] } = {}) {
   const hoy = new Date(desde); hoy.setHours(0, 0, 0, 0);
   const hasta = hoy.getTime() + dias * DIA;
   const out = [];

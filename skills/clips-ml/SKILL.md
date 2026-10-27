@@ -26,7 +26,7 @@ publicaciones sin NINGÚN video primero (cruzar con ventas/visitas para empezar
 por las que más facturan).
 
 ### 2. Estado de una publicación puntual
-`ml_clips item_id=MLA...` → cada clip con su estado y, si está rechazado, el
+`ml_clips item_id=MCO...` → cada clip con su estado y, si está rechazado, el
 motivo traducido y cómo corregirlo:
 - **Video duplicado** → no resubir el mismo archivo: exportar una versión distinta.
 - **Error de procesamiento** → reexportar MP4 (H.264 + AAC) y volver a subir.
@@ -38,7 +38,7 @@ la publicación" → SIN precio, SIN datos de contacto, SIN "oferta/envío
 gratis"). Formato de salida: MP4 vertical 1080×1920, 15-45 s, H.264/AAC.
 
 ### 4. Subir y verificar
-`ml_subir_clip item_id=... archivo=/ruta/MLA123-clip.mp4` (con confirmación del
+`ml_subir_clip item_id=... archivo=/ruta/MCO123-clip.mp4` (con confirmación del
 usuario: es escritura). El conector valida extensión y peso antes de gastar la
 subida. A las 24-48 hs, `ml_clips item_id=...` para confirmar ✅ publicado; si
 quedó ❌, corregir según el motivo, `ml_borrar_clip` del rechazado y resubir.

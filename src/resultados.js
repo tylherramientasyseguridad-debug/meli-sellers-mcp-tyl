@@ -19,8 +19,8 @@ import { estadoDecision, ICONO_DECISION } from './agenda.js';
 import { COLOR, ESTADO_CATALOGO, traducirSub } from './postventa.js';
 
 export const CARPETA_NOMBRE = 'MercadoLibre - Equipo de trabajadores';
-const dinero = (n) => (n == null ? '—' : '$ ' + Number(n).toLocaleString('es-AR', { maximumFractionDigits: 0 }));
-const fecha = (t) => (t ? new Date(t).toLocaleString('es-AR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : '—');
+const dinero = (n) => (n == null ? '—' : '$ ' + Number(n).toLocaleString('es-CO', { maximumFractionDigits: 0 }));
+const fecha = (t) => (t ? new Date(t).toLocaleString('es-CO', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : '—');
 const r1 = (n) => Math.round(n * 10) / 10;
 const mediana = (xs) => { const a = xs.filter((n) => n > 0).sort((x, y) => x - y); return a.length ? a[Math.floor(a.length / 2)] : null; };
 
@@ -108,7 +108,7 @@ export function armarResultados(d = leerEquipo()) {
       }
       const w = d.trabajadores[id];
       if (w.ultimo) prox = w.ultimo + w.intervalo * 60000;
-      destacado = filas.length ? `${rojas} 🔴 para arreglar · ${sinAct} sin actualizar hace 60+ días${prox ? ` · próxima auditoría ≈ ${new Date(prox).toLocaleDateString('es-AR')}` : ''} → mejorar-publicaciones-ml` : '';
+      destacado = filas.length ? `${rojas} 🔴 para arreglar · ${sinAct} sin actualizar hace 60+ días${prox ? ` · próxima auditoría ≈ ${new Date(prox).toLocaleDateString('es-CO')}` : ''} → mejorar-publicaciones-ml` : '';
     }
 
     if (id === 'agenda') {
@@ -138,7 +138,7 @@ export function armarResultados(d = leerEquipo()) {
           filas.push([itemId, x.titulo, x.precio, x.u, x.ganancia, x.margen, x.semaforo, x.acosMax, x.gananciaMes]);
         }
       }
-      destacado = filas.length ? `ganancia neta estimada 30 días: $ ${Math.round(total).toLocaleString('es-AR')}${rojos ? ` · ${rojos} producto(s) con PÉRDIDA` : ''}${sin ? ` · ${sin} sin costo cargado (cargalos con ml_cerebro)` : ''}` : '';
+      destacado = filas.length ? `ganancia neta estimada 30 días: $ ${Math.round(total).toLocaleString('es-CO')}${rojos ? ` · ${rojos} producto(s) con PÉRDIDA` : ''}${sin ? ` · ${sin} sin costo cargado (cargalos con ml_cerebro)` : ''}` : '';
     }
 
     if (id === 'anuncios') {
@@ -150,7 +150,7 @@ export function armarResultados(d = leerEquipo()) {
         for (const k of Object.values(s.datos.campanias || {})) { gasto += k.cost; ventas += k.ventas; filas.push(['Campaña', k.nombre, k.estado, k.cost, k.ventas, k.acos, '', k.units]); }
         for (const [itemId, x] of Object.entries(s.datos.items || {})) { if (x.acos > x.acosMax) malos++; filas.push(['Producto', `${itemId} ${x.titulo}`, x.acos > x.acosMax ? '🔴 pierde plata' : '🟢', x.cost, '', x.acos, x.acosMax, x.units]); }
       }
-      destacado = filas.length ? `7 días: invertiste $ ${Math.round(gasto).toLocaleString('es-AR')} y vendiste $ ${Math.round(ventas).toLocaleString('es-AR')} por ads${ventas ? ` (ACOS ${(gasto / ventas * 100).toFixed(1)}%)` : ''}${malos ? ` · ${malos} producto(s) con ACOS arriba de lo que aguanta su margen` : ''}` : '';
+      destacado = filas.length ? `7 días: invertiste $ ${Math.round(gasto).toLocaleString('es-CO')} y vendiste $ ${Math.round(ventas).toLocaleString('es-CO')} por ads${ventas ? ` (ACOS ${(gasto / ventas * 100).toFixed(1)}%)` : ''}${malos ? ` · ${malos} producto(s) con ACOS arriba de lo que aguanta su margen` : ''}` : '';
     }
 
     if (id === 'logistica') {
@@ -172,12 +172,12 @@ export function armarResultados(d = leerEquipo()) {
       const s = tareas.map(snap).find(Boolean);
       if (s) {
         const m = s.datos.mes, a = s.datos.comparado || {};
-        const r = (n) => (n == null ? 'sin cargar' : '$ ' + Math.round(n).toLocaleString('es-AR'));
+        const r = (n) => (n == null ? 'sin cargar' : '$ ' + Math.round(n).toLocaleString('es-CO'));
         filas.push(['Facturación', r(m.bruto), r(a.bruto)], ['Ventas (órdenes)', m.ordenes, a.ordenes], ['Unidades', m.unidades, a.unidades],
           ['− Comisiones de MercadoLibre' + (m.comisionEstimada ? ' (estimadas)' : ''), r(m.comisiones), r(a.comisiones)], ['− Publicidad', r(m.ads), '—'],
           ['− Impuestos' + (m.impuestosPct != null ? ` (${m.impuestosPct}%)` : ''), r(m.impuestos), r(a.impuestos)], ['− Costo de mercadería', r(m.costoMercaderia), r(a.costoMercaderia)],
           ['− Envíos a cargo', r(m.envios), r(a.envios)], ['= Resultado neto' + (m.parcial ? ' (parcial)' : ''), r(m.neto), r(a.neto)], ['Margen neto %', Math.round(m.margen * 10) / 10, a.bruto ? Math.round(a.margen * 10) / 10 : '—']);
-        destacado = `${m.nombre}: neto ≈ $ ${Math.round(m.neto).toLocaleString('es-AR')} sobre $ ${Math.round(m.bruto).toLocaleString('es-AR')} facturados${m.parcial ? ' (parcial: faltan costos o impuestos en el cerebro)' : ''}`;
+        destacado = `${m.nombre}: neto ≈ $ ${Math.round(m.neto).toLocaleString('es-CO')} sobre $ ${Math.round(m.bruto).toLocaleString('es-CO')} facturados${m.parcial ? ' (parcial: faltan costos o impuestos en el cerebro)' : ''}`;
       }
     }
 

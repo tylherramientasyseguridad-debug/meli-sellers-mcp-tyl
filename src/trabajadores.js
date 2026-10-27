@@ -262,11 +262,11 @@ export function asignarTarea(quien, { tipo, ref, mi_item, umbral, nota, cuenta, 
   if (tipo === 'proveedor') {
     if (!/^[A-Z]{3}\d+$/i.test(limpio)) throw new Error('Para Fede, ref es TU publicación (ej: MLA123456789).');
     const f = String(fuente ?? '').trim();
-    if (!/^[A-Z]{3}\d+$/i.test(f) && !/^https?:\/\/[^\s]{4,500}$/i.test(f)) throw new Error('Falta fuente: la publicación del proveedor en MercadoLibre (MLA…) o la URL https del producto en su tienda.');
+    if (!/^[A-Z]{3}\d+$/i.test(f) && !/^https?:\/\/[^\s]{4,500}$/i.test(f)) throw new Error('Falta fuente: la publicación del proveedor en MercadoLibre (MCO…) o la URL https del producto en su tienda.');
     if (recargo != null && !(Number(recargo) >= 0 && Number(recargo) <= 1000)) throw new Error('recargo es el % que le sumás al costo del proveedor (0 a 1000).');
   }
   const tarea = {
-    tipo, ref: (tipo === 'proveedor' ? limpio.toUpperCase() : limpio) || (['propias', 'agenda', 'tienda'].includes(tipo) ? (cuenta ? 'tienda ' + cuenta : 'mi tienda') : sitio || 'MLA'), sitio, nota,
+    tipo, ref: (tipo === 'proveedor' ? limpio.toUpperCase() : limpio) || (['propias', 'agenda', 'tienda'].includes(tipo) ? (cuenta ? 'tienda ' + cuenta : 'mi tienda') : sitio || 'MCO'), sitio, nota,
     ...(mi_item ? { mi_item: String(mi_item).trim().toUpperCase() } : {}),
     ...(umbral != null ? { umbral: Math.max(0, Number(umbral) || 0) } : {}),
     ...(cuenta ? { cuenta: String(cuenta) } : {}),
@@ -345,7 +345,7 @@ export function agregarFechaPropia({ nombre, fecha, consejo }) {
 }
 
 // ───────────────────────────── Oficios ─────────────────────────────
-const dinero = (n) => '$ ' + Number(n).toLocaleString('es-AR', { maximumFractionDigits: 0 });
+const dinero = (n) => '$ ' + Number(n).toLocaleString('es-CO', { maximumFractionDigits: 0 });
 const pct = (n, v) => (v ? ((n - v) / v) * 100 : 0);
 const flecha = (n, v) => `${n > v ? '↑' : '↓'} ${Math.abs(pct(n, v)).toFixed(1)}%`;
 const pausa = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -499,7 +499,7 @@ export const OFICIOS = {
       const ahora = Date.now(), out = [];
       const avisos = { ...(v?.avisos || {}) };
       const unaVez = (k) => (avisos[k] ? false : (avisos[k] = ahora, true));
-      const f = (ts) => new Date(ts).toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit' });
+      const f = (ts) => new Date(ts).toLocaleDateString('es-CO', { day: '2-digit', month: '2-digit' });
       const cuando = (d) => (d <= 0 ? 'HOY' : d === 1 ? 'mañana' : `en ${d} días`);
       const pregunta = (ref) => `¿Querés participar? Decime sí o no (ml_agenda accion=decidir ref=${ref})`;
       // ── el cronograma de MercadoLibre ──
@@ -562,7 +562,7 @@ export const OFICIOS = {
       const out = [], avisos = { ...(v?.avisos || {}) };
       const semana = Math.floor(Date.now() / (7 * 86400000));
       const unaVez = (k) => (avisos[k] ? false : (avisos[k] = Date.now(), true));
-      const din = (x) => '$ ' + Number(x).toLocaleString('es-AR', { maximumFractionDigits: 0 });
+      const din = (x) => '$ ' + Number(x).toLocaleString('es-CO', { maximumFractionDigits: 0 });
       for (const [id, x] of Object.entries(n.items)) {
         if (x.sinCosto) continue;
         const a = v?.items?.[id];
@@ -607,7 +607,7 @@ export const OFICIOS = {
       return { campanias: campa, items, gasto: ks.reduce((s, k) => s + k.cost, 0), ventas: ks.reduce((s, k) => s + k.ventas, 0), diario };
     },
     cambios(t, v, n) {
-      const out = [], din = (x) => '$ ' + Number(x).toLocaleString('es-AR', { maximumFractionDigits: 0 });
+      const out = [], din = (x) => '$ ' + Number(x).toLocaleString('es-CO', { maximumFractionDigits: 0 });
       if (n.sinAds) { if (!v) out.push({ nivel: 'baja', skill: 'publicidad-ml', texto: '📣 La cuenta no tiene Product Ads activo (o no es visible por API): no hay campañas para vigilar.' }); return out; }
       for (const [id, k] of Object.entries(n.campanias)) {
         const a = v?.campanias?.[id];
@@ -632,7 +632,7 @@ export const OFICIOS = {
         demoraRate: me.seller_reputation?.metrics?.delayed_handling_time?.rate ?? null };
     },
     cambios(t, v, n) {
-      const out = [], h = (ts) => new Date(ts).toLocaleString('es-AR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
+      const out = [], h = (ts) => new Date(ts).toLocaleString('es-CO', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
       const nuevos = Object.values(n.envios).filter((e) => e.porDespachar && !v?.envios?.[e.orden]?.porDespachar);
       if (nuevos.length) {
         const urgente = nuevos.some((e) => e.limiteDespacho && e.limiteDespacho - Date.now() < 24 * 3600000);
@@ -661,7 +661,7 @@ export const OFICIOS = {
     cambios(t, v, n) {
       const out = [], avisos = { ...(v?.avisos || {}) };
       const unaVez = (k) => (avisos[k] ? false : (avisos[k] = Date.now(), true));
-      const din = (x) => '$ ' + Number(x).toLocaleString('es-AR', { maximumFractionDigits: 0 });
+      const din = (x) => '$ ' + Number(x).toLocaleString('es-CO', { maximumFractionDigits: 0 });
       const linea = (r) => `facturaste ${din(r.bruto)} (${r.ordenes} ventas) − comisiones ML ${din(r.comisiones)}${r.ads != null ? ` − publicidad ${din(r.ads)}` : ''}${r.impuestos != null ? ` − impuestos ${din(r.impuestos)}` : ''} − mercadería ${din(r.costoMercaderia)}${r.envios ? ` − envíos ${din(r.envios)}` : ''} = **neto ≈ ${din(r.neto)}** (${r.margen.toFixed(1)}%)${r.parcial ? ` ⚠️ parcial: ${Math.round((1 - r.cobertura) * 100)}% de las unidades sin costo cargado${r.impuestosPct == null ? ' y sin impuestos cargados' : ''}` : ''}`;
       if (n.cierre && unaVez('cierre:' + n.cierre.mes)) out.push({ nivel: 'alta', skill: 'contabilidad-ml', texto: `🧾 Cierre de ${n.cierre.nombre}: ${linea(n.cierre)}` });
       const mesKey = new Date().toISOString().slice(0, 7);
@@ -678,7 +678,7 @@ export const OFICIOS = {
   stock: {
     async foto(c) { const me = await c.get('/users/me'); return { items: await stockDias(c, me.id), avisos: {} }; },
     cambios(t, v, n) {
-      const out = [], avisos = { ...(v?.avisos || {}) }, din = (x) => '$ ' + Number(x).toLocaleString('es-AR', { maximumFractionDigits: 0 });
+      const out = [], avisos = { ...(v?.avisos || {}) }, din = (x) => '$ ' + Number(x).toLocaleString('es-CO', { maximumFractionDigits: 0 });
       const unaVez = (k) => (avisos[k] ? false : (avisos[k] = Date.now(), true));
       const pocos = [], criticos = [];
       for (const [id, x] of Object.entries(n.items)) {
@@ -769,7 +769,7 @@ export const OFICIOS = {
       return { items };
     },
     cambios(t, v, n) {
-      const out = [], din = (x) => '$ ' + Number(x).toLocaleString('es-AR', { maximumFractionDigits: 0 });
+      const out = [], din = (x) => '$ ' + Number(x).toLocaleString('es-CO', { maximumFractionDigits: 0 });
       const gana = (e) => e === 'winning' || e === 'sharing_first_place';
       for (const [id, x] of Object.entries(n.items)) {
         const a = v?.items?.[id];
@@ -800,7 +800,7 @@ export const OFICIOS = {
       return { prov, mio };
     },
     cambios(t, v, n) {
-      const out = [], din = (x) => '$ ' + Number(x).toLocaleString('es-AR', { maximumFractionDigits: 0 });
+      const out = [], din = (x) => '$ ' + Number(x).toLocaleString('es-CO', { maximumFractionDigits: 0 });
       const p = n.prov, a = v?.prov, nombre = n.mio?.titulo || p.titulo || t.ref;
       const sugerido = t.recargo != null && p.precio ? Math.round(p.precio * (1 + t.recargo / 100)) : null;
       const sug = sugerido ? ` — con tu recargo de ${t.recargo}% tendrías que vender a ${din(sugerido)}${n.mio?.precio ? ` (hoy ${din(n.mio.precio)})` : ''}` : '';
@@ -828,7 +828,7 @@ export const OFICIOS = {
         if (x.error) continue;
         const a = v?.nichos?.[k];
         const verde = (y) => y && !y.error && y.puntaje >= 65;
-        const det = `${x.puntaje}/100 · ${x.competencia === 'repartido' ? 'sin dueño' : x.competencia === 'monopolio' ? `monopolio de ${x.lider} (${x.top1}%)` : `peleado (líder ${x.top1}%)`} · ≈ ${x.demandaMes.toLocaleString('es-AR')} u./mes visibles${x.mejorNuevo ? ` · uno que entró hace ${x.mejorNuevo.dias} días ya vende ≈ ${x.mejorNuevo.rotacion} u./mes` : ''}`;
+        const det = `${x.puntaje}/100 · ${x.competencia === 'repartido' ? 'sin dueño' : x.competencia === 'monopolio' ? `monopolio de ${x.lider} (${x.top1}%)` : `peleado (líder ${x.top1}%)`} · ≈ ${x.demandaMes.toLocaleString('es-CO')} u./mes visibles${x.mejorNuevo ? ` · uno que entró hace ${x.mejorNuevo.dias} días ya vende ≈ ${x.mejorNuevo.rotacion} u./mes` : ''}`;
         if (verde(x) && !verde(a)) out.push({ nivel: a ? 'alta' : 'media', skill: 'nichos-ml', texto: `🧭 «${k}» ${a ? 'pasó a' : 'es'} 🟢 oportunidad${t.radar ? ' (en tendencia)' : ''}: ${det} — pedí el detalle con tu costo (ml_nichos busqueda="${k}")` });
         else if (verde(a) && !verde(x)) out.push({ nivel: 'media', skill: 'nichos-ml', texto: `🧭 «${k}» dejó de ser oportunidad (${x.senal}): ${det}` });
         else if (a && !a.error && x.competencia === 'monopolio' && a.competencia !== 'monopolio') out.push({ nivel: 'baja', skill: 'nichos-ml', texto: `🧭 «${k}» se está monopolizando: ${x.lider} ya se lleva ${x.top1}%` });
@@ -874,7 +874,7 @@ async function correrTarea(trabajador, t, d, c, sitio) {
 const sitioCache = new Map();
 async function sitioDe(c, cuenta) {
   const k = cuenta || '_';
-  if (!sitioCache.has(k)) sitioCache.set(k, (await c.get('/users/me')).site_id || 'MLA');
+  if (!sitioCache.has(k)) sitioCache.set(k, (await c.get('/users/me')).site_id || 'MCO');
   return sitioCache.get(k);
 }
 

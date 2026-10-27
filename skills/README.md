@@ -28,7 +28,7 @@ skill**. Claude las usa solo cuando corresponde.
 
 ### 📊 [panel-ventas-ml](panel-ventas-ml/) — el tablero del día
 **Pedilo así:** "¿cómo venimos hoy?" · "panel de ventas" · "facturación del mes"
-**Qué entrega:** facturación de hoy y del mes, top productos, envíos (FULL/Flex/Colecta) y en qué provincias se concentra la venta, con máximo 2 lecturas accionables.
+**Qué entrega:** facturación de hoy y del mes, top productos, envíos (FULL/Flex/Colecta) y en qué departamentos se concentra la venta, con máximo 2 lecturas accionables.
 
 ### 📈 [reporte-ventas-ml](reporte-ventas-ml/) — el resumen de 4 líneas
 **Pedilo así:** "reporte de ventas" · "resumen de la semana"
@@ -104,16 +104,16 @@ skill**. Claude las usa solo cuando corresponde.
 **Qué hace:** arma el paquete de revisión para [Aldi 2.0](https://chatgpt.com/g/g-698f16e0eebc819182455494732d40a0-aldi-2-0-mercado-libre-algoritmo-digital) (el GPT revisor de Algoritmo Digital en ChatGPT), vos traés el veredicto y Claude aplica solo lo que confirmes, validando el margen antes de tocar precios.
 
 ### 🖼️ [imagenes-ml](imagenes-ml/) — el set de imágenes de venta
-**Pedilo así:** "armame las imágenes de MLA..." · "infografía de medidas"
+**Pedilo así:** "armame las imágenes de MCO..." · "infografía de medidas"
 **Qué entrega:** el set fijo de 4 (beneficio, características, medidas con cotas, qué incluye) en 1200×1200 con las fotos reales de la publicación incrustadas, siguiendo el método de 7 pasos y las reglas de imágenes de ML. Te las muestra antes de cerrar.
 **Ojo:** las medidas y el contenido salen de vos — lo que no esté confirmado, se pregunta.
 
 ### 🎬 [video-publicaciones-ml](video-publicaciones-ml/) — video del producto
-**Pedilo así:** "hacé un video para Reels de MLA..." · "clip para la publicación"
+**Pedilo así:** "hacé un video para Reels de MCO..." · "clip para la publicación"
 **Qué hace:** guion por escenas calcado del orden de fotos y producción con HyperFrames usando fotos reales + placas del set. Dentro de ML va sin precio ni contacto; en Reels/ads con precio y CTA. Guion y música se confirman antes de renderizar.
 
 ### 🎞️ [clips-ml](clips-ml/) — los videos cortos de ML
-**Pedilo así:** "¿qué clips tengo?" · "¿qué publicaciones están sin video?" · "subí este clip a MLA..."
+**Pedilo así:** "¿qué clips tengo?" · "¿qué publicaciones están sin video?" · "subí este clip a MCO..."
 **Qué hace:** mapa de Clips de toda la tienda (publicado ✅ / en revisión ⏳ / rechazado ❌ con el motivo y cómo corregirlo), produce los que faltan con las skills de video y los sube por API validando formato, duración y peso. Moderación de ML: 24-48 hs.
 
 ### 🧑‍🎤 [ugc-ml](ugc-ml/) — UGC limpio con avatar
@@ -131,7 +131,7 @@ skill**. Claude las usa solo cuando corresponde.
 ### 👷 [trabajadores-ml](trabajadores-ml/) — el equipo que vigila 24/7
 **Pedilo así:** "dale una tarea a Vera" · "Martina, ¿en qué puesto estoy para 'termo 1 litro'?" · "¿qué encontró el equipo?"
 **Qué hace:** 19 trabajadores con nombre que vigilan solos y constantemente — 🕵️ Vera (precios y quién queda más barato que vos), 📦 Tomás (ventas del rival y quiebres de stock), 🏆 Martina (líder y tu puesto en búsquedas), 🎯 Bruno (rivales nuevos), 🩺 Lucía (cada 15 días audita todas tus publicaciones: cuáles quedaron desactualizadas y qué empeoró), 🗓️ Clara (agenda comercial: cronograma de ML y fechas cruciales, siempre preguntando si participás), 💰 Ramiro (rentabilidad), 📣 Ana (anuncios), 🚚 Leo (logística), 🧾 Carmen (contabilidad), 📦 Nico (stock), 💬 Paula (atención), 🛡️ Iván (reclamos), ⭐ Valen (reputación), 🏷️ Gabi (catálogo), 🚫 Sole (moderaciones), 🔄 Fede (proveedores) y 📈 Sofía (tendencias) y 🧭 Emma (cada semana, el ranking de nichos con oportunidad). Cada alerta viene con la skill del trabajador que la resuelve.
-**Historial y base:** "historial de MLA..." · "¿cómo evolucionó el precio de este rival?" · "estado de la base" — todo queda en SQLite que viene con Node (cero instalación, ideal Windows), 400 días.
+**Historial y base:** "historial de MCO..." · "¿cómo evolucionó el precio de este rival?" · "estado de la base" — todo queda en SQLite que viene con Node (cero instalación, ideal Windows), 400 días.
 **Resultados y Drive:** "mostrame los resultados del equipo" (precio rival vs el tuyo, ritmo de ventas y $/mes del rival, tu puesto, rivales nuevos, tendencias) · "conectá el equipo a Drive" (planilla de Google en vivo con una pestaña por trabajador, o carpeta de Drive).
 **Ojo:** trabajan solos mientras Claude está abierto; para 24/7 corré una vez `npx -y github:kokesaurio/mercadolibre-sellers-mcp-algoritmo-Digital trabajadores instalar`.
 
@@ -144,12 +144,12 @@ skill**. Claude las usa solo cuando corresponde.
 **Qué hace:** semáforo de precios contra el mercado, buy box del catálogo y recomendaciones validadas por margen (nunca sugiere un precio que te deje en negativo).
 
 ### 🧠 [cerebro-ml](cerebro-ml/) — la memoria del negocio
-**Pedilo así:** "acordate que el costo del termo es $20.000" · "mis impuestos son 12%" · "¿qué sabés de MLA...?"
+**Pedilo así:** "acordate que el costo del termo es $20.000" · "mis impuestos son 12%" · "¿qué sabés de MCO...?"
 **Qué hace:** guarda en tu máquina los datos del negocio (costos, impuestos, envío, medidas, qué incluye, notas) una sola vez — y las demás herramientas los usan solas: la calculadora deja de preguntarte lo que ya le enseñaste, y lo nuevo lo aprende automáticamente.
 **Ojo:** memoria transparente — siempre te avisa qué dato guardado está usando, para que puedas corregirlo.
 
 ### 💰 [calculadora-ml](calculadora-ml/) — cuánto ganás de verdad
-**Pedilo así:** "¿cuánto gano con este producto?" · "calculame la rentabilidad de MLA..." · "¿me conviene este precio?"
+**Pedilo así:** "¿cuánto gano con este producto?" · "calculame la rentabilidad de MCO..." · "¿me conviene este precio?"
 **Qué hace:** te pregunta precio (o lo trae de la publicación), costo e impuestos SOLO la primera vez (después los recuerda el 🧠 cerebro) — y suma sola la comisión real de ML y la publicidad que estás gastando EN VIVO. Entrega el desglose peso por peso, la ganancia neta con semáforo, el margen y el ACOS máximo que aguanta el producto.
 **Ojo:** costo e impuestos los ponés vos — nunca los inventa.
 

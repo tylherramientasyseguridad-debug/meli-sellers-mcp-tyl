@@ -9,8 +9,8 @@ description: Proveedores con Fede — vincular cada producto que revendés con s
 `ml_trabajadores`, `ml_cerebro`, `ml_actualizar_publicacion` del conector (v1.21.0+).
 
 ## Vincular (una vez por producto)
-`ml_trabajadores accion=asignar trabajador=Fede ref=<TU publicación MLA…> fuente=<proveedor> recargo=<%>`
-- `fuente`: la publicación del proveedor en MercadoLibre (MLA…) o la **URL https del
+`ml_trabajadores accion=asignar trabajador=Fede ref=<TU publicación MCO…> fuente=<proveedor> recargo=<%>`
+- `fuente`: la publicación del proveedor en MercadoLibre (MCO…) o la **URL https del
   producto en su tienda** (funciona con tiendas que publican datos de producto:
   Tiendanube, WooCommerce, Shopify y la mayoría de las webs modernas).
 - `recargo`: el % que le sumás al precio del proveedor (para sugerirte el precio).

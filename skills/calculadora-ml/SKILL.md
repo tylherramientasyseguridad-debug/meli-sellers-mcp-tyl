@@ -17,8 +17,8 @@ impuestos y el costo. El número que la mayoría de los vendedores no tiene.
 2. **Preguntar el costo del producto** (lo que le sale al vendedor, con su IVA
    si corresponde). NUNCA estimarlo.
 3. **Preguntar el % de impuestos** sobre la venta. Orientar sin decidir por él:
-   depende de su situación (monotributo vs responsable inscripto, IIBB de su
-   provincia, percepciones) — si no lo sabe, que se lo pida al contador; para
+   depende de su situación (régimen simplificado vs responsable de IVA, ICA de su
+   municipio, retenciones) — si no lo sabe, que se lo pida al contador; para
    una primera pasada puede dar un % aproximado y se recalcula después.
 4. **Envío**: si la publicación ofrece envío gratis, preguntar cuánto le cuesta
    el envío por unidad (o correr una pasada con $ 0 y otra con el costo real).

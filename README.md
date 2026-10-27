@@ -1,13 +1,10 @@
-# MCP de MercadoLibre para vendedores — conectá tu tienda a Claude sin servidor
+# MCP de MercadoLibre Colombia para TYL — conecta tu tienda a Claude sin servidor
 
-[![pruebas](https://github.com/kokesaurio/mercadolibre-sellers-mcp-algoritmo-Digital/actions/workflows/pruebas.yml/badge.svg)](https://github.com/kokesaurio/mercadolibre-sellers-mcp-algoritmo-Digital/actions)
-[![versión](https://img.shields.io/github/package-json/v/kokesaurio/mercadolibre-sellers-mcp-algoritmo-Digital?label=versi%C3%B3n&color=3483FA)](CHANGELOG.md)
-[![licencia](https://img.shields.io/badge/licencia-MIT-green)](LICENSE)
-[![estrellas](https://img.shields.io/github/stars/kokesaurio/mercadolibre-sellers-mcp-algoritmo-Digital?style=social)](https://github.com/kokesaurio/mercadolibre-sellers-mcp-algoritmo-Digital/stargazers)
+> **Fork adaptado para Colombia (MCO)** del [conector original de Algoritmo Digital](https://github.com/kokesaurio/mercadolibre-sellers-mcp-algoritmo-Digital). Licencia MIT.
 
-**Palabras clave:** MCP MercadoLibre · MercadoLibre Claude · conectar MercadoLibre a Claude · API MercadoLibre IA · Model Context Protocol MercadoLibre · vendedores MercadoLibre · automatizar MercadoLibre con IA
+**Palabras clave:** MCP MercadoLibre Colombia · MercadoLibre Claude · conectar MercadoLibre a Claude · API MercadoLibre IA · Model Context Protocol MercadoLibre · vendedores MercadoLibre Colombia · automatizar MercadoLibre con IA · TYL Herramientas
 
-Conectá tu cuenta de MercadoLibre a Claude y manejá tu tienda en lenguaje natural:
+Conecta tu cuenta de MercadoLibre Colombia a Claude y maneja tu tienda en lenguaje natural:
 
 - *"¿cómo vienen las ventas hoy?"* → tablero con facturación, top productos, envíos y provincias
 - *"¿qué preguntas tengo sin responder?"* → te propone todas las respuestas y publica las que apruebes
@@ -16,13 +13,13 @@ Conectá tu cuenta de MercadoLibre a Claude y manejá tu tienda en lenguaje natu
 - *"hacé un video para Reels de este producto"* → guion por escenas y video con tus datos verdaderos
 - *"¿qué cambió en la competencia?"* → solo las novedades: precios movidos, publicaciones nuevas, ventas estimadas del rival
 
-**30 herramientas · 18 skills · multicuenta con consolidado · sin servidor propio · tokens solo en tu computadora** — hecho por [Algoritmo Digital](https://algoritmodigital.com.ar), consultora especializada en MercadoLibre.
+**30 herramientas · 18 skills · multicuenta con consolidado · sin servidor propio · tokens solo en tu computadora** — fork para Colombia por TYL Herramientas y Seguridad, basado en el [conector de Algoritmo Digital](https://algoritmodigital.com.ar).
 
 ```text
 Claude ──MCP──► este conector ──OAuth 2.0 + PKCE──► API oficial de MercadoLibre
 ```
 
-> ⭐ **¿Te sirve el conector?** [Dejanos una estrella](https://github.com/kokesaurio/mercadolibre-sellers-mcp-algoritmo-Digital/stargazers) — es gratis para vos y hace que más vendedores lo encuentren en GitHub y Google.
+> ⭐ **¿Te sirve el conector original?** [Dejale una estrella a Algoritmo Digital](https://github.com/kokesaurio/mercadolibre-sellers-mcp-algoritmo-Digital/stargazers) — este fork existe gracias a su trabajo.
 
 ## Por qué este y no otro
 
@@ -58,7 +55,7 @@ El instalador te guía para crear tu app gratis de MercadoLibre, te pide el App 
 ```text
 Instalame el conector de MercadoLibre de Algoritmo Digital:
 1. Si todavía no tengo App ID y Secret, guiame a crearlos gratis en
-   https://developers.mercadolibre.com.ar (app nueva, URI de redirect EXACTA
+   https://developers.mercadolibre.com.co (app nueva, URI de redirect EXACTA
    https://kokesaurio.github.io/mercadolibre-sellers-mcp-algoritmo-Digital/conectar.html
    y scopes read, write y offline_access) y pedímelos.
 2. Ejecutá: npx -y github:kokesaurio/mercadolibre-sellers-mcp-algoritmo-Digital instalar --app-id <MI_APP_ID> --secret <MI_SECRET>
@@ -74,7 +71,7 @@ Guía: https://github.com/kokesaurio/mercadolibre-sellers-mcp-algoritmo-Digital
 
 ### Paso 1 — Creá tu aplicación gratis en MercadoLibre
 
-Entrá a [developers.mercadolibre.com.ar](https://developers.mercadolibre.com.ar) con tu cuenta de vendedor → **Mis aplicaciones** → **Crear nueva aplicación** y completá así:
+Entrá a [developers.mercadolibre.com.co](https://developers.mercadolibre.com.co) con tu cuenta de vendedor → **Mis aplicaciones** → **Crear nueva aplicación** y completá así:
 
 ![Paso 1: crear la aplicación en el DevCenter de MercadoLibre](docs/img/paso-1-crear-app.svg)
 
@@ -150,7 +147,7 @@ En un chat nuevo decile a Claude: **"conectá mi cuenta de MercadoLibre"** — o
 | "code inválido" al pegar el código | El código vence en minutos y es de un solo uso: repetí "conectá mi cuenta" y pegá el nuevo |
 | La conexión se corta a las horas | Faltó el scope `offline_access` en la app: agregalo en el DevCenter y volvé a conectar |
 
-¿Seguís trabado? [Escribinos por WhatsApp](https://wa.me/5491177166060?text=Hola!%20Vengo%20del%20conector%20MCP%20de%20MercadoLibre%20(instalaci%C3%B3n)...) y te ayudamos.
+¿Sigues trabado? Revisa la guía del [conector original](https://github.com/kokesaurio/mercadolibre-sellers-mcp-algoritmo-Digital) o contacta a TYL.
 
 ## 📋 El tablero del día
 
@@ -189,7 +186,7 @@ Dieciocho trabajadores con nombre que **vigilan solos y constantemente** a tus s
 
 **Ponele el nombre que quieras.** Decile a Claude *"el jefe se llama Don Ramón"* (y si querés, un emoji: *"que sea 👑"*). Desde ahí aparece con ese nombre en los planes, en la lista del equipo y en el tablero, y le hablás directo: *"Don Ramón, ¿cómo vendo más este mes?"*.
 
-**Dales tareas hablando:** *"Vera, vigilá MLA123 contra mi MLA456 y avisame si baja más de 2%"* · *"Martina, decime en qué puesto estoy para 'termo 1 litro'"* · *"¿qué encontró el equipo?"* · *"Lucía, auditá la tienda ahora"* · *"Clara, ¿qué fechas vienen?"*. Sin tareas propias, cada uno vigila tus seguidos de `ml_vigilar` de su tipo.
+**Dales tareas hablando:** *"Vera, vigilá MCO123 contra mi MCO456 y avisame si baja más de 2%"* · *"Martina, decime en qué puesto estoy para 'termo 1 litro'"* · *"¿qué encontró el equipo?"* · *"Lucía, auditá la tienda ahora"* · *"Clara, ¿qué fechas vienen?"*. Sin tareas propias, cada uno vigila tus seguidos de `ml_vigilar` de su tipo.
 
 **Cuándo trabajan:**
 - Mientras Claude está abierto: se despiertan solos (cero configuración).
@@ -201,7 +198,7 @@ Dieciocho trabajadores con nombre que **vigilan solos y constantemente** a tus s
 - Opcional: `ML_TRABAJADORES_WEBHOOK=https://...` en el config manda cada alerta a tu CRM, n8n o WhatsApp.
 
 **🗄️ Base de datos incluida, cero instalación (ideal Windows):** el equipo guarda cada medición y cada alerta en **SQLite, que ya viene adentro de Node.js** — no hay servidor, ni Docker, ni compilar nada. Es un solo archivo, `equipo.db`, en `%USERPROFILE%\.meli-sellers-mcp` (Windows) o `~/.meli-sellers-mcp`.
-- Guarda **400 días de historial**: *"historial de MLA123"* muestra día por día el precio del rival vs el tuyo, cuánto vendió cada día, tu puesto en una búsqueda o el top de tendencias, con mínimos, máximos y variación.
+- Guarda **400 días de historial**: *"historial de MCO123"* muestra día por día el precio del rival vs el tuyo, cuánto vendió cada día, tu puesto en una búsqueda o el top de tendencias, con mínimos, máximos y variación.
 - Claude y el servicio 24/7 la usan a la vez sin trabarse (modo WAL, probado con 3 procesos escribiendo en paralelo).
 - *"estado de la base"* te dice cuánto ocupa y hace **backup** en un toque. Si querés mirarla por dentro: `winget install -e --id DBBrowserForSQLite.DBBrowserForSQLite`.
 - ¿Node viejo? Necesita Node 22.5+ (`winget install OpenJS.NodeJS.LTS` en Windows). Con uno anterior el equipo sigue funcionando igual, solo sin historial.
@@ -252,8 +249,8 @@ El conector trae [**32 skills listas**](skills/) con [guía de uso de cada una](
 
 | Skill | Pedila así |
 | --- | --- |
-| [imagenes-ml](skills/imagenes-ml/) | *"armame las imágenes de MLA..."* — el set fijo de 4 infografías con tus fotos reales (abajo hay ejemplos) |
-| [video-publicaciones-ml](skills/video-publicaciones-ml/) | *"hacé un video para Reels de MLA..."* — guion por escenas y producción con HyperFrames desde datos reales |
+| [imagenes-ml](skills/imagenes-ml/) | *"armame las imágenes de MCO..."* — el set fijo de 4 infografías con tus fotos reales (abajo hay ejemplos) |
+| [video-publicaciones-ml](skills/video-publicaciones-ml/) | *"hacé un video para Reels de MCO..."* — guion por escenas y producción con HyperFrames desde datos reales |
 | [clips-ml](skills/clips-ml/) | *"¿qué clips tengo?"* — mapa de Clips de la tienda, estado de moderación con motivos, y subida por API validando los requisitos de ML |
 | [ugc-ml](skills/ugc-ml/) | *"hacé un UGC de este producto"* — estilo usuario real con avatar de IA siempre y castellano latino neutro |
 

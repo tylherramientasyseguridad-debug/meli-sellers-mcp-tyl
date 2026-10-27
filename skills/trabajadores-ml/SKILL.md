@@ -87,7 +87,7 @@ Si un trabajador no tiene tareas propias, vigila solo tus seguidos de
 ## Postventa, stock y proveedores
 - Nico, Paula, Iván, Valen, Gabi y Sole trabajan solos sobre cada tienda conectada.
 - **Fede necesita que le vincules cada producto**: `ml_trabajadores accion=asignar
-  trabajador=Fede ref=<TU MLA…> fuente=<MLA del proveedor o URL https de su tienda>
+  trabajador=Fede ref=<TU MCO…> fuente=<MCO del proveedor o URL https de su tienda>
   recargo=<%>` (skill `proveedores-ml`).
 
 ## 🎩 El jefe
@@ -145,7 +145,7 @@ máximo 3 acciones, cada una con la skill del trabajador que la resuelve.
 ## La base de datos del equipo (historial)
 Todo lo que miden y avisan queda en **SQLite que viene con Node** (archivo
 `equipo.db`, cero instalación — ideal Windows). 400 días de historial.
-- `ml_trabajadores accion=historial ref=MLA123` (o `trabajador=Martina`, `dias=90`)
+- `ml_trabajadores accion=historial ref=MCO123` (o `trabajador=Martina`, `dias=90`)
   → día por día: precio rival vs el tuyo (Vera), vendió ese día y ritmo/$ por mes
   (Tomás), tu puesto y líderes (Martina), vendedores en el top (Bruno), top 3 de
   tendencias (Sofía), con mínimo, máximo y variación del período.

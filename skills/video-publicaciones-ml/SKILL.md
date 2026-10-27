@@ -54,7 +54,7 @@ Una idea por escena, 5–7 escenas: gancho con el **beneficio principal** →
 ### 6. Revisar y entregar
 Revisar el render escena por escena (ortografía, precio vigente con
 `ml_publicacion`, coherencia texto-imagen, parecido con el modelo real).
-Entregar el MP4 nombrado por publicación (`MLA123-reel.mp4`), agrupado por
+Entregar el MP4 nombrado por publicación (`MCO123-reel.mp4`), agrupado por
 producto, y mostrar el resultado al usuario antes de dar por cerrado.
 
 ## 🧠 Guardar lo aprendido

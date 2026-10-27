@@ -45,7 +45,7 @@ infladas.
    avatar/voz y frenar ahí avisando.
 5. **Revisión final**: escuchar/leer buscando españolismos, verificar claims
    contra la ficha, precio vigente si aparece, avatar consistente con los
-   anteriores. Entregar MP4 nombrado (`MLA123-ugc.mp4`).
+   anteriores. Entregar MP4 nombrado (`MCO123-ugc.mp4`).
 
 ## 🧠 Guardar lo aprendido
 El avatar elegido es LA referencia a mantener: guardar con `ml_cerebro`

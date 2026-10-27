@@ -13,7 +13,7 @@ keyword). La decisión final siempre se valida por margen.
 ## Flujo
 
 ### 1. Arrancar por la demanda
-- Con una categoría en mente: `ml_descubrir_ganadores categoria=MLA...` →
+- Con una categoría en mente: `ml_descubrir_ganadores categoria=MCO...` →
   ranking oficial de más vendidos (highlights de MercadoLibre) + qué busca la
   gente en esa categoría. Si el usuario no sabe el ID de la categoría, sacarlo
   de una publicación propia (`ml_publicacion`) o de `ml_buscar`.

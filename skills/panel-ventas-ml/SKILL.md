@@ -1,6 +1,6 @@
 ---
 name: panel-ventas-ml
-description: Panel de ventas de MercadoLibre — facturación de HOY y del MES, productos más vendidos, reparto por método de envío (FULL/Flex/Colecta) y en qué provincias se concentran las ventas. Usar cuando pidan "¿cómo venimos hoy?", "panel de ventas", "facturación del mes", "qué se está vendiendo" o "dónde vendemos más".
+description: Panel de ventas de MercadoLibre — facturación de HOY y del MES, productos más vendidos, reparto por método de envío (FULL/Flex/Colecta) y en qué departamentos se concentran las ventas. Usar cuando pidan "¿cómo venimos hoy?", "panel de ventas", "facturación del mes", "qué se está vendiendo" o "dónde vendemos más".
 ---
 
 # Panel de ventas
@@ -14,7 +14,7 @@ repo o el premium con CRM). Si no están, indicá instalarlo según el README y 
    total del negocio con varias tiendas, correrlo por cuenta y sumar los
    totales aclarando el desglose).
 2. Entregar el panel TAL CUAL lo devuelve la herramienta (ya viene formateado:
-   hoy, mes, top productos, envíos, provincias) y abajo agregar máximo 2
+   hoy, mes, top productos, envíos, departamentos) y abajo agregar máximo 2
    lecturas accionables, por ejemplo:
    - un producto concentra >50% de la venta → riesgo de depender de un solo
      ítem: proponer empujar al segundo (publicidad/mejoras).

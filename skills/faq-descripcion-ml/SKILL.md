@@ -17,7 +17,7 @@ descripción, compra sin preguntar (o pregunta menos) y respondés menos.
 1. **Origen**:
    - Si viene de una alerta de Lucía (❓ "reciben preguntas repetidas que no están en
      su descripción") → `ml_faq_descripcion todas=true` (todas las que marcó).
-   - Si nombra una publicación → `ml_faq_descripcion item_id=MLA...`.
+   - Si nombra una publicación → `ml_faq_descripcion item_id=MCO...`.
 2. **Mostrar la propuesta** (sin `aplicar`): por publicación, cada pregunta con
    cuántas veces se repitió y la respuesta que va a quedar.
 3. **Confirmar**: preguntar "¿Las aplico tal cual?". Si quiere cambiar una respuesta,

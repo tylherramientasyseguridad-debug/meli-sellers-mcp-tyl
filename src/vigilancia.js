@@ -40,7 +40,7 @@ export function quitarObjetivo(ref) {
 }
 
 const pct = (nuevo, viejo) => viejo ? Math.abs((nuevo - viejo) / viejo * 100).toFixed(1) : '—';
-const dinero = (n) => '$ ' + Number(n).toLocaleString('es-AR', { maximumFractionDigits: 2 });
+const dinero = (n) => '$ ' + Number(n).toLocaleString('es-CO', { maximumFractionDigits: 2 });
 
 // ───────── snapshots por tipo (reciben el cliente autenticado) ─────────
 export async function tomarSnapshot(c, o, sitio) {

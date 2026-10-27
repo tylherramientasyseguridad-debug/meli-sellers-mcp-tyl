@@ -17,7 +17,7 @@ import { decidir, confirmarFecha, agregarFechaPropia, jefe, nombrarJefe } from '
 import { EQUIPO, IDS, etiqueta, resumenAlertas, resolverTrabajador, leerEquipo, asignarTarea, quitarTarea, tareasDe, actualizarEquipo, correrCiclo, leerBandeja, quienCorre, INTERVALO_MINIMO } from './trabajadores.js';
 import { leerVigilancia, agregarObjetivo, quitarObjetivo, claveDe, tomarSnapshot, compararSnapshots, guardarVigilancia, registrarHistorial, leerHistorial } from './vigilancia.js';
 
-const money = (n, moneda = '$') => n == null ? '—' : `${moneda} ${Number(n).toLocaleString('es-AR', { maximumFractionDigits: 2 })}`;
+const money = (n, moneda = '$') => n == null ? '—' : `${moneda} ${Number(n).toLocaleString('es-CO', { maximumFractionDigits: 2 })}`;
 const cadaCuanto = (min) => min >= 1440 && min % 1440 === 0 ? `cada ${min / 1440} día${min === 1440 ? '' : 's'}` : min >= 60 && min % 60 === 0 ? `cada ${min / 60} h` : `cada ${min} min`;
 const sinAcento = (x) => String(x || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
 const cliente = (args) => new MeliClient({ userId: args?.cuenta });
@@ -100,13 +100,13 @@ export const TOOLS = [
   {
     name: 'ml_conectar', title: 'Conectar cuenta de MercadoLibre', readOnly: true,
     description: 'Vincula una cuenta de MercadoLibre. Sin argumentos devuelve la URL para autorizar en el navegador; con `code` (el código que muestra la página al autorizar) completa la conexión. Requiere ML_APP_ID y ML_APP_SECRET configurados.',
-    schema: { code: z.string().optional().describe('Código que devolvió MercadoLibre al autorizar'), sitio: z.string().optional().describe('País: MLA (Argentina, default), MLB, MLM, MLC, MCO, etc.') },
+    schema: { code: z.string().optional().describe('Código que devolvió MercadoLibre al autorizar'), sitio: z.string().optional().describe('País: MCO (Colombia, default), MLA, MLB, MLM, MLC, etc.') },
     async run(args) {
       const appId = process.env.ML_APP_ID, appSecret = process.env.ML_APP_SECRET;
-      if (!appId || !appSecret) return 'Faltan ML_APP_ID y ML_APP_SECRET en la configuración. Creá tu aplicación gratis en developers.mercadolibre.com.ar (guía en el README) y agregá esas dos variables.';
+      if (!appId || !appSecret) return 'Faltan ML_APP_ID y ML_APP_SECRET en la configuración. Creá tu aplicación gratis en developers.mercadolibre.com.co (guía en el README) y agregá esas dos variables.';
       if (!args.code) {
         const redirectUri = process.env.ML_REDIRECT_URI || 'https://kokesaurio.github.io/mercadolibre-sellers-mcp-algoritmo-Digital/conectar.html';
-        const url = urlDeAutorizacion({ appId, sitio: args.sitio || process.env.ML_SITE || 'MLA', redirectUri });
+        const url = urlDeAutorizacion({ appId, sitio: args.sitio || process.env.ML_SITE || 'MCO', redirectUri });
         return `Abrí este link, inicia sesión con tu cuenta de MercadoLibre y autorizá:\n\n${url}\n\nAl terminar vas a ver un código: pasámelo y completo la conexión (ml_conectar con code).\n\nImportante: la redirect URI de tu app en el DevCenter tiene que incluir exactamente:\n${redirectUri}`;
       }
       const r = await canjearCode({ appId, appSecret, code: args.code });
@@ -159,7 +159,7 @@ export const TOOLS = [
       if (!os.length) return `Sin órdenes en los últimos ${args.dias ?? 7} días.`;
       const filas = os.map((o) => {
         const it = o.order_items?.[0] || {};
-        return `- **${o.id}** · ${new Date(o.date_created).toLocaleDateString('es-AR')} · ${it.item?.title ?? ''} x${it.quantity ?? 1} · ${money(o.total_amount, o.currency_id)} · ${o.status}`;
+        return `- **${o.id}** · ${new Date(o.date_created).toLocaleDateString('es-CO')} · ${it.item?.title ?? ''} x${it.quantity ?? 1} · ${money(o.total_amount, o.currency_id)} · ${o.status}`;
       });
       return `## Órdenes (${r.paging?.total ?? os.length} en total, mostrando ${os.length})\n` + filas.join('\n');
     },
@@ -212,7 +212,7 @@ export const TOOLS = [
       }
       const pctLinea = (obj, n) => Object.entries(obj).sort((a, b) => b[1] - a[1]).slice(0, n)
         .map(([k, v]) => `${k} ${Math.round(v / Math.max(1, Object.values(obj).reduce((a, b) => a + b, 0)) * 100)}% (${v})`).join(' · ');
-      const nombreMes = mes0.toLocaleDateString('es-AR', { month: 'long', year: 'numeric' });
+      const nombreMes = mes0.toLocaleDateString('es-CO', { month: 'long', year: 'numeric' });
       return [`# Panel de ventas — ${nombreMes}`,
         `📅 **Hoy:** ${money(h.total)} · ${h.cant} venta(s) · ${h.unidades} unidad(es)`,
         `🗓️ **Mes:** ${money(m.total)} · ${m.cant} venta(s) · ${m.unidades} unidad(es) · ticket prom. ${money(m.cant ? m.total / m.cant : 0)}`,
@@ -286,7 +286,7 @@ export const TOOLS = [
   {
     name: 'ml_publicacion', title: 'Detalle de una publicación', readOnly: true,
     description: 'Detalle completo de una publicación: precio, stock, ventas, tipo, garantía, envío, link.',
-    schema: { ...cuentaParam, item_id: z.string().describe('ID del ítem, ej: MLA123456789') },
+    schema: { ...cuentaParam, item_id: z.string().describe('ID del ítem, ej: MCO123456789') },
     async run(args) {
       const c = cliente(args);
       const b = await c.get(`/items/${args.item_id}`);
@@ -372,7 +372,7 @@ export const TOOLS = [
       if (args.costo == null && costoSku == null && !args.sin_costo) {
         return `✋ Antes de publicar: **¿cuánto te cuesta este producto?** (lo que te sale a vos, con IVA si corresponde)\n\n${sku ? `El SKU **${sku}** todavía no tiene costo cargado. Lo guardo en el SKU y lo van a usar todas las publicaciones con ese SKU, así no te lo vuelvo a preguntar.` : 'La publicación no tiene SKU: pasame también el SKU si querés que el costo se comparta con otras publicaciones del mismo producto.'}\n\nDecime el costo y la publico (o decime "publicala sin costo").`;
       }
-      if (cuerpo.currency_id == null) cuerpo.currency_id = 'ARS';
+      if (cuerpo.currency_id == null) cuerpo.currency_id = 'COP';
       if (cuerpo.condition == null) cuerpo.condition = 'new';
       if (cuerpo.listing_type_id == null) cuerpo.listing_type_id = 'gold_special';
       if (cuerpo.available_quantity == null) cuerpo.available_quantity = 1;
@@ -426,10 +426,10 @@ export const TOOLS = [
   {
     name: 'ml_comisiones', title: 'Comisiones y costos de venta', readOnly: true,
     description: 'Cuánto cobra MercadoLibre por vender a un precio dado (comisión por tipo de publicación), para calcular márgenes.',
-    schema: { ...cuentaParam, precio: z.number(), categoria: z.string().optional().describe('ID de categoría, ej MLA1055'), sitio: z.string().optional() },
+    schema: { ...cuentaParam, precio: z.number(), categoria: z.string().optional().describe('ID de categoría, ej MCO1055'), sitio: z.string().optional() },
     async run(args) {
       const c = cliente(args);
-      const sitio = args.sitio || (await c.get('/users/me')).site_id || 'MLA';
+      const sitio = args.sitio || (await c.get('/users/me')).site_id || 'MCO';
       const r = await c.get(`/sites/${sitio}/listing_prices`, { price: args.precio, category_id: args.categoria });
       const filas = (Array.isArray(r) ? r : []).map((t) => `- **${t.listing_type_name ?? t.listing_type_id}**: comisión ${money(t.sale_fee_amount)} (${t.sale_fee_details?.percentage_fee ?? '—'}% + fijo ${money(t.sale_fee_details?.fixed_fee ?? 0)})`);
       return `## Costo de vender a ${money(args.precio)} en ${sitio}\n` + (filas.join('\n') || 'Sin datos para ese precio.');
@@ -454,7 +454,7 @@ export const TOOLS = [
     schema: { ...cuentaParam, consulta: z.string().describe('Qué buscar, ej "termo acero 1 litro"'), limite: z.number().optional(), sitio: z.string().optional() },
     async run(args) {
       const c = cliente(args);
-      const sitio = args.sitio || (await c.get('/users/me')).site_id || 'MLA';
+      const sitio = args.sitio || (await c.get('/users/me')).site_id || 'MCO';
       const r = await c.get(`/sites/${sitio}/search`, { q: args.consulta, limit: args.limite ?? 10 });
       const filas = (r.results || []).map((x) => `- ${x.title} · ${money(x.price, x.currency_id)} · vendedor ${x.seller?.nickname ?? x.seller?.id ?? '—'}${x.shipping?.free_shipping ? ' · envío gratis' : ''}`);
       return `## "${args.consulta}" en ${sitio} (${r.paging?.total ?? 0} resultados)\n` + (filas.join('\n') || 'Sin resultados.');
@@ -514,13 +514,13 @@ export const TOOLS = [
   {
     name: 'ml_mejorar_publicacion', title: 'Mejorador de publicaciones (revisión)', readOnly: true,
     description: 'El mejorador de publicaciones, MULTICUENTA: con item_id revisa UNA publicación de cualquiera de tus tiendas conectadas (encuentra sola de qué tienda es, no hace falta decir la cuenta) contra la receta que convierte y devuelve el checklist con lo que falta. (1) FOTOS CON MEDIDAS: te muestra las fotos para que las mires — revisá cada imagen y decí si alguna tiene las medidas dibujadas (cotas con cm/mm/L/kg); si ninguna, es un ❌ (se arregla con la skill imagenes-ml). (2) VIDEO: video clásico o clips publicados. (3) DESCRIPCIÓN en este orden: los 5 primeros renglones con el RESUMEN de todo el producto, después MEDIDAS, CARACTERÍSTICAS PRINCIPALES y QUÉ VIENE EN LA CAJA. (4) PREGUNTAS DE LOS ÚLTIMOS 90 DÍAS: las audita (cuántas, cuántas sin responder, de qué temas preguntan) y las resume en un FAQ de 20 preguntas con las respuestas reales del vendedor. Avisa si el mismo producto (mismo SKU) está en tus otras tiendas. SIN item_id hace un BARRIDO de todas tus tiendas (o de la indicada en cuenta): las publicaciones activas de cada una, de la que más le falta a la que menos, y agrupa el mismo producto entre tiendas. No modifica nada: para aplicar, ml_aplicar_mejora con el OK del vendedor.',
-    schema: { ...cuentaParam, item_id: z.string().optional().describe('La publicación (MLA...). Sin item_id: barrido de todas tus tiendas'),
+    schema: { ...cuentaParam, item_id: z.string().optional().describe('La publicación (MCO...). Sin item_id: barrido de todas tus tiendas'),
       fotos: z.boolean().optional().describe('false = no traer las fotos (más rápido)'),
       maximo: z.number().optional().describe('Barrido: publicaciones activas por tienda (default 15, máx 50)') },
     async run(args) {
       if (!args.item_id) return await barridoMejorador(args);
       const id = String(args.item_id || '').trim().toUpperCase();
-      if (!/^M[A-Z]{2}\d+$/.test(id)) return 'item_id inválido: tiene que ser como MLA123456789.';
+      if (!/^M[A-Z]{2}\d+$/.test(id)) return 'item_id inválido: tiene que ser como MCO123456789.';
       const { c, b, tienda, propia } = await tiendaDelItem(args, id);
       let desc = ''; try { desc = (await c.get(`/items/${id}/description`)).plain_text || ''; } catch {}
       const sku = skuDeItem(b), sabido = saberDe(id, sku);
@@ -562,7 +562,7 @@ export const TOOLS = [
   {
     name: 'ml_aplicar_mejora', title: 'Mejorador de publicaciones (aplicar)', readOnly: false,
     description: 'MODIFICA la descripción real de una publicación (de cualquiera de tus tiendas: encuentra sola de cuál es) con la estructura que convierte: el RESUMEN en los 5 primeros renglones (3 a 5 renglones), después MEDIDAS, CARACTERÍSTICAS PRINCIPALES, QUÉ VIENE EN LA CAJA, lo extra que haya que conservar, y al final las PREGUNTAS FRECUENTES: las 20 de los últimos 90 días con las respuestas reales del vendedor (se calculan solas). Con mismo_sku=true la aplica también a TODAS las publicaciones con el mismo SKU en todas tus tiendas conectadas, cada una con el FAQ de SUS propias preguntas. Los textos los escribe Claude con datos reales (ml_mejorar_publicacion trae el material): nunca inventar medidas ni características. Sin confirmar=true solo muestra cómo quedaría; con confirmar=true la escribe (solo con OK explícito del vendedor) y guarda antes un respaldo de cada descripción anterior. Valida: sin HTML, sin datos de contacto ni links, medidas con número y unidad.',
-    schema: { ...cuentaParam, item_id: z.string().describe('La publicación (MLA...)'),
+    schema: { ...cuentaParam, item_id: z.string().describe('La publicación (MCO...)'),
       resumen: z.array(z.string()).describe('3 a 5 renglones: el resumen de todo el producto'),
       medidas: z.array(z.string()).describe('Renglones de medidas (ej "Alto: 27 cm")'),
       caracteristicas: z.array(z.string()).describe('Características principales, un renglón cada una'),
@@ -573,7 +573,7 @@ export const TOOLS = [
       confirmar: z.boolean().optional().describe('true = escribirla en MercadoLibre (solo con OK explícito del vendedor)') },
     async run(args) {
       const id = String(args.item_id || '').trim().toUpperCase();
-      if (!/^M[A-Z]{2}\d+$/.test(id)) return 'item_id inválido: tiene que ser como MLA123456789.';
+      if (!/^M[A-Z]{2}\d+$/.test(id)) return 'item_id inválido: tiene que ser como MCO123456789.';
       const base = await tiendaDelItem(args, id);
       if (!base.propia) return `No la toqué: ${id} no es de ninguna de tus tiendas conectadas (ml_cuentas).`;
       const sku = skuDeItem(base.b);
@@ -594,7 +594,7 @@ export const TOOLS = [
       const quien = (d) => `${d.id} (${nombreTienda(d.tienda)})`;
       if (!args.confirmar) {
         return [`# 🛠️ Así quedaría la descripción de ${quien(p0)}`, '', '```', p0.nueva, '```', '',
-          `Estructura: ${rev.chequeos.map((x) => `${x.ok ? '✅' : '❌'} ${x.id}`).join(' · ')} · ❓ ${p0.nFaq} preguntas frecuentes · ${p0.nueva.length.toLocaleString('es-AR')} caracteres.`,
+          `Estructura: ${rev.chequeos.map((x) => `${x.ok ? '✅' : '❌'} ${x.id}`).join(' · ')} · ❓ ${p0.nFaq} preguntas frecuentes · ${p0.nueva.length.toLocaleString('es-CO')} caracteres.`,
           ...(destinos.length > 1 ? ['', `## 🔁 También se aplicaría en ${destinos.length - 1} publicación(es) con el SKU ${sku}`, ...destinos.slice(1).map((d) => `- ${quien(d)}: ${d.error ? '⚠️ ' + d.error : `misma estructura, con ${d.nFaq} preguntas frecuentes de SUS compradores`}`)] : args.mismo_sku ? ['', `No encontré otras publicaciones con el SKU ${sku} en tus tiendas: se aplica solo a esta.`] : []),
           '', `No toqué nada. ¿La aplico? (ml_aplicar_mejora … ${args.mismo_sku ? 'mismo_sku=true ' : ''}confirmar=true). Antes de escribir guardo un respaldo de cada descripción actual.`].join('\n');
       }
@@ -620,7 +620,7 @@ export const TOOLS = [
       const busqueda = await c.get(`/users/${id}/items/search`, { status: args.estado ?? 'active', limit: args.limite ?? 10 });
       const ids = busqueda.results || [];
       if (!ids.length) return 'No hay publicaciones para auditar con ese filtro.';
-      const sitio = (await c.get('/users/me')).site_id || 'MLA';
+      const sitio = (await c.get('/users/me')).site_id || 'MCO';
       const auditorias = [];
       for (const itemId of ids) {
         let desde = null; try { desde = precioSinCambiosDesde(itemId); } catch {}
@@ -637,7 +637,7 @@ export const TOOLS = [
     name: 'ml_faq_descripcion', title: 'Preguntas frecuentes en la descripción', readOnly: false,
     description: 'Contempla las preguntas que te hacen los compradores en una publicación y las agrega a su descripción como "PREGUNTAS FRECUENTES", con TUS respuestas reales (nunca inventa). Agrupa las parecidas, prioriza las que más se repiten, descarta lo que cambia con el tiempo (stock, precio, cuotas, envíos) y toda respuesta con datos de contacto, y no repite lo que la descripción ya cubre. El bloque queda marcado: se puede actualizar cada quincena sin duplicar. Sin aplicar=true solo MUESTRA la propuesta; con aplicar=true modifica la descripción real (pedir confirmación antes). Con todas=true toma las publicaciones que Lucía marcó en su última auditoría.',
     schema: { ...cuentaParam,
-      item_id: z.string().optional().describe('La publicación (MLA...)'),
+      item_id: z.string().optional().describe('La publicación (MCO...)'),
       todas: z.boolean().optional().describe('Todas las publicaciones que Lucía marcó con preguntas repetidas faltantes en su última auditoría'),
       aplicar: z.boolean().optional().describe('true = escribir la descripción nueva en MercadoLibre (solo con confirmación explícita del vendedor)'),
       min_veces: z.number().optional().describe('Mínimo de veces que se repitió una pregunta para entrar (default 2; 1 = todas las respondidas)'),
@@ -647,7 +647,7 @@ export const TOOLS = [
       const minVeces = Math.max(1, Math.round(args.min_veces ?? 2)), maximo = Math.min(Math.max(1, Math.round(args.maximo ?? 8)), 15);
       let objetivos = [];
       if (args.item_id) {
-        if (!/^[A-Z]{3}\d+$/i.test(args.item_id.trim())) return 'item_id inválido: tiene que ser como MLA123456789.';
+        if (!/^[A-Z]{3}\d+$/i.test(args.item_id.trim())) return 'item_id inválido: tiene que ser como MCO123456789.';
         objetivos = [{ id: args.item_id.trim().toUpperCase(), cuenta: args.cuenta }];
       } else if (args.todas) {
         const d = leerEquipo();
@@ -703,7 +703,7 @@ export const TOOLS = [
       dias: z.number().optional().describe('calendario: cuántos días hacia adelante (default 60, máx 365)'),
     },
     async run(args) {
-      const f = (ts) => new Date(ts).toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+      const f = (ts) => new Date(ts).toLocaleDateString('es-CO', { day: '2-digit', month: '2-digit', year: 'numeric' });
       const cuando = (d) => (d < 0 ? 'en curso' : d === 0 ? 'HOY' : d === 1 ? 'mañana' : `en ${d} días`);
       const ag = () => leerEquipo().agenda || {};
 
@@ -728,7 +728,7 @@ export const TOOLS = [
 
       const c = cliente(args);
       const me = await c.get('/users/me');
-      const sitio = me.site_id || 'MLA';
+      const sitio = me.site_id || 'MCO';
       const a = ag();
       const promos = Object.values(await cronogramaML(c, me.id));
 
@@ -820,7 +820,7 @@ export const TOOLS = [
       const dias = Math.min(Math.max(1, Math.round(args.dias ?? 7)), 30);
       const es = await enviosRecientes(c, me.id, dias);
       if (!es.length) return `Sin ventas con envío en los últimos ${dias} días.`;
-      const h = (ts) => new Date(ts).toLocaleString('es-AR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
+      const h = (ts) => new Date(ts).toLocaleString('es-CO', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
       const linea = (e) => `- #${e.orden} · ${e.titulo} · ${e.tipo} · ${e.estado}${e.subestado ? '/' + e.subestado : ''}${e.limiteDespacho ? ` · despachar antes del ${h(e.limiteDespacho)}` : ''}${e.provincia ? ` · a ${e.provincia}` : ''}`;
       const grupo = (titulo, lista) => (lista.length ? `## ${titulo} (${lista.length})\n` + lista.map(linea).join('\n') : '');
       const tipos = {}; for (const e of es) tipos[e.tipo] = (tipos[e.tipo] || 0) + 1;
@@ -939,7 +939,7 @@ export const TOOLS = [
     description: 'La base de datos local del negocio: guarda lo que el vendedor le enseña (costo de cada producto, % de impuestos, costo de envío, medidas, qué incluye, notas) y las demás herramientas lo usan solas — la calculadora de rentabilidad deja de preguntar lo que ya sabe. EL COSTO VA POR SKU: si la publicación tiene SKU, el costo queda guardado en el SKU y lo usan todas las publicaciones con ese mismo SKU (también las nuevas). Se puede guardar directo por SKU (item_id="TER-1L"). Todo queda en un archivo local de la máquina del vendedor, nunca sale de ahí. Acciones: guardar, ver, olvidar. Para datos del negocio entero (ej impuestos de todas las ventas), guardar sin item_id.',
     schema: { ...cuentaParam,
       accion: z.enum(['guardar', 'ver', 'olvidar']).describe('guardar conocimiento, ver lo que sabe, u olvidar un producto'),
-      item_id: z.string().optional().describe('Producto (MLA...) o SKU. Sin item_id, el dato es del negocio entero'),
+      item_id: z.string().optional().describe('Producto (MCO...) o SKU. Sin item_id, el dato es del negocio entero'),
       costo: z.number().min(0).optional().describe('Costo del producto'),
       impuestos_pct: z.number().min(0).max(60).optional().describe('% de impuestos sobre la venta'),
       costo_envio: z.number().min(0).optional().describe('Costo de envío por unidad a cargo del vendedor'),
@@ -948,7 +948,7 @@ export const TOOLS = [
       nota: z.string().optional().describe('Cualquier cosa que el vendedor quiera que Claude recuerde de este producto o del negocio'),
     },
     async run(args) {
-      const dinero = (n) => '$ ' + Number(n).toLocaleString('es-AR', { maximumFractionDigits: 0 });
+      const dinero = (n) => '$ ' + Number(n).toLocaleString('es-CO', { maximumFractionDigits: 0 });
       if (args.accion === 'guardar') {
         const { accion, item_id, ...datos } = args;
         if (!Object.values(datos).some((v) => v !== undefined)) return 'Decime qué guardar: costo, impuestos_pct, costo_envio, medidas, incluye o una nota.';
@@ -1011,7 +1011,7 @@ export const TOOLS = [
       const dias = args.dias ?? 30;
       const hasta = new Date(), desde = new Date(Date.now() - (dias - 1) * 86400000);
       const f = (d) => d.toISOString().slice(0, 10);
-      const dinero = (n) => '$ ' + Number(n || 0).toLocaleString('es-AR', { maximumFractionDigits: 0 });
+      const dinero = (n) => '$ ' + Number(n || 0).toLocaleString('es-CO', { maximumFractionDigits: 0 });
       const qy = { date_from: f(desde), date_to: f(hasta), metrics: 'clicks,prints,cost,acos,cpc,units_quantity,total_amount' };
       if (args.item_id) {
         let r = null;
@@ -1023,7 +1023,7 @@ export const TOOLS = [
         const ctr = m.prints ? (m.clicks / m.prints * 100).toFixed(2) : '0';
         const cpc = m.cpc ?? (m.clicks ? m.cost / m.clicks : 0);
         return `# 📣 Product Ads de ${args.item_id} — últimos ${dias} día(s) (en vivo)\n` +
-          `- **Inversión:** ${dinero(m.cost)}\n- **Impresiones:** ${Number(m.prints || 0).toLocaleString('es-AR')} · **Clics:** ${Number(m.clicks || 0).toLocaleString('es-AR')} (CTR ${ctr}%)\n` +
+          `- **Inversión:** ${dinero(m.cost)}\n- **Impresiones:** ${Number(m.prints || 0).toLocaleString('es-CO')} · **Clics:** ${Number(m.clicks || 0).toLocaleString('es-CO')} (CTR ${ctr}%)\n` +
           `- **CPC:** ${dinero(cpc)}\n- **Ventas por ads:** ${m.units_quantity ?? 0} unidad(es) · ${dinero(m.total_amount)}\n` +
           `- **ACOS:** ${m.acos != null ? m.acos + '%' : 's/d'} (lo que te come la publicidad de cada venta)\n\n` +
           `¿El ACOS aguanta? Validalo contra tu margen real con ml_rentabilidad: ahí entra este gasto en el desglose del producto.`;
@@ -1042,7 +1042,7 @@ export const TOOLS = [
       });
       const total = lista.reduce((s, k) => s + Number(k.metrics?.cost || 0), 0);
       return `# 📣 Campañas de Product Ads — últimos ${dias} día(s) (en vivo)\n\n| Campaña | Estado | Presupuesto/día | Invertido | ACOS | Unidades |\n| --- | --- | --- | --- | --- | --- |\n` + filas.join('\n') +
-        `\n\n**Inversión total del período:** ${dinero(total)}. Para ver una publicación puntual: ml_publicidad item_id=MLA... · Para saber si el ACOS cierra: ml_rentabilidad.`;
+        `\n\n**Inversión total del período:** ${dinero(total)}. Para ver una publicación puntual: ml_publicidad item_id=MCO... · Para saber si el ACOS cierra: ml_rentabilidad.`;
     },
   },
   {
@@ -1052,12 +1052,12 @@ export const TOOLS = [
       item_id: z.string().optional().describe('Si se indica, trae precio, tipo de publicación y gasto de ads reales'),
       precio: z.number().positive().optional().describe('Precio de venta; si hay item_id se toma el de la publicación'),
       costo: z.number().min(0).optional().describe('Costo del producto (lo que te sale a vos) — SIEMPRE preguntarlo al usuario'),
-      impuestos_pct: z.number().min(0).max(60).optional().describe('% de impuestos sobre el precio (IIBB, monotributo/IVA según su situación) — SIEMPRE preguntarlo'),
+      impuestos_pct: z.number().min(0).max(60).optional().describe('% de impuestos sobre el precio (ICA, régimen simplificado/IVA según su situación) — SIEMPRE preguntarlo'),
       costo_envio: z.number().min(0).optional().describe('Lo que paga el vendedor de envío por unidad (si ofrece envío gratis). Default 0'),
       dias_ads: z.number().int().min(1).max(90).optional().describe('Período para promediar la publicidad (default 30)') },
     async run(args) {
       const c = cliente(args);
-      const dinero = (n) => '$ ' + Number(n).toLocaleString('es-AR', { maximumFractionDigits: 0 });
+      const dinero = (n) => '$ ' + Number(n).toLocaleString('es-CO', { maximumFractionDigits: 0 });
       let precio = args.precio, tipo = 'gold_special', titulo = null, sku = null;
       if (args.item_id) {
         const b = await c.get(`/items/${args.item_id}`);
@@ -1068,13 +1068,13 @@ export const TOOLS = [
       const sabido = args.item_id ? saberDe(args.item_id, sku) : saberDe('__negocio__');
       const memoria = [];
       let costoFinal = args.costo, impuestosFinal = args.impuestos_pct, envioFinal = args.costo_envio;
-      if (costoFinal == null && sabido.costo != null) { costoFinal = sabido.costo; memoria.push(`costo ${'$ ' + Number(sabido.costo).toLocaleString('es-AR')} ${sabido.costoDelSku ? `del SKU ${sabido.costoDelSku.sku}${sabido.costoDelSku.de && sabido.costoDelSku.de !== args.item_id && sabido.costoDelSku.de !== sabido.costoDelSku.sku ? ` (cargado en ${sabido.costoDelSku.de})` : ''}` : 'guardado'}`); }
+      if (costoFinal == null && sabido.costo != null) { costoFinal = sabido.costo; memoria.push(`costo ${'$ ' + Number(sabido.costo).toLocaleString('es-CO')} ${sabido.costoDelSku ? `del SKU ${sabido.costoDelSku.sku}${sabido.costoDelSku.de && sabido.costoDelSku.de !== args.item_id && sabido.costoDelSku.de !== sabido.costoDelSku.sku ? ` (cargado en ${sabido.costoDelSku.de})` : ''}` : 'guardado'}`); }
       if (impuestosFinal == null && sabido.impuestos_pct != null) { impuestosFinal = sabido.impuestos_pct; memoria.push(`impuestos ${sabido.impuestos_pct}% guardados`); }
-      if (envioFinal == null && sabido.costo_envio != null) { envioFinal = sabido.costo_envio; memoria.push(`envío ${'$ ' + Number(sabido.costo_envio).toLocaleString('es-AR')} guardado`); }
+      if (envioFinal == null && sabido.costo_envio != null) { envioFinal = sabido.costo_envio; memoria.push(`envío ${'$ ' + Number(sabido.costo_envio).toLocaleString('es-CO')} guardado`); }
       const faltan = [];
       if (!precio) faltan.push('el **precio de venta** (o pasame el item_id y lo traigo)');
       if (costoFinal == null) faltan.push(`el **costo del producto** (lo que te sale a vos, con IVA si corresponde)${sku ? ` — lo guardo en el SKU ${sku} y vale para todas sus publicaciones` : ''}`);
-      if (impuestosFinal == null) faltan.push('el **% de impuestos** sobre la venta (IIBB + monotributo o IVA según tu situación — si no lo sabés, tu contador lo tiene en 1 minuto)');
+      if (impuestosFinal == null) faltan.push('el **% de impuestos** sobre la venta (ICA + régimen simplificado o IVA según tu situación — si no lo sabés, tu contador lo tiene en 1 minuto)');
       if (faltan.length) return 'Para calcular la rentabilidad real me falta:\n- ' + faltan.join('\n- ') + '\n\nCon esos datos te doy el desglose peso por peso (y los guardo en el cerebro para no volver a preguntarlos).';
       // Aprender lo que vino nuevo
       const aprendido = {};
@@ -1082,7 +1082,7 @@ export const TOOLS = [
       if (args.impuestos_pct != null && args.impuestos_pct !== sabido.impuestos_pct) aprendido.impuestos_pct = args.impuestos_pct;
       if (args.costo_envio != null && args.costo_envio !== sabido.costo_envio) aprendido.costo_envio = args.costo_envio;
       if (Object.keys(aprendido).length) aprender(args.item_id || null, aprendido, { sku });
-      const sitio = (await c.get('/users/me')).site_id || 'MLA';
+      const sitio = (await c.get('/users/me')).site_id || 'MCO';
       let pct = 14, fijo = 0;
       try {
         const lp = await c.get(`/sites/${sitio}/listing_prices`, { price: precio });
@@ -1120,8 +1120,8 @@ export const TOOLS = [
         `| − Impuestos (${impuestosFinal}% del precio) | −${dinero(impuestos)} |\n` +
         `| − Costo del producto | −${dinero(costoFinal)} |\n` +
         `| **= Ganancia neta por unidad** | **${dinero(ganancia)}** |\n\n` +
-        `**Margen: ${margen.toLocaleString('es-AR', { maximumFractionDigits: 1 })}%** ${semaforo}\n` +
-        (memoria.length ? `🧠 Usando del cerebro: ${memoria.join(' · ')} (actualizalos con ml_cerebro).\n` : (Object.keys(aprendido).length ? '🧠 Datos nuevos guardados en el cerebro: no te los vuelvo a preguntar.\n' : '')) + `**ACOS máximo que aguanta este producto: ${Math.max(0, acosMax).toLocaleString('es-AR', { maximumFractionDigits: 1 })}%** — arriba de eso, la publicidad se come toda la ganancia.` +
+        `**Margen: ${margen.toLocaleString('es-CO', { maximumFractionDigits: 1 })}%** ${semaforo}\n` +
+        (memoria.length ? `🧠 Usando del cerebro: ${memoria.join(' · ')} (actualizalos con ml_cerebro).\n` : (Object.keys(aprendido).length ? '🧠 Datos nuevos guardados en el cerebro: no te los vuelvo a preguntar.\n' : '')) + `**ACOS máximo que aguanta este producto: ${Math.max(0, acosMax).toLocaleString('es-CO', { maximumFractionDigits: 1 })}%** — arriba de eso, la publicidad se come toda la ganancia.` +
         (ganancia <= 0 ? `\n\n⚠️ Así como está, PERDÉS plata en cada venta. Precio de equilibrio (ganancia 0): ${dinero((costoFinal + envio + adsPorUnidad + (pct != null ? fijo : comision)) / (1 - ((pct ?? 0) + impuestosFinal) / 100))} — validá también contra ml_precio_catalogo antes de subirlo.` : '');
     },
   },
@@ -1187,7 +1187,7 @@ export const TOOLS = [
   {
     name: 'ml_subir_clip', title: 'Subir un clip', readOnly: false,
     description: 'Sube un Clip (video vertical corto) a una publicación por la API. Requisitos de MercadoLibre: MP4/MOV/MPEG/AVI, vertical, 10 a 61 segundos, mínimo 360x640, máximo 280 MB, publicación activa. La moderación tarda 24-48 hs (verificar después con ml_clips).',
-    schema: { ...cuentaParam, item_id: z.string(), archivo: z.string().describe('Ruta local del video (ej /ruta/MLA123-clip.mp4)') },
+    schema: { ...cuentaParam, item_id: z.string(), archivo: z.string().describe('Ruta local del video (ej /ruta/MCO123-clip.mp4)') },
     async run(args) {
       const fs = await import('node:fs');
       if (!fs.existsSync(args.archivo)) return `No encuentro el archivo "${args.archivo}". Pasame la ruta completa del video.`;
@@ -1245,10 +1245,10 @@ export const TOOLS = [
         const resumen = (o) => {
           const s = d.snapshots[claveDe(o)];
           if (!s) return '';
-          const fecha = new Date(s.t).toLocaleDateString('es-AR');
+          const fecha = new Date(s.t).toLocaleDateString('es-CO');
           if (o.tipo === 'vendedor') return ` · ${Object.keys(s.datos.items || {}).length} publicaciones registradas (control: ${fecha})`;
-          if (o.tipo === 'publicacion') return ` · último control: $ ${Number(s.datos.precio).toLocaleString('es-AR')} · ${s.datos.vendidos} vendidos (${fecha})`;
-          if (o.tipo === 'busqueda') return s.datos.top?.[0] ? ` · líder: ${s.datos.top[0].vendedor} a $ ${Number(s.datos.top[0].precio).toLocaleString('es-AR')} (${fecha})` : '';
+          if (o.tipo === 'publicacion') return ` · último control: $ ${Number(s.datos.precio).toLocaleString('es-CO')} · ${s.datos.vendidos} vendidos (${fecha})`;
+          if (o.tipo === 'busqueda') return s.datos.top?.[0] ? ` · líder: ${s.datos.top[0].vendedor} a $ ${Number(s.datos.top[0].precio).toLocaleString('es-CO')} (${fecha})` : '';
           return ` · top registrado (${fecha})`;
         };
         const grupos = [];
@@ -1265,7 +1265,7 @@ export const TOOLS = [
       }
       if (!args.tipo || (!args.ref && args.tipo !== 'tendencias')) return 'Para agregar indicá tipo y ref (en tendencias, ref puede ser una categoría o quedar vacío para el sitio entero).';
       const c = cliente(args);
-      const sitio = (await c.get('/users/me')).site_id || 'MLA';
+      const sitio = (await c.get('/users/me')).site_id || 'MCO';
       const o = { tipo: args.tipo, ref: args.ref || sitio, nota: args.nota, sitio };
       const r = agregarObjetivo(o);
       if (r.ya) return 'Ya estaba en la lista de seguimiento.';
@@ -1285,7 +1285,7 @@ export const TOOLS = [
     schema: { ...cuentaParam },
     async run(args) {
       const c = cliente(args);
-      const sitio = (await c.get('/users/me')).site_id || 'MLA';
+      const sitio = (await c.get('/users/me')).site_id || 'MCO';
       const d = leerVigilancia();
       if (!d.objetivos.length) return 'La lista de seguimiento está vacía: agregá objetivos con ml_vigilar.';
       const secciones = []; let sinCambios = 0, primeros = 0;
@@ -1320,7 +1320,7 @@ export const TOOLS = [
       trabajador: z.string().optional().describe('Nombre (Vera, Tomás, Martina, Bruno, Lucía, Clara, Ramiro, Ana, Leo, Carmen, Nico, Paula, Iván, Valen, Gabi, Sole, Fede, Sofía) o puesto, o "todos"'),
       tipo: z.enum(['vendedor', 'publicacion', 'busqueda', 'tendencias']).optional().describe('Se deduce solo según el trabajador; Vera acepta vendedor o publicacion'),
       ref: z.string().optional().describe('item_id rival, nickname/id del vendedor, palabra clave, o categoría (tendencias)'),
-      fuente: z.string().optional().describe('Fede (proveedores): la publicación del proveedor en MercadoLibre (MLA…) o la URL https del producto en su tienda; ref = TU publicación'),
+      fuente: z.string().optional().describe('Fede (proveedores): la publicación del proveedor en MercadoLibre (MCO…) o la URL https del producto en su tienda; ref = TU publicación'),
       recargo: z.number().optional().describe('Fede: % que le sumás al precio del proveedor para vender (para sugerirte el precio)'),
       mi_item: z.string().optional().describe('Tu item_id para comparar: Vera avisa si un rival queda más barato, Martina te dice tu puesto en la búsqueda'),
       umbral: z.number().optional().describe('Vera: % mínimo de cambio de precio para avisar · Martina: puestos mínimos de cambio · Tomás: unidades mínimas'),
@@ -1338,7 +1338,7 @@ export const TOOLS = [
       const quien = args.trabajador && sinAcento(args.trabajador) !== 'todos' ? resolverTrabajador(args.trabajador) : null;
       if (args.trabajador && sinAcento(args.trabajador) !== 'todos' && !quien) return `No conozco a "${args.trabajador}". El equipo: ${IDS.map(etiqueta).join(' · ')}.`;
       const objetivo = quien ? [quien] : IDS;
-      const hora = (t) => t ? new Date(t).toLocaleString('es-AR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' }) : '—';
+      const hora = (t) => t ? new Date(t).toLocaleString('es-CO', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' }) : '—';
       const icono = { alta: '🔴', media: '🟡', baja: '🟢' };
       const linea = (a) => `- ${icono[a.nivel] || '•'} ${a.texto}${a.skill ? ` → 👉 skill **${a.skill}**` : ''} _(${hora(a.t)})_`;
       const agrupar = (alertas) => {
@@ -1369,16 +1369,16 @@ export const TOOLS = [
           ? `📁 Google Drive: ${[dv.script ? 'planilla en vivo' : '', dv.carpeta ? 'carpeta ' + dv.carpeta : ''].filter(Boolean).join(' + ')} · último envío ${hora(dv.ultimo)}${dv.ultimoError ? ' · ⚠️ ' + dv.ultimoError : ''}`
           : '📁 Google Drive: sin conectar (ml_trabajadores accion=drive)';
         const eb = estadoDB();
-        const lineaBase = eb.activa ? `🗄️ Base de datos: ${eb.mediciones.n.toLocaleString('es-AR')} mediciones y ${eb.alertas.n.toLocaleString('es-AR')} alertas guardadas (accion=base)` : `🗄️ Base de datos: no activa — ${eb.motivo} (accion=base)`;
+        const lineaBase = eb.activa ? `🗄️ Base de datos: ${eb.mediciones.n.toLocaleString('es-CO')} mediciones y ${eb.alertas.n.toLocaleString('es-CO')} alertas guardadas (accion=base)` : `🗄️ Base de datos: no activa — ${eb.motivo} (accion=base)`;
         const J = jefe(d);
         const lineaJefe = `${J.emoji} Jefe de equipo: **${J.nombre}**${J.propio ? '' : ' — ponele nombre: decí "el jefe se llama …"'} (ml_jefe)`;
-        return `# Equipo de trabajadores\n${lineaJefe}\n${modo}\n${lineaBase}\n${lineaDrive}\n\n` + bloques.join('\n\n') + '\n\nDales tareas con ml_trabajadores accion=asignar (ej: trabajador=Vera ref=MLA123 mi_item=TU_ITEM umbral=3) y leé lo que encontraron con accion=informe.';
+        return `# Equipo de trabajadores\n${lineaJefe}\n${modo}\n${lineaBase}\n${lineaDrive}\n\n` + bloques.join('\n\n') + '\n\nDales tareas con ml_trabajadores accion=asignar (ej: trabajador=Vera ref=MCO123 mi_item=TU_ITEM umbral=3) y leé lo que encontraron con accion=informe.';
       }
 
       if (args.accion === 'asignar') {
         if (!quien) return `Decime a quién: ${IDS.map(etiqueta).join(' · ')}.`;
         let sitio;
-        if (EQUIPO[quien].tipos.includes('tendencias') && !args.ref) sitio = (await cliente(args).get('/users/me')).site_id || 'MLA';
+        if (EQUIPO[quien].tipos.includes('tendencias') && !args.ref) sitio = (await cliente(args).get('/users/me')).site_id || 'MCO';
         const r = asignarTarea(quien, { tipo: args.tipo, ref: args.ref, mi_item: args.mi_item, umbral: args.umbral, nota: args.nota, cuenta: args.cuenta, sitio, fuente: args.fuente, recargo: args.recargo });
         const w = leerEquipo().trabajadores[quien];
         const skills = EQUIPO[quien].skills.map((x) => '`' + x.skill + '`').join(', ');
@@ -1433,12 +1433,12 @@ export const TOOLS = [
           `**Cómo activarla en Windows (1 comando, 2 minutos):** abrí PowerShell y corré \`winget install OpenJS.NodeJS.LTS\`, cerrá y volvé a abrir Claude. No hay que instalar ninguna base de datos aparte: SQLite viene adentro de Node ${NODE_MINIMO}+.`].join('\n');
         let extra = '';
         if (args.backup) extra = `\n\n✅ Backup hecho: \`${backupDB()}\` (copia completa y consistente, aunque el equipo esté trabajando).`;
-        const f = (t) => t ? new Date(t).toLocaleDateString('es-AR') : '—';
+        const f = (t) => t ? new Date(t).toLocaleDateString('es-CO') : '—';
         const mb = (e.bytes / 1048576).toFixed(2);
         return [`# Base de datos del equipo — 🟢 activa`,
           `- **Archivo:** \`${e.ruta}\` (${mb} MB · SQLite ${e.sqlite}, viene con Node: nada que instalar)`,
-          `- **Mediciones:** ${e.mediciones.n.toLocaleString('es-AR')} de ${e.objetivos} objetivo(s) · desde ${f(e.mediciones.desde)} hasta ${f(e.mediciones.hasta)}`,
-          `- **Alertas guardadas:** ${e.alertas.n.toLocaleString('es-AR')} · **Controles registrados:** ${e.controles.n.toLocaleString('es-AR')}`,
+          `- **Mediciones:** ${e.mediciones.n.toLocaleString('es-CO')} de ${e.objetivos} objetivo(s) · desde ${f(e.mediciones.desde)} hasta ${f(e.mediciones.hasta)}`,
+          `- **Alertas guardadas:** ${e.alertas.n.toLocaleString('es-CO')} · **Controles registrados:** ${e.controles.n.toLocaleString('es-CO')}`,
           `- **Se guarda:** ${RETENCION_DIAS} días de historial (lo más viejo se limpia solo, una vez por día)`,
           `- **Ver la base por dentro (opcional, Windows):** \`winget install -e --id DBBrowserForSQLite.DBBrowserForSQLite\` y abrí el archivo de arriba. Tablas: alertas, mediciones, controles.`,
           `- **Backup:** ml_trabajadores accion=base backup=true (o copiá el archivo con Claude cerrado).`].join('\n') + extra;
@@ -1451,8 +1451,8 @@ export const TOOLS = [
         const dias = Math.min(Math.max(1, Math.round(args.dias ?? 30)), RETENCION_DIAS);
         const ms = leerMediciones({ ref: args.ref?.trim(), trabajador: quien || undefined, dias });
         if (!ms.length) return `Sin mediciones de ${args.ref ? '"' + args.ref + '"' : etiqueta(quien)} en los últimos ${dias} días. ¿Está asignado a algún trabajador? (accion=equipo)`;
-        const din = (n) => n == null ? '—' : '$ ' + Number(n).toLocaleString('es-AR', { maximumFractionDigits: 0 });
-        const dia = (t) => new Date(t).toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit' });
+        const din = (n) => n == null ? '—' : '$ ' + Number(n).toLocaleString('es-CO', { maximumFractionDigits: 0 });
+        const dia = (t) => new Date(t).toLocaleDateString('es-CO', { day: '2-digit', month: '2-digit' });
         const bloques = [];
         const grupos = {};
         for (const m of ms) (grupos[m.trabajador + '|' + m.ref] ||= []).push(m);
@@ -1561,8 +1561,8 @@ export const TOOLS = [
       const r = leerHistorial(args.ref);
       if (!r) return `"${args.ref}" no está en la lista de seguimiento. Agregalo con ml_vigilar y el historial se arma solo con cada control.`;
       if (!r.puntos.length) return `**${r.objetivo.ref}** está vigilado pero todavía sin historial: corré ml_novedades_competencia para registrar el primer punto.`;
-      const f = (t) => new Date(t).toLocaleDateString('es-AR');
-      const dinero = (n) => '$ ' + Number(n).toLocaleString('es-AR', { maximumFractionDigits: 0 });
+      const f = (t) => new Date(t).toLocaleDateString('es-CO');
+      const dinero = (n) => '$ ' + Number(n).toLocaleString('es-CO', { maximumFractionDigits: 0 });
       let filas, resumen = '';
       if (r.objetivo.tipo === 'publicacion') {
         filas = r.puntos.map((p, i) => {
@@ -1586,12 +1586,12 @@ export const TOOLS = [
   },
   {
     name: 'ml_descubrir_ganadores', title: 'Descubrir artículos ganadores', readOnly: true,
-    description: 'Encuentra artículos ganadores dentro de lo que permite la API: por CATEGORÍA usa el ranking oficial de más vendidos (highlights) + las tendencias de esa categoría; por BÚSQUEDA analiza el mercado de una keyword (competencia, precios, envío gratis, vendedores que dominan y ventas visibles). Indicar categoria (id tipo MLA1234) o busqueda (keyword).',
-    schema: { ...cuentaParam, categoria: z.string().optional().describe('ID de categoría, ej MLA1055'), busqueda: z.string().optional().describe('Keyword a analizar, ej "termo 1 litro"'), sitio: z.string().optional() },
+    description: 'Encuentra artículos ganadores dentro de lo que permite la API: por CATEGORÍA usa el ranking oficial de más vendidos (highlights) + las tendencias de esa categoría; por BÚSQUEDA analiza el mercado de una keyword (competencia, precios, envío gratis, vendedores que dominan y ventas visibles). Indicar categoria (id tipo MCO1234) o busqueda (keyword).',
+    schema: { ...cuentaParam, categoria: z.string().optional().describe('ID de categoría, ej MCO1055'), busqueda: z.string().optional().describe('Keyword a analizar, ej "termo 1 litro"'), sitio: z.string().optional() },
     async run(args) {
       const c = cliente(args);
-      const sitio = args.sitio || (await c.get('/users/me')).site_id || 'MLA';
-      const dinero = (n) => '$ ' + Number(n).toLocaleString('es-AR', { maximumFractionDigits: 0 });
+      const sitio = args.sitio || (await c.get('/users/me')).site_id || 'MCO';
+      const dinero = (n) => '$ ' + Number(n).toLocaleString('es-CO', { maximumFractionDigits: 0 });
       if (args.categoria) {
         const hl = await c.get(`/highlights/${sitio}/category/${args.categoria}`);
         const ids = (hl.content || []).filter((x) => x.type === 'ITEM').slice(0, 20);
@@ -1624,12 +1624,12 @@ export const TOOLS = [
         let enTendencias = false;
         try { const t = await c.get(`/trends/${sitio}`); enTendencias = (Array.isArray(t) ? t : []).some((x) => x.keyword.toLowerCase().includes(args.busqueda.toLowerCase()) || args.busqueda.toLowerCase().includes(x.keyword.toLowerCase())); } catch {}
         const top = items.slice(0, 5).map((x, i) => `${i + 1}. **${x.title}** — ${dinero(x.price)} · ${x.seller?.nickname || '—'}${x.sold_quantity ? ` · ${x.sold_quantity} vendidos` : ''}${x.shipping?.free_shipping ? ' · 🚚 gratis' : ''}`);
-        return `# 🔎 Análisis de mercado: "${args.busqueda}"\n\n- **Competencia:** ${total.toLocaleString('es-AR')} publicaciones compitiendo\n- **Precios (top 20):** ${dinero(precios[0])} a ${dinero(precios[precios.length - 1])} · mediana ${dinero(mediana)}\n- **Envío gratis:** ${gratis}/${items.length} del top lo ofrecen${gratis / items.length > 0.6 ? ' (casi obligatorio para competir)' : ''}\n- **En tendencias del sitio:** ${enTendencias ? '✅ SÍ — demanda validada' : 'no aparece hoy'}\n` +
+        return `# 🔎 Análisis de mercado: "${args.busqueda}"\n\n- **Competencia:** ${total.toLocaleString('es-CO')} publicaciones compitiendo\n- **Precios (top 20):** ${dinero(precios[0])} a ${dinero(precios[precios.length - 1])} · mediana ${dinero(mediana)}\n- **Envío gratis:** ${gratis}/${items.length} del top lo ofrecen${gratis / items.length > 0.6 ? ' (casi obligatorio para competir)' : ''}\n- **En tendencias del sitio:** ${enTendencias ? '✅ SÍ — demanda validada' : 'no aparece hoy'}\n` +
           (dominan.length ? `- **Vendedores que dominan el top:** ${dominan.map(([v, n]) => `${v} (${n})`).join(', ')}\n` : '- **Top repartido:** ningún vendedor domina — más fácil entrar\n') +
           `\n## Top 5 del momento\n` + top.join('\n') +
           `\n\n**Señal de oportunidad:** ${enTendencias && !dominan.length ? '🟢 ALTA — demanda validada y top repartido' : enTendencias ? '🟡 MEDIA — hay demanda pero el top tiene dueños' : '⚪ a validar — medí la demanda con ml_tendencias de la categoría'}. Validá margen con ml_comisiones antes de entrar, y sumá la búsqueda a la vigilancia (ml_vigilar) para ver su evolución.`;
       }
-      return 'Indicá categoria (ej MLA1055) para el ranking de más vendidos, o busqueda (keyword) para el análisis de mercado.';
+      return 'Indicá categoria (ej MCO1055) para el ranking de más vendidos, o busqueda (keyword) para el análisis de mercado.';
     },
   },
   // ───────────────────────────── Tendencias ─────────────────────────────
@@ -1639,20 +1639,20 @@ export const TOOLS = [
     schema: { ...cuentaParam,
       busqueda: z.string().optional().describe('Una keyword, ej "organizador de cocina"'),
       busquedas: z.array(z.string()).optional().describe('Varias keywords (hasta 5) para el ranking de oportunidades'),
-      categoria: z.string().optional().describe('ID de categoría (ej MLA1574) en vez de keyword'),
+      categoria: z.string().optional().describe('ID de categoría (ej MCO1574) en vez de keyword'),
       costo: z.number().min(0).optional().describe('Tu costo por unidad (solo con una búsqueda): para ver si los números cierran'),
       costo_envio: z.number().min(0).optional().describe('Envío por unidad a tu cargo (default 0)'),
       muestra: z.number().optional().describe('Publicaciones a analizar por nicho (default 100 con una, 60 con varias; máx 300)'),
       sitio: z.string().optional() },
     async run(args) {
       const c = cliente(args);
-      const sitio = (args.sitio || (await c.get('/users/me')).site_id || 'MLA').toUpperCase();
-      if (!/^M[A-Z]{2}$/.test(sitio)) return 'sitio inválido (ej MLA, MLM, MLB).';
-      const din = (n) => (n == null ? '—' : '$ ' + Math.round(n).toLocaleString('es-AR'));
-      const u = (n) => (n == null ? '—' : n >= 10 ? Math.round(n).toLocaleString('es-AR') : n.toFixed(1).replace('.', ','));
+      const sitio = (args.sitio || (await c.get('/users/me')).site_id || 'MCO').toUpperCase();
+      if (!/^M[A-Z]{2}$/.test(sitio)) return 'sitio inválido (ej MCO, MLA, MLM, MLB).';
+      const din = (n) => (n == null ? '—' : '$ ' + Math.round(n).toLocaleString('es-CO'));
+      const u = (n) => (n == null ? '—' : n >= 10 ? Math.round(n).toLocaleString('es-CO') : n.toFixed(1).replace('.', ','));
       const edad = (d) => (d == null ? '—' : d < 60 ? `${d} días` : d < 730 ? `${Math.round(d / 30)} meses` : `${(d / 365).toFixed(1).replace('.', ',')} años`);
       const lista = [...new Set([...(args.busquedas || []), ...(args.busqueda ? [args.busqueda] : [])].map((x) => String(x).replace(/\s+/g, ' ').trim()).filter((x) => x.length >= 2 && x.length <= 80))].slice(0, 5);
-      if (args.categoria && !/^M[A-Z]{2}\d+$/i.test(args.categoria)) return 'categoria inválida: tiene que ser como MLA1574.';
+      if (args.categoria && !/^M[A-Z]{2}\d+$/i.test(args.categoria)) return 'categoria inválida: tiene que ser como MCO1574.';
       if (!lista.length && !args.categoria) return 'Decime qué nicho analizar: una búsqueda (busqueda="organizador de cocina"), varias para el ranking (busquedas=[…]) o una categoría (categoria=MLA1574).';
       let tendencias = [];
       try { tendencias = (await c.get(`/trends/${sitio}`)).map((t) => sinAcento(t.keyword)); } catch {}
@@ -1694,14 +1694,14 @@ export const TOOLS = [
       const tabla = a.ranking.slice(0, 10).map((x, i) => `| ${i + 1} | ${x.titulo.slice(0, 48)} | ${x.vendedor.nick}${x.tiendaOficial ? ' 🏬' : ''} | ${din(x.precio)} | ${x.vendidos} | ${edad(x.dias)} | **${u(x.rotacion)}** | ${x.vigencia == null ? '—' : x.vigencia >= 0.7 ? '✅ se vende hoy' : x.vigencia >= 0.35 ? '🟡 bajando' : '🔴 vendió en el pasado'} |`);
       const cv = a.curva;
       const lineas = [`# 🧭 Nicho: «${nombre}» — ${senal(a)} (${a.puntaje}/100)`,
-        `_Muestra: ${a.muestra} publicaciones más relevantes${a.total ? ` de ${a.total.toLocaleString('es-AR')} en total` : ''}, con la API oficial de MercadoLibre. Rotación = unidades por mes estimadas (vendidos ÷ antigüedad)._`, '',
+        `_Muestra: ${a.muestra} publicaciones más relevantes${a.total ? ` de ${a.total.toLocaleString('es-CO')} en total` : ''}, con la API oficial de MercadoLibre. Rotación = unidades por mes estimadas (vendidos ÷ antigüedad)._`, '',
         `## 1. ¿Cuánto rota? Las ${Math.min(10, a.ranking.length)} que más venden por mes`,
         a.ranking.length ? ['| # | Publicación | Vendedor | Precio | Vendidos | Antigüedad | Rotación / mes | ¿Hoy? |', '| --- | --- | --- | --- | --- | --- | --- | --- |', ...tabla].join('\n') : '_MercadoLibre no informa ventas de las publicaciones de este nicho: no puedo calcular la rotación (el resto del análisis usa presencia y visitas)._',
         '', '## 2. ¿Se vende hoy o vendió en el pasado?',
-        cv ? `Visitas de las ${cv.medidos} que más rotan, por mes (del más viejo al último): ${cv.tramos.map((x) => x.toLocaleString('es-AR')).join(' → ')}${cv.cambio != null ? ` · el último mes ${cv.cambio >= 0 ? 'sube' : 'baja'} ${Math.abs(Math.round(cv.cambio))}% contra el promedio de los 4 anteriores` : ''}.` : '_ML no devolvió el detalle de visitas por día para estas publicaciones._',
+        cv ? `Visitas de las ${cv.medidos} que más rotan, por mes (del más viejo al último): ${cv.tramos.map((x) => x.toLocaleString('es-CO')).join(' → ')}${cv.cambio != null ? ` · el último mes ${cv.cambio >= 0 ? 'sube' : 'baja'} ${Math.abs(Math.round(cv.cambio))}% contra el promedio de los 4 anteriores` : ''}.` : '_ML no devolvió el detalle de visitas por día para estas publicaciones._',
         a.historicas.length ? `🔴 ${a.historicas.length} publicación(es) con muchas ventas viejas pero pocas visitas hoy (vendieron en el pasado, no cuentan como demanda actual): ${a.historicas.slice(0, 3).map((x) => x.id).join(', ')}.` : cv ? '✅ Las que más venden siguen recibiendo visitas: la demanda es actual.' : '',
         '', '## 3. ¿Oportunidad o monopolio?',
-        `${COMP[a.competencia]}. Líder: **${a.vendedores[0]?.nick}${a.vendedores[0]?.oficial ? ' (tienda oficial)' : ''}** con ${Math.round(a.top1)}% · top 3: ${Math.round(a.top3)}% · ${a.conVentas} vendedor(es) con ventas · índice de concentración ${a.hhi.toLocaleString('es-AR')} (más de 2.500 = concentrado).`,
+        `${COMP[a.competencia]}. Líder: **${a.vendedores[0]?.nick}${a.vendedores[0]?.oficial ? ' (tienda oficial)' : ''}** con ${Math.round(a.top1)}% · top 3: ${Math.round(a.top3)}% · ${a.conVentas} vendedor(es) con ventas · índice de concentración ${a.hhi.toLocaleString('es-CO')} (más de 2.500 = concentrado).`,
         '', '## 4. Techo de demanda',
         `≈ **${u(a.demandaMes)} unidades por mes** entre las ${a.ranking.length} publicaciones con ventas de la muestra (es un piso: el mercado completo es más grande).`,
         a.nuevos.length ? `🚀 ${a.nuevos.length} publicación(es) entraron en los últimos 90 días y ya venden. La mejor arrancó hace **${a.nuevos[0].dias} días** y vende ≈ **${u(a.nuevos[0].rotacion)} u./mes** (${a.nuevos[0].vendedor.nick}). Un nuevo hoy vende ≈ ${u(a.rotNuevo)} u./mes (mediana de los que entraron).` : `Nadie que haya entrado en los últimos 90 días está vendiendo todavía: entrar es más difícil.${a.paraUnNuevo ? ` Un objetivo realista para arrancar: ≈ ${u(a.paraUnNuevo)} u./mes.` : ''}`,
@@ -1725,7 +1725,7 @@ export const TOOLS = [
     schema: { ...cuentaParam, categoria: z.string().optional(), sitio: z.string().optional() },
     async run(args) {
       const c = cliente(args);
-      const sitio = args.sitio || (await c.get('/users/me')).site_id || 'MLA';
+      const sitio = args.sitio || (await c.get('/users/me')).site_id || 'MCO';
       const r = await c.get(`/trends/${sitio}${args.categoria ? '/' + args.categoria : ''}`);
       const ts = (Array.isArray(r) ? r : []).slice(0, 20);
       return `## Tendencias en ${sitio}${args.categoria ? ' · ' + args.categoria : ''}\n` + ts.map((t, i) => `${i + 1}. ${t.keyword}`).join('\n');

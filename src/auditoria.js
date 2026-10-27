@@ -12,7 +12,7 @@ import { revisarDescripcion } from './mejorador.js';
 const DIAS = 86400000;
 export const SIN_TOCAR_DIAS = 60;       // publicación sin ningún cambio hace más de esto → desactualizada
 export const PRECIO_CONGELADO_DIAS = 45; // precio idéntico en todas las auditorías de este período
-const dinero = (n) => '$ ' + Number(n).toLocaleString('es-AR', { maximumFractionDigits: 0 });
+const dinero = (n) => '$ ' + Number(n).toLocaleString('es-CO', { maximumFractionDigits: 0 });
 const mediana = (xs) => { const a = xs.filter((n) => n > 0).sort((x, y) => x - y); return a.length ? a[Math.floor(a.length / 2)] : null; };
 
 // Lado más chico de la foto más grande que ML tiene ("1200x1200" → 1200)
@@ -94,7 +94,7 @@ export function evaluar({ b, desc, ptw = null, mercado = null, precioSinCambiosD
 }
 
 /** Trae lo necesario de ML y audita una publicación. */
-export async function auditarItem(c, itemId, { sitio = 'MLA', sellerId, precioSinCambiosDesde = null, conMercado = true, conPreguntas = true, b: yaTraido } = {}) {
+export async function auditarItem(c, itemId, { sitio = 'MCO', sellerId, precioSinCambiosDesde = null, conMercado = true, conPreguntas = true, b: yaTraido } = {}) {
   const b = yaTraido || (await c.get(`/items/${itemId}`));
   let desc = null; try { desc = (await c.get(`/items/${itemId}/description`)).plain_text; } catch {}
   let ptw = null;

@@ -20,7 +20,7 @@ export const RUTA_TABLERO = () => path.join(DIR(), 'tablero.html');
 const PLANTILLA = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', 'panel', 'tablero.html');
 const MARCA = '/*__DATOS_DEL_TABLERO__*/null';
 
-const din = (n) => { const v = Math.round(Number(n) || 0); return (v < 0 ? '−$\u00a0' : '$\u00a0') + Math.abs(v).toLocaleString('es-AR'); }; // $ y número nunca se separan
+const din = (n) => { const v = Math.round(Number(n) || 0); return (v < 0 ? '−$\u00a0' : '$\u00a0') + Math.abs(v).toLocaleString('es-CO'); }; // $ y número nunca se separan
 const cadaCuanto = (min) => (min >= 1440 && min % 1440 === 0 ? `cada ${min / 1440} día${min === 1440 ? '' : 's'}` : min >= 60 && min % 60 === 0 ? `cada ${min / 60} h` : `cada ${min} min`);
 
 function fotos(d, id) {

@@ -14,14 +14,15 @@ const sinAcentos = (x) => String(x || '').normalize('NFD').replace(/[̀-ͯ]/g, '
 const mediana = (xs) => { const a = xs.filter((n) => Number.isFinite(n)).sort((x, y) => x - y); return a.length ? a[Math.floor((a.length - 1) / 2)] : null; };
 const percentil = (xs, p) => { const a = xs.filter((n) => Number.isFinite(n)).sort((x, y) => x - y); return a.length ? a[Math.min(a.length - 1, Math.floor(p * (a.length - 1)))] : null; };
 
-// Fechas que mueven la demanda (Argentina y la región): meses en los que pica
+// Fechas que mueven la demanda (Colombia y la región): meses en los que pica
 export const ESTACIONES = [
   { meses: [11, 12], palabras: ['navidad', 'navideno', 'arbolito', 'pesebre', 'papa noel', 'guirnalda'] },
-  { meses: [12, 1, 2], palabras: ['pileta', 'piscina', 'inflable', 'ventilador', 'protector solar', 'malla', 'sombrilla', 'reposera', 'aire acondicionado', 'conservadora', 'repelente'] },
-  { meses: [5, 6, 7, 8], palabras: ['estufa', 'caloventor', 'calefactor', 'frazada', 'acolchado', 'campera', 'bufanda', 'guantes', 'bolsa de agua caliente', 'panel calefactor', 'termica'] },
-  { meses: [2, 3], palabras: ['mochila', 'utiles', 'cartuchera', 'guardapolvo', 'escolar', 'lapicera', 'cuaderno'] },
-  { meses: [6], palabras: ['dia del padre'] }, { meses: [10], palabras: ['dia de la madre', 'halloween', 'disfraz'] },
-  { meses: [8], palabras: ['dia del nino', 'dia de las infancias'] }, { meses: [2], palabras: ['san valentin', 'enamorados'] },
+  { meses: [12, 1, 2, 3], palabras: ['piscina', 'inflable', 'ventilador', 'protector solar', 'vestido de bano', 'sombrilla', 'aire acondicionado', 'repelente'] },
+  { meses: [4, 5, 10, 11], palabras: ['paraguas', 'impermeable', 'bota de lluvia', 'chaqueta', 'cobija', 'edredon'] },
+  { meses: [1, 2], palabras: ['mochila', 'utiles', 'cartuchera', 'uniforme', 'escolar', 'lapicero', 'cuaderno'] },
+  { meses: [6], palabras: ['dia del padre'] }, { meses: [5], palabras: ['dia de la madre'] },
+  { meses: [10], palabras: ['halloween', 'disfraz'] }, { meses: [4], palabras: ['dia del nino', 'dia de la ninez'] },
+  { meses: [2], palabras: ['san valentin', 'amor y amistad'] }, { meses: [9], palabras: ['amor y amistad'] },
 ];
 export function estacionDe(texto) {
   const t = ' ' + sinAcentos(texto) + ' ';

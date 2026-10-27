@@ -95,7 +95,7 @@ mejorador encuentra solo de qué tienda es cada publicación.
 
 Cuando el vendedor pide mejorar una publicación puntual:
 
-1. `ml_mejorar_publicacion item_id=MLA…` → checklist + las fotos de la publicación.
+1. `ml_mejorar_publicacion item_id=MCO…` → checklist + las fotos de la publicación.
    - **📏 Medidas en las fotos:** mirá cada foto que devuelve (en orden, la 1 es la
      portada) y decí cuál tiene las medidas dibujadas (cotas con número y unidad).
      Si ninguna: ❌ y ofrecé hacerla con la skill imagenes-ml (foto de medidas),

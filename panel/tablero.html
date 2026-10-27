@@ -343,7 +343,7 @@
     if (m < 1) return 'recién'; if (m < 60) return 'hace ' + m + ' min'; if (m < 1440) return 'hace ' + Math.round(m / 60) + ' h';
     return 'hace ' + Math.round(m / 1440) + ' días';
   }
-  function dia(t) { return new Date(t).toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit' }); }
+  function dia(t) { return new Date(t).toLocaleDateString('es-CO', { day: '2-digit', month: '2-digit' }); }
   function guardado(k, v) { try { if (v === undefined) return localStorage.getItem(k); localStorage.setItem(k, v); } catch (e) { return null; } }
   var NS = 'http://www.w3.org/2000/svg';
   var porId = {}; D.equipo.forEach(function (w) { porId[w.id] = w; });
@@ -372,16 +372,16 @@
 
 
   // ───────── Hoy + ventas y publicidad día por día ─────────
-  var pesos = function (v) { return (v < 0 ? '−$ ' : '$ ') + Math.abs(Math.round(v)).toLocaleString('es-AR'); };
-  var compacto = function (v) { var a = Math.abs(v); return '$ ' + (a >= 1e6 ? (v / 1e6).toLocaleString('es-AR', { maximumFractionDigits: 1 }) + ' M' : a >= 1e3 ? (v / 1e3).toLocaleString('es-AR', { maximumFractionDigits: a >= 1e4 ? 0 : 1 }) + ' mil' : Math.round(v)); };
-  var diaLargo = function (d) { var x = new Date(d + 'T12:00:00'); return x.toLocaleDateString('es-AR', { weekday: 'long' }) + ' ' + diaCorto(d); };
+  var pesos = function (v) { return (v < 0 ? '−$ ' : '$ ') + Math.abs(Math.round(v)).toLocaleString('es-CO'); };
+  var compacto = function (v) { var a = Math.abs(v); return '$ ' + (a >= 1e6 ? (v / 1e6).toLocaleString('es-CO', { maximumFractionDigits: 1 }) + ' M' : a >= 1e3 ? (v / 1e3).toLocaleString('es-CO', { maximumFractionDigits: a >= 1e4 ? 0 : 1 }) + ' mil' : Math.round(v)); };
+  var diaLargo = function (d) { var x = new Date(d + 'T12:00:00'); return x.toLocaleDateString('es-CO', { weekday: 'long' }) + ' ' + diaCorto(d); };
   var diaCorto = function (d) { return Number(d.slice(8, 10)) + '/' + Number(d.slice(5, 7)); };
   var HOY = D.hoy || {}, VD = D.ventasDia || [], AD = D.adsDia || [];
   (function () {
     $('hoy-titulo').textContent = 'Hoy, ' + (HOY.dia ? diaLargo(HOY.dia) : '');
     var conVentas = VD.filter(function (x) { return x.d !== HOY.dia; });
     var prom = conVentas.length ? conVentas.reduce(function (s, x) { return s + x.bruto; }, 0) / conVentas.length : null;
-    var hora = new Date(D.generado).toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit', hourCycle: 'h23' });
+    var hora = new Date(D.generado).toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit', hourCycle: 'h23' });
     var detV = HOY.ventas == null ? 'Todavía sin datos de hoy.' : HOY.ordenes + ' venta' + (HOY.ordenes === 1 ? '' : 's') + ', ' + HOY.unidades + ' unidad' + (HOY.unidades === 1 ? '' : 'es') + (prom ? '. Tu promedio diario es ' + pesos(prom) : '') + (HOY.enVivo ? '. Al momento de las ' + hora + '.' : '.');
     var detA = HOY.ads == null ? 'Sin Product Ads o sin datos de hoy.' : (HOY.ventasAds ? 'Vendió ' + pesos(HOY.ventasAds) + ' por publicidad, ACOS ' + String(HOY.acos).replace('.', ',') + '%.' : 'Todavía sin ventas por publicidad hoy.');
     [['Vendiste hoy', HOY.ventas, detV, 'var(--serie-ventas)'], ['Invertiste en publicidad hoy', HOY.ads, detA, 'var(--serie-ads)']].forEach(function (x) {
@@ -526,7 +526,7 @@
   if (NICHOS.length) {
     NICHOS.forEach(function (n, i) {
       var tono = n.puntaje >= 65 ? 'verde' : n.puntaje >= 40 ? 'ambar' : 'rojo';
-      var det = [n.senal.replace(/^\S+\s/, ''), '≈ ' + Number(n.demandaMes || 0).toLocaleString('es-AR') + ' u./mes', (COMPET[n.competencia] || n.competencia) + (n.competencia !== 'repartido' && n.lider ? ' (' + n.lider + ' ' + n.top1 + '%)' : ''),
+      var det = [n.senal.replace(/^\S+\s/, ''), '≈ ' + Number(n.demandaMes || 0).toLocaleString('es-CO') + ' u./mes', (COMPET[n.competencia] || n.competencia) + (n.competencia !== 'repartido' && n.lider ? ' (' + n.lider + ' ' + n.top1 + '%)' : ''),
         n.mejorNuevo ? 'uno nuevo ya vende ≈ ' + n.mejorNuevo.rotacion + ' u./mes' : 'sin nuevos vendiendo', TIPOS[n.tipo] || n.tipo, n.origen === 'tendencia' ? 'de las tendencias' : null].filter(Boolean).join(' · ');
       var riel = h('div', { clase: 'riel', role: 'img', 'aria-label': 'Puntaje ' + n.puntaje + ' de 100' }, [h('div', { clase: 'relleno' })]);
       riel.firstChild.style.width = Math.max(2, Math.min(100, Number(n.puntaje) || 0)) + '%';
@@ -542,7 +542,7 @@
   SERIES.forEach(function (s) {
     var pts = (D.series && D.series[s[0]]) || [];
     var ult = pts.length ? pts[pts.length - 1].v : null;
-    var caja = h('div', { clase: 'serie' }, [h('div', { clase: 't', texto: s[1] }), h('div', { clase: 'v', texto: ult == null ? 'sin datos todavía' : s[2] ? '$ ' + Math.round(ult).toLocaleString('es-AR') : String(ult) })]);
+    var caja = h('div', { clase: 'serie' }, [h('div', { clase: 't', texto: s[1] }), h('div', { clase: 'v', texto: ult == null ? 'sin datos todavía' : s[2] ? '$ ' + Math.round(ult).toLocaleString('es-CO') : String(ult) })]);
     if (pts.length > 1) {
       var svg = document.createElementNS(NS, 'svg'); svg.setAttribute('viewBox', '0 0 100 40'); svg.setAttribute('preserveAspectRatio', 'none'); svg.setAttribute('role', 'img');
       svg.setAttribute('aria-label', s[1] + ': de ' + pts[0].v + ' a ' + ult + ' en ' + pts.length + ' días');
@@ -566,7 +566,7 @@
       var w = porId[a.quien] || { emoji: '•', nombre: a.quien };
       ul.appendChild(h('li', { clase: a.nivel }, [h('span', { clase: 'quien', 'aria-hidden': 'true', texto: w.emoji }),
         h('div', { clase: 'que' }, [h('span', { clase: 'marca', 'aria-hidden': 'true' }), a.texto, h('span', { clase: 'por', texto: w.nombre + (a.skill ? ', skill ' + a.skill : '') })]),
-        h('span', { clase: 'hora', texto: new Date(a.t).toLocaleString('es-AR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }) })]));
+        h('span', { clase: 'hora', texto: new Date(a.t).toLocaleString('es-CO', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }) })]));
     });
     if (lista.length > mostrar) ul.appendChild(h('li', { clase: 'mas' }, [h('span'), h('button', { clase: 'boton', type: 'button', texto: 'Mostrar ' + Math.min(25, lista.length - mostrar) + ' más (quedan ' + (lista.length - mostrar) + ')', onclick: function () { mostrar += 25; pintarBitacora(); } })]));
   }
@@ -593,7 +593,7 @@
     if (w.destacado) cuerpo.appendChild(h('p', null, [h('b', { texto: w.destacado })]));
     if (w.tabla.filas.length) {
       var thead = h('thead', null, [h('tr', null, w.tabla.cabecera.map(function (c) { return h('th', { scope: 'col', texto: c }); }))]);
-      var tbody = h('tbody', null, w.tabla.filas.map(function (f) { return h('tr', null, f.map(function (v) { return h('td', { texto: v == null || v === '' ? '—' : typeof v === 'number' ? v.toLocaleString('es-AR') : String(v) }); })); }));
+      var tbody = h('tbody', null, w.tabla.filas.map(function (f) { return h('tr', null, f.map(function (v) { return h('td', { texto: v == null || v === '' ? '—' : typeof v === 'number' ? v.toLocaleString('es-CO') : String(v) }); })); }));
       cuerpo.appendChild(h('table', { clase: 'tabla' }, [thead, tbody]));
     } else cuerpo.appendChild(h('p', { clase: 'vacio', texto: 'Todavía no tiene datos. Si necesita tareas o costos, Claude te dice cuáles.' }));
     var lat = $('lateral'); lat.hidden = false;

@@ -56,7 +56,7 @@ export function fijarPredeterminada(userId) {
 // ─────────────────────────────── OAuth (PKCE) ───────────────────────────────
 const b64url = (b) => b.toString('base64url');
 
-export function urlDeAutorizacion({ appId, sitio = 'MLA', redirectUri }) {
+export function urlDeAutorizacion({ appId, sitio = 'MCO', redirectUri }) {
   const verifier = b64url(crypto.randomBytes(48));
   const challenge = b64url(crypto.createHash('sha256').update(verifier).digest());
   const base = AUTH_POR_SITIO[sitio];
